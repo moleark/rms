@@ -1,0 +1,129 @@
+--供应商
+OPEN TUID manufactory(
+    id,
+    main code char(20) not null,        --供应商编号
+    name char(200),                     --供应商名称
+    Ename char(200),                    --供应商别名
+    PayTerm  char(60),                  --付款账期（关联dbs.dbo.PayTerm.PayTermID）
+    Class char(40),                     --供应商分类(内贸、外贸)
+    Zip char(40),                       --邮编
+    Addr char(500),                     --地址
+    AddrE char(500),                    --生产厂址
+    AddrH char(500),                    --供应商银行地址
+    SWIFT char(100),                    --供应商开户行SWIFT/BIC
+    IBAN char(100),                     --供应商开户行IBAN
+    RTN char(20),                       --供应商开户行的RTN   
+    AcceptBank char(500),               --供应商开户银行
+    AccountNo char(60),                 --供应商在开户银行的帐号 
+    IRD char(60),                       --税号  
+    WebSite char(500),                  --供应商网址1
+    WebSite2 char(500),                 --供应商网址2
+    key country ID Country,,            --国家代码  
+    City char(100),                     --城市代码
+    Profile text,                       --企业简介(供应商信息概况)   
+    IsCheck samllint,                   --是否为免检供应商（0 非免检、1 免检）
+    IsTure smallint not null default 1, --是否有效（0 无效、1 有效）
+    Property char(100),                 --供应商属性（生产商/贸易商）
+    Class2 char(50),                    --供应商总评价（市场发展部的评价）
+    CreateTime datetime,                --创建时间
+    Creater char(10),                   --创建人
+    LastUpdateTime datetime,            --最后更新时间
+    LastUpdateEPID char(10),            --最后更新人
+    ColligationScore dec(12, 2)         --采购评价的综合评分，从采购评价报告中来
+)
+
+--供应商联系人
+TUID suppliers(
+    id,
+    main code char(20) not null,                --编号
+    main manufactory ID Manufactory not null,   --供应商编号
+    NameF1 char(100),                           --名称1
+    NameF2 char(100),                           --名称2
+    PrefixF char(40),                           --称谓前缀   
+    DeptF char(100),                            --所在部门
+    TitleF char(300),                           --所属职位
+    key country ID Country,,                    --国家代码   
+    CityF char(100),                            --城市代码
+    AddrF char(500)                             --详细地址
+    ZipF char(40),                              --邮编
+    AreaCodeF char(20),                         --电话号码中的区域码
+    Phone1 char(100),                           --联系电话1
+    Phone2 char(100),                           --联系电话2
+    ExtF1 char(100),                            --分机号
+    FaxF1 char(100),                            --传真1
+    FaxF2 char(100),                            --传真2
+    MoblieF char(40),                           --手机号
+    EmailF char(100),                           --邮件地址
+    NoteF text,                                 --备注
+    PayTerm char(60),                           --付款方式
+    PayTermDay int,                             --付款账期（单位：天）
+    IsDefault samllint not null default 0,      --是否是供应商默认联系人（1 是、0 否）
+    ResponsibleFiWork samllint not null default 0,--是否为财务工作的负责人（应用：付款后会自动向财务工作负责人发送提醒邮件）（1 是、0 否）
+    IsValid samllint not null default 1         --联系人信息是否有效（1 有效、0 无效）
+)
+
+--资源产品
+TUID ProductT(
+    id,
+    no char(50) not null,                       --编号
+    main manufactory ID Manufactory not null,   --供应商编号
+    OriginalID char(50),                        --供应商自编号
+    main description char(1000) null,           --产品英文名称
+    main descriptionC char(1000) null,          --产品中文名称
+    Alias descriptionC char(1000) null,         --产品别名
+    arr PackT (
+        owner,
+        id,
+        main radiox dec(12,2),                  --套
+        main radioy dec(12,4),                  --包装规格
+        main unit char(10),                     --单位
+        note text,                              --备注
+        type samllint,                          --包装类型，分为两种：1.目录包装，2.非目录包装
+        Grads int,                              --包装梯度
+        IsValid smallint not null default 1,    --是否有效（0 无效、1 有效）       
+    ),
+    purity char(80),                            --纯度
+    UseFor text,                                --用途
+    Storage char(4),                            --存储条件,关联zcl_mess.dbo.storage表主键
+    MF char(100),                               --分子式
+    MW char(40),                                --分子量
+    CAS char(100),                              --CAS
+    RI char(20),                                --折射率
+    Or char(20),                                --旋光度
+    FP char(200),                               --闪点
+    MP char(200),                               --熔点
+    BP char(200),                               --沸点
+    UN char(30),                                --联合国号码
+    Remark1 text,                               --备注
+    ADR char(20),                               --欧洲陆路运输危险品守则编号（ADR class）
+    IceCode char(20),                           --冷藏温度
+    expid char(20),                             --货架期
+    prodtype char(200),                         --产品类别，如：嘧啶，食品添加剂等 
+    Restrict char(20),                          --限制性标记，关联zcl_mess.dbo.jkrestrict表主键
+    cUstOm char(40),                            --中国海关分类编码
+    Expiry char(40),                            --保质期
+    ExpiryUnit char(50),                        --保质期单位
+    capacity dec(19,4),                         --统一规定为月生产能力，以KG为单位
+    Water char(50),                             --含水量
+    MaxImpurity char(50),                       --最大杂质含量
+    BurnOffal char(50),                         --灼烧残渣
+    QuanlityStand char(50),                     --质量标准
+    CGrade char(50),                            --产品规格
+    Structure char(20),                         --结构式
+    Shape char(1000),                           --性状
+    Chroma char(100),                           --色度
+    CooperativeType smallint,                   --合作类型（1;化学品类;66;非化学品类;6;工程类;10;物流类;34;包装类供应商;18;其他服务类;3;全部） 待确认
+    ResourceEvaluation smallint,                --资源评价（关联opdata.dbo.tResource_level）
+    Opinion char(2),                            -- 产品级别（四级A/B/C/D）
+    IsTure smallint not null default 1,         --是否有效（0 无效、1 有效）
+    isMainProduct smallint not null default 1,  --是否是否主营产品（0 否、1 是）
+    Brand char(40),                             --该产品可支持的销售品牌（zcl_mess.dbo.manufactory.code），并非该产品的实际品牌。
+    CreateTime datetime,                        --创建时间
+    Creater char(10),                           --创建人   
+    LastUpdateTime datetime,                    --最后更新时间
+    LastUpdateEPID char(10),                    --最后更新人
+    individualsale smallint not null default 1, --产品是否可单独采购的标记，用于处理套件产品中的组件是否可单独采购的问题。0：不可单独采购；1：可单独采购。
+    Issuperior smallint not null default 1,     --是否优势产品（1 表示是优势产品，0表示非优势产品）
+    Isspot smallint not null default 1          --是否现货产品（1 表示是现货产品，0表示非现货产品）
+)
+
