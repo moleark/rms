@@ -1,0 +1,13 @@
+/** 根据供应商搜索联系人*/
+QUERY SearchSupplierContact( _id ID supplier)
+returns ret (
+    id bigint,
+    no char(10),
+    name char(50),
+    firstName char(50),
+    lastName char(50)
+) { 
+    into ret select w.id , w.no, w.name, w.firstName, w.lastName
+    from    SupplierContact as w
+    where   w.supplier = _id;
+};

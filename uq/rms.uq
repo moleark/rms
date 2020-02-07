@@ -1,11 +1,11 @@
 --供应商
 OPEN TUID Supplier(
     id,
-    no char(10) not null,
+    main no char(10) not null,
     main name char(200),                     -- 供应商名称
-    abbreviation char(200),                  -- 简称
-    isValid smallint not null default 1, --是否有效（0 无效、1 有效）
-    createTime datetime,                --创建时间
+    main abbreviation char(200),                  -- 简称
+    main isValid smallint not null default 1, --是否有效（0 无效、1 有效）
+    main createTime datetime,                --创建时间
     search(name),
     unique(no),
 );
@@ -13,7 +13,7 @@ OPEN TUID Supplier(
 --供应商联系人
 TUID SupplierContact(
     id,
-    no char(10) not null,
+    main no char(10) not null,
     main supplier ID Supplier not null,   --供应商编号
     main name char(50) null,
     main firstName char(50),
@@ -30,15 +30,15 @@ TUID SupplierContact(
     wechatId char(50),
     addressString char(400),
     address ID Address,
-    isDefault samllint not null default 0,      --是否是供应商默认联系人（1 是、0 否）
-    isValid samllint not null default 1         --联系人信息是否有效（1 有效、0 无效）
+    isDefault smallint not null default 0,      --是否是供应商默认联系人（1 是、0 否）
+    isValid smallint not null default 1         --联系人信息是否有效（1 有效、0 无效）
 );
 
 
 --资源产品
-TUID Product(
+OPEN TUID Product(
     id,
-    no char(50) not null,                       --编号
+    main no char(50) not null,                       --编号
     main supplier ID Supplier not null,   --供应商编号
     main origin char(50),                        --供应商自编号
     main description char(1000) null,           --产品英文名称
@@ -49,17 +49,17 @@ TUID Product(
         main radiox dec(12,2),                  --套
         main radioy dec(12,4),                  --包装规格
         main unit char(10),                     --单位
-        type samllint,                          --包装类型，分为两种：1.目录包装，2.非目录包装
+        type smallint,                          --包装类型，分为两种：1.目录包装，2.非目录包装
         isValid smallint not null default 1,    --是否有效（0 无效、1 有效）
     ),
-    isValid tinyint not null default 1,
+    isTrue tinyint not null default 1,
     createTime datetime,                        --创建时间
     search(origin, description, descriptionC),
     unique(no),
 );
 
 OPEN Map ProductChemical (
-    key product ID ProductX,
+    key product ID Product,
     key chemical ID Chemical,
     CAS char(20),
     purity char(80),

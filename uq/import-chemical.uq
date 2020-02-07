@@ -1,0 +1,3 @@
+import JKChemical = 百灵威系统工程部/chemical;
+
+TUID Chemical from JKChemical;
