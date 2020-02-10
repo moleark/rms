@@ -6,10 +6,15 @@ export interface UqRMS {
     Product: Tuid;
     ProductChemical: Map;
     SearchSupplierContact: Query;
+    SearchSupplier: Query;
 }
 
 export interface UqCommon {
     Country: Tuid;
+    Address: Tuid;
+    GetCountryProvinces: Query;
+    GetProvinceCities: Query;
+    GetCityCounties: Query;
 }
 
 export interface UQs {

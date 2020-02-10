@@ -21,9 +21,10 @@ export class VSupplierDetail extends VPage<CSupplier> {
 
     private getSupplierContact = () => {
         let { showCreateSupplierContact } = this.controller.cApp.cSupplierContact;
+
         return <div className="bg-white mb-3">
             <div className="cursor-pointer">
-                &nbsp;<FA className="align-middle text-warning" name="user-circle" /><span className="h6 py-2 px-1 align-middle"><b> 供应商联系人</b></span>
+                &nbsp;<FA className="align-middle text-warning" name="users" /><span className="h6 py-2 px-1 align-middle"><b> 供应商联系人</b></span>
             </div>
             {this.firstSupplierContact && <List items={this.supplierContacts} item={{ render: this.renderContact }} />}
             <div className="text-primary text-center small bg-white py-2" onClick={() => showCreateSupplierContact(this.supplier)}>＋联系人</div>
@@ -32,12 +33,20 @@ export class VSupplierDetail extends VPage<CSupplier> {
     }
 
     private renderContact = (item: any, index: number) => {
-        let { no, name, firstname } = item;
-        return <LMR className="py-2">
-            <p >
-                <FA name="location-arrow" className="px-2 text-primary"></FA>
-                {no} - {name}
-            </p>
+        let { delSupplierContact, showEditSupplierContact, showSupplierContactDetail } = this.controller.cApp.cSupplierContact;
+        let { no, name, id, gender, mobile } = item;
+        let { defaultContact } = this.supplier;
+        let fa_text = defaultContact === undefined ? "px-2 text-muted small" : (defaultContact.id === id ? "px-2 text-info small" : "px-2 text-muted small");
+        let fa_gender = gender === "0" ? <FA name="user" className="px-2 text-danger"></FA> : <FA name="user" className="px-2 text-primary"></FA>;
+        let left = <div className={fa_text} onClick={() => showSupplierContactDetail(item)}>
+            {fa_gender}
+            {no} - {name} - {mobile === undefined ? "无" : mobile}</div>
+        let right =
+            <div className="px-2 text-muted text-right samll">
+                <span onClick={() => delSupplierContact(item)}><FA className="align-middle text-danger" name="times" /></span>
+                <span onClick={() => showEditSupplierContact(this.supplier, item)}><FA className="align-middle p-2 cursor-pointer text-info" name="edit" /></span>
+            </div>;
+        return <LMR left={left} right={right} className="py-2">
         </LMR>;
     }
 
@@ -49,11 +58,11 @@ export class VSupplierDetail extends VPage<CSupplier> {
             <div className="cursor-pointer">
                 &nbsp;<FA className="align-middle text-warning" name="credit-card" /><span className="h6 py-2 px-1 align-middle"><b> 供应商基本信息</b></span>
             </div>
-            <div className="py-2 cat-root-sub">
+            <div className="py-2 cat-root-sub small">
                 <div><span className="px-4 align-middle">编号：</span><span className="py-2 px-4">{no}</span></div>
                 <div><span className="px-4 align-middle ">名称：</span><span className="py-2 px-4">{name}</span></div>
                 <div><span className="px-4 align-middle ">简称：</span><span className="py-2 px-4">{abbreviation}</span></div>
-                <div><p><span className="px-4 align-middle ">创建时间：</span><span className="py-3">{<EasyDate date={createTime} />}</span></p></div>
+                <div><p><span className="px-4 align-middle ">创建时间：</span><span className="py-2">{<EasyDate date={createTime} />}</span></p></div>
             </div>
         </div>;
     }

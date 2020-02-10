@@ -1,13 +1,60 @@
 /** 根据供应商搜索联系人*/
-QUERY SearchSupplierContact( _id ID supplier)
+QUERY SearchSupplierContact(_id ID Supplier)
 returns ret (
     id bigint,
     no char(10),
+    supplier ID Supplier,
     name char(50),
     firstName char(50),
-    lastName char(50)
+    lastName char(50),
+    gender char(5),
+    salutation char(10),
+    departmentName char(100),
+    telephone char(50),
+    mobile char(50) null,
+    email char(50),
+    fax char(20),
+    zipCode char(20),
+    wechatId char(50),
+    addressString char(400),
+    address ID Address,
+    defaultContact ID SupplierContact,
+    isValid smallint
 ) { 
-    into ret select w.id , w.no, w.name, w.firstName, w.lastName
+    into ret select tabl.id, tabl.no, tabl.supplier, tabl.name, tabl.firstName,tabl.lastName, tabl.gender, tabl.salutation,tabl.departmentName
+    ,tabl.telephone,tabl.mobile, tabl.email ,tabl.fax,tabl.zipCode ,tabl.wechatId ,tabl.addressString ,tabl.address
+    ,tabl.defaultContact, tabl.isValid
+    from (
+    select  (case when s.defaultContact is null then w.id else 0 end) as num
+            ,w.id, w.no, w.supplier, w.name, w.firstName,w.lastName, w.gender, w.salutation,w.departmentName
+            ,w.telephone,w.mobile, w.email ,w.fax,w.zipCode ,w.wechatId ,w.addressString ,w.address
+            ,s.defaultContact, w.isValid
     from    SupplierContact as w
-    where   w.supplier = _id;
+            left join Supplier as s on w.id=s.defaultContact
+    where   w.supplier = _id and w.isValid=1
+    order by w.id
+    ) as tabl
+    order by tabl.num;
+};
+
+
+/** 搜索供应商*/
+QUERY SearchSupplier(key char(100))
+PAGE (
+    id bigint start 0,
+    no char(10) ,
+    name char(200),
+    abbreviation char(200),
+    defaultContact ID SupplierContact
+) {
+    var key2 char(102);
+    set key2 = concat('%', key, '%');
+
+    PAGE select w.id, w.no, w.name,w.abbreviation,w.defaultContact
+    from    Supplier as w
+    where   1=1 
+            and (key is null or ( w.name like key2 or w.no like key2 ))
+            and w.id > $pageStart and w.isValid = 1 
+    order by w.id
+    limit $pageSize;
 };

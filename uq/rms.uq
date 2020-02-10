@@ -3,9 +3,10 @@ OPEN TUID Supplier(
     id,
     main no char(10) not null,
     main name char(200),                     -- 供应商名称
-    main abbreviation char(200),                  -- 简称
-    main isValid smallint not null default 1, --是否有效（0 无效、1 有效）
+    main abbreviation char(200),             -- 简称
+    main isValid smallint default 1, --是否有效（0 无效、1 有效）
     main createTime datetime,                --创建时间
+    main defaultContact ID SupplierContact,  --默认联系人
     search(name),
     unique(no),
 );
@@ -20,18 +21,16 @@ TUID SupplierContact(
     main lastName char(50),
     main gender char(5),
     main salutation char(10),
-    main organizationName char(100),
     main departmentName char(100),
-    telephone char(50),
-    mobile char(50) null,
-    email char(50),
-    fax char(20),
-    zipCode char(20),
-    wechatId char(50),
-    addressString char(400),
-    address ID Address,
-    isDefault smallint not null default 0,      --是否是供应商默认联系人（1 是、0 否）
-    isValid smallint not null default 1         --联系人信息是否有效（1 有效、0 无效）
+    main telephone char(50),
+    main mobile char(50) null,
+    main email char(50),
+    main fax char(20),
+    main zipCode char(20),
+    main wechatId char(50),
+    main addressString char(400),
+    main address ID Address,
+    main isValid smallint default 1         --联系人信息是否有效（1 有效、0 无效）
 );
 
 
