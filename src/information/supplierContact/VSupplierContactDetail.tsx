@@ -30,7 +30,7 @@ export class VSupplierContactDetail extends VPage<CSupplierContact> {
                     <div><span className="px-4 align-middle ">名称：</span><span className="py-2 px-4">{name}</span></div>
                     <div><span className="px-4 align-middle ">姓氏：</span><span className="py-2 px-4">{lastName}</span></div>
                     <div><span className="px-4 align-middle ">&nbsp;&nbsp;&nbsp;名：</span><span className="py-2 px-4">{firstName}</span></div>
-                    <div><span className="px-4 align-middle">性别：</span><span className="py-2 px-4">{gender === 0 ? "女" : "男"}</span></div>
+                    <div><span className="px-4 align-middle">性别：</span><span className="py-2 px-4">{gender === "0" ? "女" : "男"}</span></div>
                     <div><span className="px-4 align-middle ">称谓：</span><span className="py-2 px-4">{salutation}</span></div>
                     <div><span className="px-4 align-middle ">部门名称：</span><span className="py-2">{departmentName}</span></div>
                     <div><span className="px-4 align-middle">固定电话：</span><span className="py-2 px-2">{telephone}</span></div>
