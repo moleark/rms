@@ -5,6 +5,7 @@ import { VMain } from './ui/main';
 import { CHome } from "./information/CHome";
 import { CSupplier } from "./information/supplier/CSupplier";
 import { CSupplierContact } from "./information/supplierContact/CSupplierContact";
+import { CProduct } from "./information/product/CProduct";
 
 
 export class CApp extends CAppBase {
@@ -14,6 +15,7 @@ export class CApp extends CAppBase {
     cHome: CHome;
     cSupplier: CSupplier;
     cSupplierContact: CSupplierContact;
+    cProduct: CProduct;
 
     protected newC<T extends CUqBase>(type: IConstructor<T>): T {
         return new type(this);
@@ -23,6 +25,7 @@ export class CApp extends CAppBase {
 
         this.cHome = this.newC(CHome);
         this.cSupplier = this.newC(CSupplier);
+        this.cProduct = this.newC(CProduct);
         this.cSupplierContact = this.newC(CSupplierContact);
         let promises: PromiseLike<void>[] = [];
         promises.push(this.cSupplier.start());

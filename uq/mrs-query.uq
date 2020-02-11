@@ -58,3 +58,26 @@ PAGE (
     order by w.id
     limit $pageSize;
 };
+
+/** 搜索产品*/
+QUERY SearchProduct(key char(100))
+PAGE (
+    id bigint start 0,
+    no char(10) ,
+    supplier ID Supplier,   --供应商编号
+    origin char(50),                        --供应商自编号
+    description char(1000),           --产品英文名称
+    descriptionC char(1000),
+    createTime datetime
+) {
+    var key2 char(102);
+    set key2 = concat('%', key, '%');
+
+    PAGE select w.id, w.no, w.supplier,w.origin,w.description,w.descriptionC,w.createTime
+    from    Product as w
+    where   1=1 
+            and (key is null or ( w.description like key2 or w.descriptionC like key2 or w.no like key2))
+            and w.id > $pageStart and w.isTrue = 1 
+    order by w.id
+    limit $pageSize;
+};

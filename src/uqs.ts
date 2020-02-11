@@ -7,6 +7,7 @@ export interface UqRMS {
     ProductChemical: Map;
     SearchSupplierContact: Query;
     SearchSupplier: Query;
+    SearchProduct: Query;
 }
 
 export interface UqCommon {
