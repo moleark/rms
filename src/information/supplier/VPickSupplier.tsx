@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { VPage, Page, List, LMR, SearchBox, FA } from 'tonva';
 import { observer } from 'mobx-react';
-import { CSupplier } from './CSupplier';
+import { CPickSupplier } from './CPickSupplier';
 
-export class VPickSupplier extends VPage<CSupplier> {
+export class VPickSupplier extends VPage<CPickSupplier> {
     async open(param?: any) {
         this.openPage(this.page);
     }

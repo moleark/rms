@@ -10,7 +10,6 @@ import { VSupplierList } from './VSupplierList';
 import { VHome } from '../VHome';
 import { VSupplierDetail } from './VSupplierDetail';
 import { SupplierItem } from "model/supplierItem";
-import { VPickSupplier } from './VPickSupplier';
 
 class PageSupplier extends PageItems<any> {
 
@@ -37,7 +36,7 @@ export class CSupplier extends CUqBase {
 
     async internalStart(param: any) {
         this.searchSupplierByKey(param);
-        this.openVPage(VPickSupplier);
+
     }
 
     searchSupplierByKey = async (key: string) => {
@@ -88,10 +87,6 @@ export class CSupplier extends CUqBase {
             child: contact.ret,
         }
         this.openVPage(VSupplierDetail, param);
-    }
-
-    returnSupplier = (model: any) => {
-        this.returnCall(model);
     }
 }
 

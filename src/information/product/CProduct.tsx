@@ -7,7 +7,7 @@ import { VAddProduct } from './VAddProduct';
 import { VEditProduct } from './VEditProduct';
 import { VProductDetail } from './VProductDetail';
 import { VProductList } from './VProductList';
-import { CSupplier } from 'information/supplier/CSupplier';
+import { CPickSupplier } from 'information/supplier/CPickSupplier';
 import { CChemical } from './CChemical';
 import { CBrand } from './CBrand';
 import { SupplierItem } from "model/supplierItem";
@@ -47,8 +47,8 @@ export class CProduct extends CUqBase {
     }
 
     pickSupplier = async (context: Context, name: string, value: number): Promise<number> => {
-        let cSupplier = this.newC(CSupplier);
-        return await cSupplier.call<number>();
+        let cPickSupplier = this.newC(CPickSupplier);
+        return await cPickSupplier.call<number>();
     }
 
     pickBrand = async (context: Context, name: string, value: number): Promise<number> => {

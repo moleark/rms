@@ -43,7 +43,7 @@ export class VProductList extends VPage<CProduct> {
                 <i className="fa fa-plus fa-stack-1x"></i>
             </span>
         </div>;
-        let header = <header className="py-2 px-2 text-center text-white">
+        let header = <header className="py-2 px-4 text-center text-white">
             <span className="h5 align-middle" style={{ textAlign: 'center' }}>产品</span>
         </header>;
         return <Page header={header} right={right} onScrollBottom={this.onScrollBottom} headerClassName="bg-primary">

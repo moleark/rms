@@ -9,6 +9,7 @@ import { CProduct } from "./information/product/CProduct";
 import { CChemical } from "./information/product/CChemical";
 import { CBrand } from "./information/product/CBrand";
 import { CPackage } from "./information/package/CPackage";
+import { CPickSupplier } from 'information/supplier/CPickSupplier';
 
 export class CApp extends CAppBase {
     get uqs(): UQs { return this._uqs as UQs };
@@ -16,6 +17,7 @@ export class CApp extends CAppBase {
     topKey: any;
     cHome: CHome;
     cSupplier: CSupplier;
+    cPickSupplier: CPickSupplier;
     cSupplierContact: CSupplierContact;
     cProduct: CProduct;
     cChemical: CChemical;
@@ -30,6 +32,7 @@ export class CApp extends CAppBase {
 
         this.cHome = this.newC(CHome);
         this.cSupplier = this.newC(CSupplier);
+        this.cPickSupplier = this.newC(CPickSupplier);
         this.cProduct = this.newC(CProduct);
         this.cChemical = this.newC(CChemical);
         this.cBrand = this.newC(CBrand);
