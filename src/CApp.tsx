@@ -6,7 +6,9 @@ import { CHome } from "./information/CHome";
 import { CSupplier } from "./information/supplier/CSupplier";
 import { CSupplierContact } from "./information/supplierContact/CSupplierContact";
 import { CProduct } from "./information/product/CProduct";
-
+import { CChemical } from "./information/product/CChemical";
+import { CBrand } from "./information/product/CBrand";
+import { CPackage } from "./information/package/CPackage";
 
 export class CApp extends CAppBase {
     get uqs(): UQs { return this._uqs as UQs };
@@ -16,6 +18,9 @@ export class CApp extends CAppBase {
     cSupplier: CSupplier;
     cSupplierContact: CSupplierContact;
     cProduct: CProduct;
+    cChemical: CChemical;
+    cBrand: CBrand;
+    cPackage: CPackage;
 
     protected newC<T extends CUqBase>(type: IConstructor<T>): T {
         return new type(this);
@@ -26,6 +31,9 @@ export class CApp extends CAppBase {
         this.cHome = this.newC(CHome);
         this.cSupplier = this.newC(CSupplier);
         this.cProduct = this.newC(CProduct);
+        this.cChemical = this.newC(CChemical);
+        this.cBrand = this.newC(CBrand);
+        this.cPackage = this.newC(CPackage);
         this.cSupplierContact = this.newC(CSupplierContact);
         let promises: PromiseLike<void>[] = [];
         promises.push(this.cSupplier.start());

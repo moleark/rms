@@ -59,25 +59,71 @@ PAGE (
     limit $pageSize;
 };
 
-/** 搜索产品*/
-QUERY SearchProduct(key char(100))
+/** 搜索品牌*/
+QUERY SearchBrand(key char(100))
 PAGE (
     id bigint start 0,
     no char(10) ,
-    supplier ID Supplier,   --供应商编号
-    origin char(50),                        --供应商自编号
-    description char(1000),           --产品英文名称
-    descriptionC char(1000),
-    createTime datetime
+    name char(50)
 ) {
     var key2 char(102);
     set key2 = concat('%', key, '%');
 
-    PAGE select w.id, w.no, w.supplier,w.origin,w.description,w.descriptionC,w.createTime
-    from    Product as w
+    PAGE select w.id, w.no, w.name
+    from    Brand as w
     where   1=1 
-            and (key is null or ( w.description like key2 or w.descriptionC like key2 or w.no like key2))
-            and w.id > $pageStart and w.isTrue = 1 
+            and (key is null or ( w.no like key2 or w.name like key2))
+            and w.id > $pageStart and w.isValid=1
     order by w.id
     limit $pageSize;
+};
+
+/** 搜索产品*/
+QUERY SearchProduct(key char(100))
+PAGE (
+    id bigint start 0,
+    no char(50) ,
+    supplier ID Supplier,   --供应商编号
+    brand ID Brand,        --品牌
+    origin char(50),                        --供应商自编号
+    description char(1000),           --产品英文名称
+    descriptionC char(1000),
+    createTime datetime,
+    chemical ID Chemical,
+    CAS char(20),
+    purity char(80),
+    molecularFomula char(200),
+    molecularWeight char(30)
+) {
+    var key2 char(102);
+    set key2 = concat('%', key, '%');
+
+    PAGE select w.id, w.no, w.supplier,w.brand,w.origin,w.description,w.descriptionC,w.createTime,p.chemical,p.CAS,p.purity,p.molecularFomula,p.molecularWeight
+    from    Product as w
+            left join ProductChemical as p on w.id=p.product
+    where   1=1 
+            and (key is null or ( w.description like key2 or w.descriptionC like key2 or p.CAS like key2))
+            and w.id > $pageStart 
+            and w.isTrue = 1  
+    order by w.id
+    limit $pageSize;
+};
+
+--获取产品包装
+QUERY GetPack(_id ID Product)
+returns ret (
+    id bigint,
+    product ID Product,
+    radiox dec(12,2),                  --套
+    radioy dec(12,4),                  --包装规格
+    unit char(10),                     --单位
+    type smallint
+) {
+    into ret select pp.id,p.id as product, pp.radiox, pp.radioy,pp.unit,pp.type
+    from    Product as p 
+            join Product.Pack as pp on p.id = pp.owner
+    where   1=1 
+            and p.id=_id
+            and pp.isValid = 1 
+    order by pp.id;
 };

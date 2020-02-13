@@ -32,11 +32,7 @@ export class CSupplierContact extends CUqBase {
 
     @observable pageSupplierContact: PageSupplierContact;
     protected async internalStart() {
-    }
 
-    searchSupplierContactByKey = async (parent: any, key: string) => {
-        this.pageSupplierContact = new PageSupplierContact(await this.uqs.rms.SearchSupplierContact.query({ _id: parent.id }));
-        this.pageSupplierContact.first({ key: key });
     }
 
     pickAddress = async (context: Context, name: string, value: number): Promise<number> => {
@@ -68,8 +64,8 @@ export class CSupplierContact extends CUqBase {
     }
 
     saveSupplierContact = async (id: number, param: any, parent: any) => {
-        let { no, name, firstName, lastName, gender, salutation, departmentName, telephone, mobile, email, fax, zipCode, wechatId, addressString, address, isDefault } = param;
-        let parrm = { no: no, name: name, firstName: firstName, lastName: lastName, gender: gender, salutation: salutation, departmentName: departmentName, telephone: telephone, mobile: mobile, email: email, fax: fax, zipCode: zipCode, wechatId: wechatId, addressString: addressString, address: address, supplier: parent.id, isValid: 1 };
+        let { name, firstName, lastName, gender, salutation, departmentName, telephone, mobile, email, fax, zipCode, wechatId, addressString, address, isDefault } = param;
+        let parrm = { name: name, firstName: firstName, lastName: lastName, gender: gender, salutation: salutation, departmentName: departmentName, telephone: telephone, mobile: mobile, email: email, fax: fax, zipCode: zipCode, wechatId: wechatId, addressString: addressString, address: address, supplier: parent.id, isValid: 1 };
         let result = await this.uqs.rms.SupplierContact.save(id, parrm);
         if (isDefault === true) {
             let sid = id;
@@ -81,9 +77,11 @@ export class CSupplierContact extends CUqBase {
         this.cApp.cHome.start();
     }
 
-    delSupplierContact = async (model: any) => {
+    delSupplierContact = async (parent: any, model: any) => {
         let { id, no, name, firstName, lastName, isDefault, isValid, supplier, gender, salutation, departmentName, telephone, mobile, email, fax, zipCode, wechatId, addressString, address } = model;
         await this.uqs.rms.SupplierContact.save(id, { no: no, name: name, firstName: firstName, lastName: lastName, supplier: supplier, gender: gender, salutation: salutation, departmentName: departmentName, telephone: telephone, mobile: mobile, email: email, fax: fax, zipCode: zipCode, wechatId: wechatId, addressString: addressString, address: address, isDefault: isDefault, isValid: 0 });
+        await this.uqs.rms.SearchSupplierContact.query({ _id: model.id });
+        this.closePage();
     }
 
     loadList = async (parent: any) => {

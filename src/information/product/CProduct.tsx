@@ -3,9 +3,14 @@ import { View, BoxId, Image, PageItems, Query, Context } from 'tonva';
 import { CUqBase } from 'CBase';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { VProduct } from './VProduct';
+import { VAddProduct } from './VAddProduct';
+import { VEditProduct } from './VEditProduct';
+import { VProductDetail } from './VProductDetail';
 import { VProductList } from './VProductList';
 import { CSupplier } from 'information/supplier/CSupplier';
+import { CChemical } from './CChemical';
+import { CBrand } from './CBrand';
+import { SupplierItem } from "model/supplierItem";
 
 class PageProduct extends PageItems<any> {
 
@@ -29,6 +34,7 @@ class PageProduct extends PageItems<any> {
 export class CProduct extends CUqBase {
 
     @observable products: PageProduct;
+    chemical: any;
 
     async internalStart(param: any) {
         this.searchProductByKey(param);
@@ -45,30 +51,72 @@ export class CProduct extends CUqBase {
         return await cSupplier.call<number>();
     }
 
+    pickBrand = async (context: Context, name: string, value: number): Promise<number> => {
+        let cBrand = this.newC(CBrand);
+        return await cBrand.call<number>();
+    }
+
+    pickChemical = async (): Promise<any> => {
+        let mode: any = await this.cApp.cChemical.call();
+    }
+
     saveProductData = async (product: any) => {
 
         if (product.id === undefined) {
-            product.createTime = Date.now();
-            product.defaultContact = undefined;
-            await this.uqs.rms.Product.save(undefined, product);
-        } else {
-            await this.uqs.rms.Product.save(product.id, product);
+            if (this.chemical) {
+                let { id, CAS, description, descriptoinCN, molecularFomula, molecularWeight } = this.chemical;
+                product.description = description;
+                product.descriptionC = descriptoinCN;
+                product.createTime = Date.now();
+                product.defaultContact = undefined;
+                let result = await this.uqs.rms.Product.save(undefined, product);
+                await this.uqs.rms.ProductChemical.add({ product: result.id, arr1: [{ chemical: id, CAS: CAS, molecularFomula: molecularFomula, molecularWeight: molecularWeight, purity: product.purity }] });
+            }
         }
-        await this.searchProductByKey("");
+        this.closePage();
+        await this.loadList();
+    }
+
+    updateProductData = async (productdata: any, model: any) => {
+
+        if (productdata) {
+            productdata.origin = model.origin;
+            productdata.isTrue = 1;
+            let { chemical } = productdata;
+            await this.uqs.rms.Product.save(model.id, productdata);
+            await this.uqs.rms.ProductChemical.add({ product: model.id, arr1: [{ chemical: chemical.id, CAS: productdata.CAS, molecularFomula: productdata.molecularFomula, molecularWeight: productdata.molecularWeight, purity: model.purity }] });
+        }
+        this.closePage();
+        await this.loadList();
     }
 
     /**
     * 打开新建界面
     */
-    onNewProduct = async () => {
-        this.openVPage(VProduct, { description: undefined });
+    onNewProduct = async (model: any) => {
+        this.chemical = model;
+        this.openVPage(VAddProduct, { product: undefined });
     }
 
     /**
     * 打开编辑界面
     */
     onEditProduct = async (product: any) => {
-        this.openVPage(VProduct, product);
+        this.openVPage(VEditProduct, product);
+    }
+
+    /**
+    * 打开详情界面
+    */
+    showProductDetail = async (model: any) => {
+        let { id } = model;
+        let pitem = await this.uqs.rms.GetPack.query({ _id: id });
+        let param: SupplierItem = {
+            parent: model,
+            item: pitem.ret[0],
+            child: pitem.ret,
+        }
+        this.openVPage(VProductDetail, param);
     }
 
     loadList = async () => {

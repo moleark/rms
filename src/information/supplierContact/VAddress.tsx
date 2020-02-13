@@ -18,7 +18,7 @@ export class VAddress extends VPage<CAddress> {
 
     private page = (param: any) => {
         this.backLevel++;
-        return <Page header="选择所在省市">
+        return <Page header="选择所在省市" headerClassName="bg-primary">
             <div className="row no-gutters">
                 {param.provinces.map((v: any) => this.renderPCC(v.province, this.onProvinceClick))}
             </div>

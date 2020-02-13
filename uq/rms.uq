@@ -1,7 +1,7 @@
 --供应商
-OPEN TUID Supplier(
+TUID Supplier(
     id,
-    main no char(10) not null,
+    main no char(10) null,
     main name char(200),                     -- 供应商名称
     main abbreviation char(200),             -- 简称
     main isValid smallint default 1, --是否有效（0 无效、1 有效）
@@ -14,7 +14,7 @@ OPEN TUID Supplier(
 --供应商联系人
 TUID SupplierContact(
     id,
-    main no char(10) not null,
+    main no char(10) null,
     main supplier ID Supplier not null,   --供应商编号
     main name char(50) null,
     main firstName char(50),
@@ -33,22 +33,33 @@ TUID SupplierContact(
     main isValid smallint default 1         --联系人信息是否有效（1 有效、0 无效）
 );
 
+--资源品牌
+TUID Brand(
+    id,
+    main no char(10) ,--编号
+    main name char(50), --名称
+    main isValid smallint default 1,
+    search(name),
+    unique(no),
+);
+
 
 --资源产品
-OPEN TUID Product(
+TUID Product(
     id,
-    main no char(50) not null,                       --编号
-    main supplier ID Supplier not null,   --供应商编号
+    main no char(50) null,                       --编号
+    main supplier ID Supplier not null,          --供应商编号
+    main brand ID Brand null,                    --品牌
     main origin char(50),                        --供应商自编号
-    main description char(1000) null,           --产品英文名称
-    main descriptionC char(1000) null,          --产品中文名称
+    main description char(1000) null,            --产品英文名称
+    main descriptionC char(1000) null,           --产品中文名称
     arr Pack (
         owner,
         id,
         main radiox dec(12,2),                  --套
         main radioy dec(12,4),                  --包装规格
         main unit char(10),                     --单位
-        type smallint,                          --包装类型，分为两种：1.目录包装，2.非目录包装
+        main type smallint,                          --包装类型，分为两种：1.目录包装，2.非目录包装
         isValid smallint not null default 1,    --是否有效（0 无效、1 有效）
     ),
     isTrue tinyint not null default 1,
@@ -57,7 +68,7 @@ OPEN TUID Product(
     unique(no),
 );
 
-OPEN Map ProductChemical (
+Map ProductChemical (
     key product ID Product,
     key chemical ID Chemical,
     CAS char(20),

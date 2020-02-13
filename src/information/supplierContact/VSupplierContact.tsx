@@ -20,15 +20,7 @@ export class VSupplierContact extends VPage<CSupplierContact> {
         this.openPage(this.page);
     }
 
-    private gradeContent = (boxId: any) => {
-        return tv(boxId, (values) => {
-            let { name } = values;
-            return <>{name}</>;
-        });
-    }
-
     private schema: Schema = [
-        { name: 'no', type: 'string', required: true },
         { name: 'name', type: 'string', required: true },
         { name: 'gender', type: 'string', required: true },
         { name: 'firstName', type: 'string', required: false },
@@ -48,7 +40,6 @@ export class VSupplierContact extends VPage<CSupplierContact> {
 
     private uiSchema: UiSchema = {
         items: {
-            no: { widget: 'text', label: '编号', placeholder: '必填' } as UiInputItem,
             name: { widget: 'text', label: '姓名', placeholder: '必填' } as UiInputItem,
             gender: { widget: 'radio', label: '性别', list: [{ value: '1', title: '男' }, { value: '0', title: '女' }] } as UiRadio,
             firstName: { widget: 'text', label: '名', placeholder: '名', rules: nameValidation } as UiInputItem,
@@ -105,7 +96,7 @@ export class VSupplierContact extends VPage<CSupplierContact> {
             </div>
         </div>;
 
-        return <Page header="添加联系人" footer={footer} >
+        return <Page header="编辑联系人" footer={footer} headerClassName="bg-primary">
             <Form ref={v => this.form = v} className="my-3 mx-3"
                 formData={this.item}
                 schema={this.schema}

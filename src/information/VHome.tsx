@@ -25,7 +25,7 @@ export class VHome extends View<CHome> {
                 <i className="fa fa-plus fa-stack-1x"></i>
             </span>
         </div>;
-        let header = <header className="py-2 px-4 text-center text-white">
+        let header = <header className="py-2 px-2 text-center text-white">
             <span className="h5 align-middle" style={{ textAlign: 'center' }}>供应商</span>
         </header>;
         return <Page right={right} header={header} headerClassName="bg-primary">

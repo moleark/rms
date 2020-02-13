@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { View, EasyDate, FA, LMR, List, EasyTime, Page, VPage, SearchBox } from 'tonva';
+import { View, EasyDate, FA, LMR, List, EasyTime, Page, VPage, SearchBox, tv } from 'tonva';
 import { CProduct } from './CProduct';
 
 export class VProductList extends VPage<CProduct> {
@@ -13,29 +13,32 @@ export class VProductList extends VPage<CProduct> {
     }
 
     private renderRootCategory = (item: any, parent: any) => {
-        let { no, description, createTime } = item;
-        let { onEditProduct } = this.controller;
+        let { no, description, createTime, supplier, CAS } = item;
+        let { onEditProduct, showProductDetail } = this.controller;
 
         let right = <div className="p-2 cursor-pointer text-info" onClick={() => onEditProduct(item)}>
             <FA name="edit" />
         </div>
         return <LMR right={right} className="py-2">
-            <p>
-                <FA name="location-arrow" className="px-2 text-primary"></FA>
-                {no} - {description}
-            </p>
-        </LMR>
+            <div onClick={() => showProductDetail(item)}>
+                <div>
+                    <FA name="location-arrow" className="px-2 text-primary"></FA>
+                    {CAS}&nbsp;&nbsp;{description}
+                </div>
+                <div className="px-4 text-muted small">{tv(supplier, v => <>{v.name}</>)}</div>
+            </div>
+        </LMR >
     }
 
     private page = observer(() => {
-        let { products, onNewProduct, searchProductByKey } = this.controller;
+        let { products, onNewProduct, searchProductByKey, pickChemical } = this.controller;
 
         let right = <div className="w-19c d-flex">
             <SearchBox className="w-80"
                 size='sm'
                 onSearch={(key: string) => searchProductByKey(key)}
-                placeholder="请输入关键字" />
-            <span onClick={() => onNewProduct()} className="fa-stack">
+                placeholder="请输入cas、名称关键字" />
+            <span onClick={() => pickChemical()} className="fa-stack">
                 <i className="fa fa-square fa-stack-2x text-primary"></i>
                 <i className="fa fa-plus fa-stack-1x"></i>
             </span>

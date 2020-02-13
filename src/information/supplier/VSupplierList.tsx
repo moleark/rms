@@ -15,7 +15,7 @@ export class VSupplierList extends View<CSupplier> {
         return <LMR right={right} className="py-2">
             <p onClick={() => this.controller.onSupplierSelected(item)}>
                 <FA name="location-arrow" className="px-2 text-primary"></FA>
-                {no} - {name}
+                {name}
             </p>
         </LMR>
     }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, List, LMR, SearchBox } from 'tonva';
+import { VPage, Page, List, LMR, SearchBox, FA } from 'tonva';
 import { observer } from 'mobx-react';
 import { CSupplier } from './CSupplier';
 
@@ -11,10 +11,10 @@ export class VPickSupplier extends VPage<CSupplier> {
     private page = observer(() => {
         let { suppliers, searchSupplierByKey } = this.controller;
 
-        let header = <header className="py-2 px-4 text-center text-white">
+        let header = <header className="py-2 px-2 text-center text-white">
             <span className="h5 align-middle" style={{ textAlign: 'center' }}>选择供应商</span>
         </header>;
-        return <Page header={header} onScrollBottom={this.onScrollBottom} >
+        return <Page header={header} onScrollBottom={this.onScrollBottom} headerClassName="bg-primary">
             <SearchBox className="w-80 mt-1 mr-2"
                 size='sm'
                 onSearch={(key: string) => searchSupplierByKey(key)}
@@ -35,7 +35,8 @@ export class VPickSupplier extends VPage<CSupplier> {
 
     private renderItem = (item: any, index: number) => {
         let { name } = item;
-        return <LMR className="px-3 py-2 border" left={name}>
+        return <LMR className="py-2 border">
+            <div><FA name="circle" className="px-2 text-primary"></FA>{name}</div>
         </LMR >;
     }
 
