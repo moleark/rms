@@ -80,11 +80,10 @@ Map ProductChemical (
 );
 
 --待询价PENDING
-PENDING WaitInquiryPending ver 0.1 (
+PENDING InquiryPending ver 0.1 (
     id,
     user id [$user],
-    supplier ID Supplier,                   --供应商编号
-    defaultContact ID SupplierContact,      --供应商默认联系人
+    supplier ID Supplier not null,                   --供应商编号
     product ID Product not null,            --产品编号
     quantity int,                           --数量
     radiox dec(12,2),                       --套
@@ -94,11 +93,18 @@ PENDING WaitInquiryPending ver 0.1 (
 );
 
 --资源对外询价单
-SHEET ExternalInquirySheet ver 0.1 (
+SHEET InquirySheet ver 0.1 (
     supplier ID Supplier,                   --供应商编号
-    defaultContact ID SupplierContact,      --供应商默认联系人
+    contact ID SupplierContact,      --供应商默认联系人
+    contactName char(50) null,
+    contactSalutation char(10),
+    contactDepartmentName char(100),
+    contactTelephone char(50),
+    contactMobile char(50) null,
+    contactEmail char(50),
     ARR InquiryItems (
         product ID Product not null,        --产品编号
+        pack ID Product.Pack,               -- 包装编号
         quantity int,                       --数量
         radiox dec(12,2),                   --套
         radioy dec(12,4),                   --包装规格
@@ -107,44 +113,45 @@ SHEET ExternalInquirySheet ver 0.1 (
     way smallint not null,                  --询价方式：2：电话询价；3：传真询价；1：Email询价
     user ID [$user],                        --创建人
     createTime datetime,                    --创建时间
-    Remarks char(1000)                      --备注：资源部新建的询价单需要国际部完成询价时，填写的询价要求
+    remarks char(1000)                      --备注：资源部新建的询价单需要国际部完成询价时，填写的询价要求
 )
 
 --询价结果历史记录
-History ExternalInquiryResultHistory(
+History InquiryResultHistory(
     date,
     product ID Product,                 --产品编号
+    product ID Product not null,            --产品编号
     quantity int,                       --数量
     radiox dec(12,2),                   --套
     radioy dec(12,4),                   --包装规格
-    unit char(10),                      --单位 
-    ListPrice dec(12,2),                --目录单价
+    unit char(10),                      --单位
+    listPrice dec(12,2),                --目录单价
     price dec(12,2),                    --结算单价
     currency ID Currency,               --结算币种
-    IsTaxIn smallint，                  --结算单价中是否已经包含税费；0：不包含；1：包含
-    IsTransFeeIn smallint，             --结算单价中是否已经包含税费；0：不包含；1：包含
-    TransFee dec(12,2),                 --运费
-    TransFeecurrency ID Currency,       --运费币种 
-    PackingFee dec(12,2),               --包装费
-    Packingcurrency ID Currency,        --包装费币种  
-    OtherFee dec(12,2),                 --其他费用
-    Customized smallint,                --产品是否需要定制；0：不需要；1：需要定制
-    CustomizeUpto datetime，            --用于计算定制周期。产品需要定制时，用于计算定制周期，CustomizeUpto减去CreateDate为定制周期 
-    ValidUpto datetime，                --报价有效期
-    MinArriveDate datetime，            --最短到货期
-    MaxArriveDate datetime，            --最长到货期    
+    isTaxIn smallint，                  --结算单价中是否已经包含税费；0：不包含；1：包含
+    isTransFeeIn smallint，             --结算单价中是否已经包含税费；0：不包含；1：包含
+    transFee dec(12,2),                 --运费
+    transFeecurrency ID Currency,       --运费币种
+    packingFee dec(12,2),               --包装费
+    packingcurrency ID Currency,        --包装费币种
+    otherFee dec(12,2),                 --其他费用
+    customized smallint,                --产品是否需要定制；0：不需要；1：需要定制
+    customizeUpto datetime，            --用于计算定制周期。产品需要定制时，用于计算定制周期，CustomizeUpto减去CreateDate为定制周期
+    validUpto datetime，                --报价有效期
+    minArriveDate datetime，            --最短到货期
+    maxArriveDate datetime，            --最长到货期
     invoiceType ID InvoiceType,         --发票类型
-    VatRate dec(12,2),                  --增值税率
-    TariffRate dec(12,2),               --关税税率
-    PackType smallint，                 --包装类型，分为两种：1.目录包装，2.非目录包装
-    Remarks char(1000),                 --备注
-    COAFilePath char(1000),             --供应商所提供的COA文件路径
-    MSDSFilePath char(1000),            --供应商所提供的MSDS文件的上传路径
-    QuotationFilePath char(1000),       --供应商提供的报价单的上传路径      
-    sheet s1,
-    row s2,
-    user,
-    unit,
+    vatRate dec(12,2),                  --增值税率
+    tariffRate dec(12,2),               --关税税率
+    packType smallint，                 --包装类型，分为两种：1.目录包装，2.非目录包装
+    remarks char(1000),                 --备注
+    coaFilePath char(1000),             --供应商所提供的COA文件路径
+    msdsFilePath char(1000),            --供应商所提供的MSDS文件的上传路径
+    quotationFilePath char(1000),       --供应商提供的报价单的上传路径
+    sheet,
+    type,
+    row,
+    user
 );
 
 --包装价格
@@ -152,19 +159,19 @@ MAP PackPrice ver 0.1 (
     key pack of Product.Pack,           --包装
     price dec(12,2),                    --结算单价
     currency ID Currency,               --结算币种
-    IsTaxIn smallint，                  --结算单价中是否已经包含税费；0：不包含；1：包含
-    IsTransFeeIn smallint，             --结算单价中是否已经包含税费；0：不包含；1：包含
-    TransFee dec(12,2),                 --运费
-    TransFeecurrency ID Currency,       --运费币种 
-    PackingFee dec(12,2),               --包装费
-    Packingcurrency ID Currency,        --包装费币种  
-    OtherFee dec(12,2),                 --其他费用
-    Customized smallint,                --产品是否需要定制；0：不需要；1：需要定制
-    CustomizeUpto datetime，            --用于计算定制周期。产品需要定制时，用于计算定制周期，CustomizeUpto减去CreateDate为定制周期 
-    ValidUpto datetime，                --报价有效期
-    MinArriveDate datetime，            --最短到货期
-    MaxArriveDate datetime，            --最长到货期    
+    isTaxIn smallint，                  --结算单价中是否已经包含税费；0：不包含；1：包含
+    isTransFeeIn smallint，             --结算单价中是否已经包含税费；0：不包含；1：包含
+    transFee dec(12,2),                 --运费
+    transFeecurrency ID Currency,       --运费币种
+    packingFee dec(12,2),               --包装费
+    packingcurrency ID Currency,        --包装费币种
+    otherFee dec(12,2),                 --其他费用
+    customized smallint,                --产品是否需要定制；0：不需要；1：需要定制
+    customizeUpto datetime，            --用于计算定制周期。产品需要定制时，用于计算定制周期，CustomizeUpto减去CreateDate为定制周期
+    validUpto datetime，                --报价有效期
+    minArriveDate datetime，            --最短到货期
+    maxArriveDate datetime，            --最长到货期
     invoiceType ID InvoiceType,         --发票类型
-    VatRate dec(12,2),                  --增值税率
-    TariffRate dec(12,2),               --关税税率
+    vatRate dec(12,2),                  --增值税率
+    tariffRate dec(12,2),               --关税税率
 );
