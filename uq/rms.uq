@@ -83,7 +83,7 @@ Map ProductChemical (
 PENDING InquiryPending ver 0.1 (
     id,
     user id [$user],
-    supplier ID Supplier not null,                   --供应商编号
+    supplier ID Supplier not null,          --供应商编号
     product ID Product not null,            --产品编号
     quantity int,                           --数量
     radiox dec(12,2),                       --套
@@ -95,13 +95,14 @@ PENDING InquiryPending ver 0.1 (
 --资源对外询价单
 SHEET InquirySheet ver 0.1 (
     supplier ID Supplier,                   --供应商编号
-    contact ID SupplierContact,      --供应商默认联系人
-    contactName char(50) null,
+    contact ID SupplierContact,             --供应商默认联系人
+    contactName char(50) null,              --供应商联系人姓名
     contactSalutation char(10),
     contactDepartmentName char(100),
     contactTelephone char(50),
     contactMobile char(50) null,
     contactEmail char(50),
+    contactfax char(20),
     ARR InquiryItems (
         product ID Product not null,        --产品编号
         pack ID Product.Pack,               -- 包装编号
@@ -119,8 +120,7 @@ SHEET InquirySheet ver 0.1 (
 --询价结果历史记录
 History InquiryResultHistory(
     date,
-    product ID Product,                 --产品编号
-    product ID Product not null,            --产品编号
+    product ID Product not null,        --产品编号
     quantity int,                       --数量
     radiox dec(12,2),                   --套
     radioy dec(12,4),                   --包装规格

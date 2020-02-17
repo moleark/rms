@@ -127,3 +127,29 @@ returns ret (
             and pp.isValid = 1 
     order by pp.id;
 };
+
+--查询待询价任务   
+QUERY SearchInquiryPending(key char(100))
+PAGE (
+    id bigint start 0,
+    user id [$user],
+    supplier ID Supplier not null,          --供应商编号
+    product ID Product not null,            --产品编号
+    quantity int,                           --数量
+    radiox dec(12,2),                       --套
+    radioy dec(12,4),                       --包装规格
+    unit char(10),                          --单位
+    date datetime
+) {
+    var key2 char(102);
+    set key2 = concat('%', key, '%');
+
+    PAGE select p.id, p.user,p.supplier,p.product,p.quantity,p.radiox,p.radioy,p.unit, p.date
+    from    InquiryPending as p
+            join Supplier as s on p.supplier=s.id
+    where   1=1
+            and (key is null or ( s.name like key2 or ws.no like key2))
+            and p.id > $pageStart 
+    order by p.id
+    limit $pageSize;
+};
