@@ -79,6 +79,20 @@ Map ProductChemical (
     index idx_unit_cas,
 );
 
+--待询价PENDING
+PENDING WaitInquiryPending ver 0.1 (
+    id,
+    user id [$user],
+    supplier ID Supplier,                   --供应商编号
+    defaultContact ID SupplierContact,      --供应商默认联系人
+    product ID Product not null,            --产品编号
+    quantity int,                           --数量
+    radiox dec(12,2),                       --套
+    radioy dec(12,4),                       --包装规格
+    unit char(10),                          --单位
+    date,
+);
+
 --资源对外询价单
 SHEET ExternalInquirySheet ver 0.1 (
     supplier ID Supplier,                   --供应商编号
@@ -89,7 +103,6 @@ SHEET ExternalInquirySheet ver 0.1 (
         radiox dec(12,2),                   --套
         radioy dec(12,4),                   --包装规格
         unit char(10),                      --单位
-        isValid smallint not null default 1,--是否有效（0 无效、1 有效）
     ),
     way smallint not null,                  --询价方式：2：电话询价；3：传真询价；1：Email询价
     user ID [$user],                        --创建人
@@ -124,7 +137,7 @@ History ExternalInquiryResultHistory(
     VatRate dec(12,2),                  --增值税率
     TariffRate dec(12,2),               --关税税率
     PackType smallint，                 --包装类型，分为两种：1.目录包装，2.非目录包装
-    Remarks char(1000),                 --报价备注
+    Remarks char(1000),                 --备注
     COAFilePath char(1000),             --供应商所提供的COA文件路径
     MSDSFilePath char(1000),            --供应商所提供的MSDS文件的上传路径
     QuotationFilePath char(1000),       --供应商提供的报价单的上传路径      
@@ -135,7 +148,7 @@ History ExternalInquiryResultHistory(
 );
 
 --包装价格
-BOOK PackPrice(
+MAP PackPrice ver 0.1 (
     key pack of Product.Pack,           --包装
     price dec(12,2),                    --结算单价
     currency ID Currency,               --结算币种
