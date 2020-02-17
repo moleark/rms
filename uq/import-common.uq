@@ -5,3 +5,5 @@ TUID Country from JKCommon;
 TUID Province from JKCommon;
 TUID City from JKCommon;
 TUID County from JKCommon;
+TUID Currency from JKCommon;
+TUID InvoiceType from JKCommon;
