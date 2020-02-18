@@ -7,6 +7,7 @@ import { VPendingInquiry } from './VPendingInquiry';
 import { VPendingInquiryList } from './VPendingInquiryList';
 import { VPendingInquiryDetail } from './VPendingInquiryDetail';
 import { SupplierItem } from "model/supplierItem";
+import { VAddInquiry } from './VAddInquiry';
 
 class PagePendingInquiry extends PageItems<any> {
 
@@ -68,12 +69,51 @@ export class CPendingInquiry extends CUqBase {
         await this.loadList();
     }
 
-    deletePendingInquiryData = async (id: number) => {
-
+    deletePendingInquiryData = async (item: any) => {
+        let { id } = item;
         let param = {
             id: id,
         };
         await this.uqs.rms.DeleteInquiryPending.submit(param);
+        this.closePage();
+        await this.loadList();
+    }
+
+    getDataForSave = async (model: any, supplier: any, contact: any, items: any[]) => {
+
+        let { name, salutation, departmentName, telephone, mobile, email, fax } = contact;
+        let inquiryItems: any[] = [];
+        items.forEach(pk => {
+            inquiryItems.push({
+                product: pk.product, pack: pk.pack, price: pk.price, quantity: pk.quantity
+                , radiox: pk.radiox, radioy: pk.radioy, unit: pk.unit
+            })
+        });
+        return {
+            supplier: supplier,
+            contact: contact,
+            contactName: name,
+            contactSalutation: salutation,
+            contactDepartmentName: departmentName,
+            contactTelephone: telephone,
+            contactMobile: mobile,
+            contactEmail: email,
+            contactfax: fax,
+            way: model.way,
+            remarks: model.remarks,
+            InquiryItems: inquiryItems,
+            createTime: Date.now,
+            user: this.user,
+        }
+    }
+
+    saveInquiryData = async (model: any, supplier: any) => {
+
+        let { id, defaultContact } = supplier;
+        let pitem = await this.uqs.rms.SearchInquiryPendingBySupplier.query({ _id: id });
+
+        let result: any = await this.uqs.rms.InquirySheet.save("InquirySheet", this.getDataForSave(model, supplier, defaultContact.obj, pitem.ret));
+        await this.uqs.rms.InquirySheet.action(result.id, result.flow, result.state, "submit");
         this.closePage();
         await this.loadList();
     }
@@ -98,6 +138,20 @@ export class CPendingInquiry extends CUqBase {
             child: pitem.ret,
         }
         this.openVPage(VPendingInquiryDetail, param);
+    }
+
+    /**
+    * 新建询价单界面
+    */
+    onAddInquiry = async (supplier: any) => {
+        let { id } = supplier;
+        let pitem = await this.uqs.rms.SearchInquiryPendingBySupplier.query({ _id: id });
+        let param: SupplierItem = {
+            parent: supplier,
+            item: pitem.ret[0],
+            child: pitem.ret,
+        }
+        this.openVPage(VAddInquiry, param);
     }
 
     loadList = async () => {

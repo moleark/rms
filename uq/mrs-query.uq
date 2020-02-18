@@ -137,19 +137,18 @@ PAGE (
     var key2 char(102);
     set key2 = concat('%', key, '%');
 
-    PAGE select distinct s.id, p.supplier
+    PAGE select distinct s.id,p.supplier
     from    InquiryPending as p
             join Supplier as s on p.supplier=s.id
     where   (key is null or ( s.name like key2 or s.no like key2))
-            and p.id > $pageStart 
-    order by p.id
+            and s.id > $pageStart 
     limit $pageSize;
 };
 
 --查询待询价包装   
 QUERY SearchInquiryPendingBySupplier(_id ID Supplier)
-PAGE (
-    id bigint start 0,
+returns ret (
+    id bigint,
     user id [$user],
     supplier ID Supplier not null,          --供应商编号
     product ID Product not null,            --产品编号
@@ -162,15 +161,13 @@ PAGE (
     purity char(80)
 ) {
 
-    PAGE select p.id, p.user,p.supplier,p.product,p.quantity,p.radiox,p.radioy,p.unit, p.date,c.CAS,c.purity
+    into ret select p.id, p.user,p.supplier,p.product,p.quantity,p.radiox,p.radioy,p.unit, p.date,c.CAS,c.purity
     from    InquiryPending as p
             join Supplier as s on p.supplier=s.id
             join Product as t on p.product=t.id
             join ProductChemical as c on t.id=c.product
     where   p.supplier=_id
-            and p.id > $pageStart 
-    order by p.id
-    limit $pageSize;
+    order by p.id;
 };
 
 --添加待询价Pending
@@ -191,5 +188,26 @@ ACTION AddInquiryPending(
 ACTION DeleteInquiryPending(
     id bigint
 ) {
-    delete from InquiryPending where id = id;
+    Pending InquiryPending - at id;
+};
+
+--新建询价单
+ACTION AddInquiry(
+    supplier ID Supplier,
+    contact ID SupplierContact,
+    way smallint,
+    remarks char(1000)
+){
+
+    VAR agency id;
+    VAR price dec(12,2);
+    VAR currency id;
+    VAR items Arr;
+
+    SET agency=a.agency
+        ,price=a.price
+        ,currency=a.currency
+        ,createdate=a.date
+    from    InquiryPending as a
+    WHERE   a.supplier=supplier;
 };

@@ -18,39 +18,36 @@ export class VPendingInquiryDetail extends VPage<CPendingInquiry> {
     }
 
     private getPackage = () => {
-        return <div className="bg-white mb-3">
-            <div className="cursor-pointer">
-                &nbsp;<FA className="align-middle text-warning" name="cubes" /><span className="h6 py-2 px-1 align-middle"><b> 产品包装</b></span>
-            </div>
+        return <div className="bg-white px-2 ">
             {this.firstPackage && <List items={this.packages} item={{ render: this.renderPackage }} />}
-
         </div>
     }
 
     private renderPackage = (item: any, index: number) => {
         let { deletePendingInquiryData } = this.controller;
         let { id, user, product, quantity, radiox, radioy, unit, date, CAS, purity } = item;
-        let { brand, description, descriptionC } = product;
+        let { brand, description, descriptionC } = product.obj;
         let radio = (radiox !== 1) ? <>{radiox} * {radioy}{unit}</> : <>{radioy}{unit}</>;
         let brandname = brand === undefined ? undefined : brand.obj.name;
 
         let right =
             <div className="px-2 text-muted text-right">
-                <span onClick={() => deletePendingInquiryData(id)}><FA className="align-middle p-2 cursor-pointer text-danger" name="remove" /></span>
+                <span onClick={() => deletePendingInquiryData(item)}><FA className="align-middle p-2 cursor-pointer text-danger" name="remove" /></span>
             </div>;
         return <LMR right={right} className="py-2 samll">
-            <div><FA name="circle" className="px-2 text-primary"></FA>{CAS}&nbsp;&nbsp;{description}</div>
-            <div className="px-4 text-muted small">{quantity} * {radio}</div>
+            <div><FA name="circle" className="px-2 text-primary"></FA>CAS：{CAS}</div>
+            <div className="px-4 text-muted small">名称：{description}</div>
+            <div className="px-4 text-muted small">包装：{quantity} * {radio}</div>
         </LMR>;
     }
 
     private rowTop = () => {
         let suppplierData = _.clone(this.suppplier);
-        let { name } = suppplierData;
+        let { supplier } = suppplierData;
 
-        return <div className="py-2 bg-white mb-3">
+        return <div className="py-2 bg-white">
             <div className="cursor-pointer">
-                &nbsp;<FA className="align-middle text-warning" name="credit-card" /><span className="h6 py-2 px-1 align-middle"><b>{name}}</b></span>
+                &nbsp;<FA className="align-middle text-warning" name="credit-card" /><span className="h6 py-2 px-1 align-middle"><b>{tv(supplier, v => <>{v.name}</>)}</b></span>
             </div>
         </div>;
     }
