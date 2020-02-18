@@ -25,8 +25,8 @@ export class VPackage extends VPage<CPackage> {
 
     private uiSchema: UiSchema = {
         items: {
-            radiox: { widget: 'text', label: '套', placeholder: '必填' } as UiInputItem,
-            radioy: { widget: 'text', label: '包装规格', placeholder: '必填' } as UiInputItem,
+            radiox: { widget: 'text', label: '套', placeholder: '必填', defaultValue: 1 } as UiInputItem,
+            radioy: { widget: 'text', label: '包装规格', placeholder: '必填', defaultValue: 1 } as UiInputItem,
             unit: { widget: 'text', label: '单位', placeholder: '必填' } as UiTextItem,
             type: { widget: 'radio', label: '类型', list: [{ value: 1, title: '目录包装' }, { value: 2, title: '非目录包装' }] } as UiRadio,
             isValid: { widget: 'checkbox', label: '有效', defaultValue: true },

@@ -52,7 +52,7 @@ export class VProductDetail extends VPage<CProduct> {
 
         let { supplier, brand, origin, description, descriptionC, createTime, chemical, CAS, purity, molecularFomula, molecularWeight } = this.product;
         let { name: suppliername } = supplier.obj;
-        let brandno = brand === undefined ? undefined : brand.obj.no;
+        let brandno = brand === undefined ? undefined : brand.obj.name;
 
         return <div className="py-2 bg-white mb-3">
             <div className="cursor-pointer">

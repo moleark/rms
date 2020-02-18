@@ -71,7 +71,7 @@ export class VAddProduct extends VPage<CProduct> {
 
         return <div className="py-2 bg-white">
             <div className="cursor-pointer">
-                &nbsp;<FA className="align-middle text-warning" name="credit-card" /><span className="h6 py-2 px-1 align-middle"><b>产品信息</b></span>
+                &nbsp;<FA className="align-middle text-warning" name="credit-card" /><span className="h6 py-2 px-1 align-middle"><b>标准库信息</b></span>
             </div>
             <div className="py-2 cat-root-sub">
                 <div><span className="px-4 align-middle">&nbsp;chemid:</span><span> {no}</span></div>

@@ -10,6 +10,8 @@ import { CChemical } from "./information/product/CChemical";
 import { CBrand } from "./information/product/CBrand";
 import { CPackage } from "./information/package/CPackage";
 import { CPickSupplier } from 'information/supplier/CPickSupplier';
+import { CPickProduct } from 'information/product/CPickProduct';
+import { CPendingInquiry } from 'information/PendingInquiry/CPendingInquiry';
 
 export class CApp extends CAppBase {
     get uqs(): UQs { return this._uqs as UQs };
@@ -20,9 +22,11 @@ export class CApp extends CAppBase {
     cPickSupplier: CPickSupplier;
     cSupplierContact: CSupplierContact;
     cProduct: CProduct;
+    cPickProduct: CPickProduct;
     cChemical: CChemical;
     cBrand: CBrand;
     cPackage: CPackage;
+    cPendingInquiry: CPendingInquiry;
 
     protected newC<T extends CUqBase>(type: IConstructor<T>): T {
         return new type(this);
@@ -34,10 +38,12 @@ export class CApp extends CAppBase {
         this.cSupplier = this.newC(CSupplier);
         this.cPickSupplier = this.newC(CPickSupplier);
         this.cProduct = this.newC(CProduct);
+        this.cPickProduct = this.newC(CPickProduct);
         this.cChemical = this.newC(CChemical);
         this.cBrand = this.newC(CBrand);
         this.cPackage = this.newC(CPackage);
         this.cSupplierContact = this.newC(CSupplierContact);
+        this.cPendingInquiry = this.newC(CPendingInquiry);
         let promises: PromiseLike<void>[] = [];
         promises.push(this.cSupplier.start());
         await Promise.all(promises);

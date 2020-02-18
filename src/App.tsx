@@ -12,7 +12,8 @@ class App extends React.Component {
     await start(CApp, appConfig);
   }
   public render() {
-    return <NavView onLogined={this.onLogined} notLogined={this.onLogined} />
+    // return <NavView onLogined={this.onLogined} notLogined={this.onLogined} />
+    return <NavView onLogined={this.onLogined} />
   }
 }
 

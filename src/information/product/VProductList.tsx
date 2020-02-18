@@ -47,7 +47,7 @@ export class VProductList extends VPage<CProduct> {
             <span className="h5 align-middle" style={{ textAlign: 'center' }}>产品</span>
         </header>;
         return <Page header={header} right={right} onScrollBottom={this.onScrollBottom} headerClassName="bg-primary">
-            <List items={products} item={{ render: this.renderRootCategory }} none="目前还没有产品哦！" />
+            <List items={products} item={{ render: this.renderRootCategory }} />
         </Page>;
     })
 

@@ -11,6 +11,10 @@ export interface UqRMS {
     SearchProduct: Query;
     SearchBrand: Query;
     GetPack: Query;
+    SearchInquiryPending: Query;
+    SearchInquiryPendingBySupplier: Query;
+    AddInquiryPending: Action;
+    DeleteInquiryPending: Action;
 }
 
 export interface UqCommon {

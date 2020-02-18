@@ -26,6 +26,6 @@ export class VSupplierList extends View<CSupplier> {
 
     private content = observer(() => {
         let { suppliers } = this.controller;
-        return <List items={suppliers} item={{ render: this.renderRootCategory }} none="目前还没有供应商哦！" />;
+        return <List items={suppliers} item={{ render: this.renderRootCategory }} />;
     });
 } 
