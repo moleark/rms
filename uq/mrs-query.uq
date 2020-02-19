@@ -191,23 +191,15 @@ ACTION DeleteInquiryPending(
     Pending InquiryPending - at id;
 };
 
---新建询价单
-ACTION AddInquiry(
-    supplier ID Supplier,
-    contact ID SupplierContact,
-    way smallint,
-    remarks char(1000)
-){
 
-    VAR agency id;
-    VAR price dec(12,2);
-    VAR currency id;
-    VAR items Arr;
-
-    SET agency=a.agency
-        ,price=a.price
-        ,currency=a.currency
-        ,createdate=a.date
-    from    InquiryPending as a
-    WHERE   a.supplier=supplier;
+QUERY GetInquirySheet ver 1.0()
+returns ret(
+    id bigint,
+    no char(30),
+    description char(50),
+    date datetime
+) {
+    into ret select st.id, st.no, st.discription as description, st.date
+    from    [$sheet] as st 
+    order by st.id desc;
 };

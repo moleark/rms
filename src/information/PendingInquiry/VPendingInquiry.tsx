@@ -54,9 +54,9 @@ export class VPendingInquiry extends VPage<CPendingInquiry> {
                 &nbsp;<FA className="align-middle text-warning" name="credit-card" /><span className="h6 py-2 px-1 align-middle"><b>产品信息</b></span>
             </div>
             <div className="py-2 cat-root-sub small">
-                <div><span className="px-4 align-middle">供应商:</span><span> {name}</span></div>
-                <div><span className="px-4 align-middle ">品牌:</span><span> {brandname}</span></div>
-                <div><span className="px-4 align-middle ">CAS：</span><span>{CAS}</span></div>
+                <div><span className="px-4 align-middle text-righ ">供应商:</span><span> {name}</span></div>
+                <div><span className="px-4 align-middle text-right">品牌:</span><span> {brandname}</span></div>
+                <div><span className="px-4 align-middle text-right">CAS：</span><span>{CAS}</span></div>
                 <div><span className="px-4 align-middle ">英文名称：</span><span>{description}</span></div>
                 <div><span className="px-4 align-middle ">中文名称：</span><span>{descriptionC}</span></div>
                 <div><span className="px-4 align-middle ">纯度：</span><span>{purity}</span></div>

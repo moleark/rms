@@ -79,13 +79,13 @@ export class CPendingInquiry extends CUqBase {
         await this.loadList();
     }
 
-    getDataForSave = async (model: any, supplier: any, contact: any, items: any[]) => {
+    getDataForSave = (model: any, supplier: any, contact: any, items: any[]) => {
 
         let { name, salutation, departmentName, telephone, mobile, email, fax } = contact;
         let inquiryItems: any[] = [];
         items.forEach(pk => {
             inquiryItems.push({
-                product: pk.product, pack: pk.pack, price: pk.price, quantity: pk.quantity
+                product: pk.product, quantity: pk.quantity
                 , radiox: pk.radiox, radioy: pk.radioy, unit: pk.unit
             })
         });
@@ -101,9 +101,7 @@ export class CPendingInquiry extends CUqBase {
             contactfax: fax,
             way: model.way,
             remarks: model.remarks,
-            InquiryItems: inquiryItems,
-            createTime: Date.now,
-            user: this.user,
+            inquiryitems: inquiryItems,
         }
     }
 

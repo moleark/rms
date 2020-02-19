@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, List, LMR, SearchBox, FA } from 'tonva';
+import { VPage, Page, List, LMR, SearchBox, FA, tv } from 'tonva';
 import { observer } from 'mobx-react';
 import { CPickProduct } from './CPickProduct';
 
@@ -30,10 +30,11 @@ export class VPickProduct extends VPage<CPickProduct> {
     }
 
     private renderItem = (item: any, index: number) => {
-        let { CAS, description } = item;
+        let { CAS, description, supplier } = item;
         return <LMR className="py-2 border">
             <div><FA name="circle" className="px-2 text-primary"></FA>{CAS}</div>
             <div className="px-4 text-muted small">{description}</div>
+            <div className="px-4 text-muted small">{tv(supplier, v => <>{v.name}</>)}</div>
         </LMR >;
     }
 

@@ -4,6 +4,8 @@ import { CUqBase } from 'CBase';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { VInquiryList } from './VInquiryList';
+import { VInquiryDetail } from './VInquiryDetail';
+import { PackRow } from './Inquiry';
 
 class PageInquiry extends PageItems<any> {
 
@@ -33,7 +35,17 @@ export class CInquiry extends CUqBase {
     }
 
     searchInquiryByKey = async (key: string) => {
-        this.inquirys = await this.uqs.rms.InquirySheet.mySheets(undefined, 1, -20);
+        this.inquirys = await this.uqs.rms.GetInquirySheet.table(undefined);;
+    }
+
+    openInquiryDetail = async (id: number) => {
+
+        let inquiry = await this.uqs.rms.InquirySheet.getSheet(id);
+        let { data } = inquiry;
+        let { inquiryItems } = data;
+        let inquiryItemssGrouped = groupByPack(inquiryItems);
+        data.InquiryItems = inquiryItemssGrouped;
+        this.openVPage(VInquiryDetail, inquiry);
     }
 
     loadList = async () => {
@@ -47,4 +59,29 @@ export class CInquiry extends CUqBase {
     tab = () => {
         return <this.render />;
     }
+}
+
+export function groupByPack(packItems: any[]) {
+    let result: any[] = [];
+    for (let packItem of packItems) {
+        let { product, pack, quantity, radiox, radioy, unit } = packItem;
+        let packRow: any = {
+            pack: pack,
+            quantity: quantity,
+            radio: (radiox !== 1) ? <>{radiox} * {radioy}{unit}</> : <>{radioy}{unit}</>
+        }
+        let cpi = result.find(e => e.product.id === product.id);
+        if (cpi === undefined) {
+            cpi = { product: product, packs: [] };
+            result.push(cpi);
+        }
+        cpi.packs.push(packRow);
+    }
+    return result;
+}
+
+export class OrderItem {
+
+    product: BoxId;
+    @observable packs: PackRow[];
 }

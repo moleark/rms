@@ -13,16 +13,13 @@ export class VInquiryList extends VPage<CInquiry> {
     }
 
     private renderRootCategory = (item: any, parent: any) => {
-        let { supplier } = item;
+        let { id, no, date, discription } = item;
+        let { openInquiryDetail } = this.controller;
 
-        return <LMR className="py-2">
-            <div>
-                <div>
-                    <FA name="location-arrow" className="px-2 text-primary"></FA>
-                    {tv(supplier, v => <>{v.name}</>)}
-                </div>
-            </div>
-        </LMR >
+        return <div className="m-3 justify-content-between cursor-pointer" onClick={() => openInquiryDetail(id)}>
+            <div><span className="small text-muted">订单编号: </span><strong>{no}</strong></div>
+            <div className="small text-muted"><EasyDate date={date} /></div>
+        </div>;
     }
 
     private page = observer(() => {
