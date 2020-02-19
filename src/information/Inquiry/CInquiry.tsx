@@ -29,6 +29,7 @@ class PageInquiry extends PageItems<any> {
 export class CInquiry extends CUqBase {
 
     @observable inquirys: any;
+    @observable productdata: any;
 
     async internalStart(param: any) {
         this.searchInquiryByKey(param);
@@ -42,10 +43,20 @@ export class CInquiry extends CUqBase {
 
         let inquiry = await this.uqs.rms.InquirySheet.getSheet(id);
         let { data } = inquiry;
-        let { inquiryItems } = data;
-        let inquiryItemssGrouped = groupByPack(inquiryItems);
+        let { inquiryitems } = data;
+        let inquiryItemssGrouped = groupByPack(inquiryitems);
         data.InquiryItems = inquiryItemssGrouped;
         this.openVPage(VInquiryDetail, inquiry);
+    }
+
+    renderProduct = (id: BoxId) => {
+        return this.renderView(VProductView, id);
+    }
+
+    getProduct = async (pid: number) => {
+        let product = await this.uqs.rms.SearchProductById.query({ _id: pid });
+        this.productdata = product.ret[0];
+        return product.ret[0];
     }
 
     loadList = async () => {
@@ -59,6 +70,24 @@ export class CInquiry extends CUqBase {
     tab = () => {
         return <this.render />;
     }
+}
+
+export class VProductView extends View<CInquiry> {
+
+    render(param: any): JSX.Element {
+        let { controller } = this;
+        controller.getProduct(param);
+        return <this.contentagency pid={param} />
+    }
+    protected contentagency = observer((param: any) => {
+        let LocationUI;
+        let pro = this.controller.productdata;
+        if (pro !== undefined) {
+            let { description, CAS } = pro;
+            LocationUI = <span className="text-muted small">{description} {CAS}</span>;
+        }
+        return LocationUI;
+    });
 }
 
 export function groupByPack(packItems: any[]) {

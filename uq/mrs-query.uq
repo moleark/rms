@@ -101,12 +101,37 @@ PAGE (
     PAGE select w.id, w.no, w.supplier,w.brand,w.origin,w.description,w.descriptionC,w.createTime,p.chemical,p.CAS,p.purity,p.molecularFomula,p.molecularWeight
     from    Product as w
             left join ProductChemical as p on w.id=p.product
-    where   1=1 
-            and ( w.description like key2 or w.descriptionC like key2 or p.CAS like key2)
+    where   ( w.description like key2 or w.descriptionC like key2 or p.CAS like key2)
             and w.id > $pageStart 
             and w.isTrue = 1  
     order by w.id
     limit $pageSize;
+};
+
+/** 搜索产品*/
+QUERY SearchProductById(_id ID Product)
+returns ret (
+    id bigint,
+    no char(50) ,
+    supplier ID Supplier,   --供应商编号
+    brand ID Brand,        --品牌
+    origin char(50),                        --供应商自编号
+    description char(1000),           --产品英文名称
+    descriptionC char(1000),
+    createTime datetime,
+    chemical ID Chemical,
+    CAS char(20),
+    purity char(80),
+    molecularFomula char(200),
+    molecularWeight char(30)
+) {
+
+    into ret select  w.id, w.no, w.supplier,w.brand,w.origin,w.description,w.descriptionC,w.createTime,p.chemical,p.CAS,p.purity,p.molecularFomula,p.molecularWeight
+    from    Product as w
+            left join ProductChemical as p on w.id=p.product
+    where   w.id=_id
+            and w.isTrue = 1  
+    order by w.id;
 };
 
 --获取产品包装
@@ -184,11 +209,18 @@ ACTION AddInquiryPending(
     PENDING InquiryPending +(supplier:supplier,product:product,quantity:quantity,radiox:radiox,radioy:radioy,unit:unit) to pid;
 };
 
---待删除询价Pending
+--删除待询价Pending
 ACTION DeleteInquiryPending(
     id bigint
 ) {
     Pending InquiryPending - at id;
+};
+
+--删除供应商待询价Pending
+ACTION DeleteInquiryPendingBySupplier(
+    _supplier ID Supplier
+) {
+    delete from InquiryPending where supplier=_supplier;
 };
 
 

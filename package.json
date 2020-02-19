@@ -23,7 +23,7 @@
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-scripts": "3.3.1",
-    "tonva": "^1.2.5"
+    "tonva": "^1.2.6"
   },
   "scripts": {
     "predeploy": "npm run build",

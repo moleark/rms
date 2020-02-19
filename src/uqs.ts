@@ -15,7 +15,11 @@ export interface UqRMS {
     SearchInquiryPendingBySupplier: Query;
     AddInquiryPending: Action;
     DeleteInquiryPending: Action;
+    DeleteInquiryPendingBySupplier: Action;
     InquirySheet: Sheet;
+    GetInquirySheet: Query;
+    $user: Tuid;
+    SearchProductById: Query;
 }
 
 export interface UqCommon {

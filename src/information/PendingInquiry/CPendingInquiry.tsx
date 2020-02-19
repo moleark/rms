@@ -112,6 +112,11 @@ export class CPendingInquiry extends CUqBase {
 
         let result: any = await this.uqs.rms.InquirySheet.save("InquirySheet", this.getDataForSave(model, supplier, defaultContact.obj, pitem.ret));
         await this.uqs.rms.InquirySheet.action(result.id, result.flow, result.state, "submit");
+        let param = {
+            _supplier: id,
+        };
+        await this.uqs.rms.DeleteInquiryPendingBySupplier.submit(param);
+
         this.closePage();
         await this.loadList();
     }
