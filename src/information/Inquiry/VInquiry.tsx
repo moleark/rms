@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, UiSchema, UiInputItem, Form, Context, UiTextItem, UiRadio } from 'tonva';
+import { VPage, Page, UiSchema, UiInputItem, Form, Context, UiTextItem, UiRadio, tv, UiIdItem } from 'tonva';
 import { Schema } from 'tonva';
 import _ from 'lodash';
 import { CInquiry } from './CInquiry';
@@ -10,29 +10,29 @@ const schema: Schema = [
     { name: 'radiox', type: 'number', required: true },
     { name: 'radioy', type: 'number', required: true },
     { name: 'unit', type: 'string', required: true },
-    { name: 'listPrice', type: 'number', required: true },
+    { name: 'listPrice', type: 'number', required: false },
     { name: 'price', type: 'number', required: true },
     { name: 'currency', type: 'id', required: true },
     { name: 'isTaxIn', type: 'number', required: true },
     { name: 'isTransFeeIn', type: 'number', required: true },
-    { name: 'transFee', type: 'number', required: true },
-    { name: 'transFeecurrency', type: 'id', required: true },
-    { name: 'packingFee', type: 'number', required: true },
-    { name: 'packingcurrency', type: 'id', required: true },
-    { name: 'otherFee', type: 'number', required: true },
+    { name: 'transFee', type: 'number', required: false },
+    { name: 'transFeecurrency', type: 'id', required: false },
+    { name: 'packingFee', type: 'number', required: false },
+    { name: 'packingcurrency', type: 'id', required: false },
+    { name: 'otherFee', type: 'number', required: false },
     { name: 'customized', type: 'number', required: true },
     { name: 'customizeUpto', type: 'date', required: true },
     { name: 'validUpto', type: 'date', required: true },
     { name: 'minArriveDate', type: 'date', required: true },
     { name: 'maxArriveDate', type: 'date', required: true },
-    { name: 'invoiceType', type: 'id', required: true },
-    { name: 'vatRate', type: 'number', required: true },
-    { name: 'tariffRate', type: 'number', required: true },
+    { name: 'invoiceType', type: 'number', required: true },
+    { name: 'vatRate', type: 'number', required: false },
+    { name: 'tariffRate', type: 'number', required: false },
     { name: 'packType', type: 'number', required: true },
-    { name: 'remarks', type: 'string', required: true },
-    { name: 'coaFilePath', type: 'string', required: true },
-    { name: 'msdsFilePath', type: 'string', required: true },
-    { name: 'quotationFilePath', type: 'string', required: true },
+    { name: 'remarks', type: 'string', required: false },
+    { name: 'coaFilePath', type: 'string', required: false },
+    { name: 'msdsFilePath', type: 'string', required: false },
+    { name: 'quotationFilePath', type: 'string', required: false },
 ];
 
 export class VInquiry extends VPage<CInquiry> {
@@ -48,22 +48,49 @@ export class VInquiry extends VPage<CInquiry> {
             radioy: { widget: 'text', label: '包装规格', placeholder: '必填' } as UiInputItem,
             unit: { widget: 'text', label: '单位', placeholder: '必填' } as UiTextItem,
             listPrice: { widget: 'text', label: '目录价', } as UiInputItem,
-            Price: { widget: 'text', label: '结算价', placeholder: '必填' } as UiInputItem,
-            currency: { widget: 'text', label: '结算币种', placeholder: '必填' } as UiInputItem,
-            isTaxIn: { widget: 'checkbox', label: '含税费', defaultValue: false },
-            isTransFeeIn: { widget: 'checkbox', label: '含运费', defaultValue: false },
+            price: { widget: 'text', label: '结算价', placeholder: '必填' } as UiInputItem,
+            currency: {
+                widget: 'id', label: '结算币种', placeholder: '结算币种',
+                pickId: async (context: Context, name: string, value: number) => await this.controller.pickCurrency(context, name, value),
+                Templet: (item: any) => {
+                    if (!item) return <small className="text-muted">请选择结算币种</small>;
+                    return <>
+                        {tv(item, v => <>{v.name}</>)}
+                    </>;
+                }
+            } as UiIdItem,
+            isTaxIn: { widget: 'radio', label: '含税费', list: [{ value: 0, title: '否' }, { value: 1, title: '是' }] } as UiRadio,
+            isTransFeeIn: { widget: 'radio', label: '含运费', list: [{ value: 0, title: '否' }, { value: 1, title: '是' }] } as UiRadio,
             transFee: { widget: 'text', label: '运费' } as UiInputItem,
-            transFeecurrency: { widget: 'text', label: '运费币种' } as UiInputItem,
+            transFeecurrency: {
+                widget: 'id', label: '运费币种', placeholder: '运费币种',
+                pickId: async (context: Context, name: string, value: number) => await this.controller.pickCurrency(context, name, value),
+                Templet: (item: any) => {
+                    if (!item) return <small className="text-muted">请选择运费币种</small>;
+                    return <>
+                        {tv(item, v => <>{v.name}</>)}
+                    </>;
+                }
+            } as UiIdItem,
             packingFee: { widget: 'text', label: '包装费', } as UiInputItem,
-            packingFeecurrency: { widget: 'text', label: '包装费币种' } as UiInputItem,
+            packingcurrency: {
+                widget: 'id', label: '包装费币种', placeholder: '包装费币种',
+                pickId: async (context: Context, name: string, value: number) => await this.controller.pickCurrency(context, name, value),
+                Templet: (item: any) => {
+                    if (!item) return <small className="text-muted">请选择包装费币种</small>;
+                    return <>
+                        {tv(item, v => <>{v.name}</>)}
+                    </>;
+                }
+            } as UiIdItem,
             otherFee: { widget: 'text', label: '其他费' } as UiInputItem,
-            customized: { widget: 'checkbox', label: '定制', defaultValue: false },
+            customized: { widget: 'radio', label: '定制', list: [{ value: 0, title: '否' }, { value: 1, title: '是' }] } as UiRadio,
             customizeUpto: { widget: 'date', label: '定制截止日期' } as UiInputItem,
             validUpto: { widget: 'date', label: '报价有效期', placeholder: '必填' } as UiInputItem,
             minArriveDate: { widget: 'date', label: '最短到货期', placeholder: '必填' } as UiInputItem,
             maxArriveDate: { widget: 'date', label: '最长到货期', placeholder: '必填' } as UiInputItem,
-
-            vatRate: { widget: 'text', label: '增值税率', } as UiInputItem,
+            invoiceType: { widget: 'radio', label: '发票类型', list: [{ value: 1, title: '增值税专用发票' }, { value: 2, title: '增值税普通发票' }, { value: 3, title: '形式发票' }] } as UiRadio,
+            vatRate: { widget: 'text', label: '增值税率' } as UiInputItem,
             tariffRate: { widget: 'text', label: '关税税率' } as UiInputItem,
             packType: { widget: 'radio', label: '包装类型', list: [{ value: 1, title: '目录包装' }, { value: 2, title: '非目录包装' }] } as UiRadio,
             remarks: { widget: 'text', label: '备注', row: 10 } as UiInputItem,
@@ -80,7 +107,8 @@ export class VInquiry extends VPage<CInquiry> {
     }
 
     private onFormButtonClick = async (name: string, context: Context) => {
-        // await this.controller.saveInquiryData(context.form.data);
+        let { product } = this.inquiryData;
+        await this.controller.saveInquiryData(context.form.data, product);
     }
 
     private onSaveInquiryData = async () => {

@@ -12,11 +12,8 @@ export class VSupplierList extends View<CSupplier> {
         let right = <div className="p-2 cursor-pointer text-info" onClick={() => onEditSupplier(item)}>
             <FA name="edit" />
         </div>
-        return <LMR right={right} className="py-2">
-            <p onClick={() => this.controller.onSupplierSelected(item)}>
-                <FA name="location-arrow" className="px-2 text-primary"></FA>
-                {name}
-            </p>
+        return <LMR right={right} className="m-2 justify-content-between cursor-pointer">
+            <div><span className="small">{name}</span></div>
         </LMR>
     }
 
@@ -26,6 +23,6 @@ export class VSupplierList extends View<CSupplier> {
 
     private content = observer(() => {
         let { suppliers } = this.controller;
-        return <List items={suppliers} item={{ render: this.renderRootCategory }} />;
+        return <div className="py-2"><List items={suppliers} item={{ render: this.renderRootCategory }} /></div>;
     });
 } 

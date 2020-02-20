@@ -20,11 +20,13 @@ export interface UqRMS {
     GetInquirySheet: Query;
     $user: Tuid;
     SearchProductById: Query;
+    AddInquiryResultHistory: Action;
 }
 
 export interface UqCommon {
     Country: Tuid;
     Address: Tuid;
+    Currency: Tuid;
     GetCountryProvinces: Query;
     GetProvinceCities: Query;
     GetCityCounties: Query;

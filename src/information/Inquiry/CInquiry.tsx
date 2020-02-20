@@ -5,7 +5,8 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { VInquiryList } from './VInquiryList';
 import { VInquiryDetail } from './VInquiryDetail';
-import { PackRow } from './Inquiry';
+import { VInquiry } from './VInquiry';
+import { CCurrency } from './CCurrency';
 
 class PageInquiry extends PageItems<any> {
 
@@ -49,6 +50,15 @@ export class CInquiry extends CUqBase {
         this.openVPage(VInquiryDetail, inquiry);
     }
 
+    openInquiry = async (item: any) => {
+        this.openVPage(VInquiry, item);
+    }
+
+    pickCurrency = async (context: Context, name: string, value: number): Promise<number> => {
+        let cCurrency = this.newC(CCurrency);
+        return await cCurrency.call<number>();
+    }
+
     renderProduct = (id: BoxId) => {
         return this.renderView(VProductView, id);
     }
@@ -57,6 +67,43 @@ export class CInquiry extends CUqBase {
         let product = await this.uqs.rms.SearchProductById.query({ _id: pid });
         this.productdata = product.ret[0];
         return product.ret[0];
+    }
+
+    saveInquiryData = async (model: any, product: any) => {
+        let { quantity, radiox, radioy, unit, listPrice, price, currency, isTaxIn, isTransFeeIn, transFee, transFeecurrency, packingFee, packingcurrency, otherFee, customized, customizeUpto, validUpto, minArriveDate, maxArriveDate, invoiceType, vatRate, tariffRate, packType, remarks, coaFilePath, msdsFilePath, quotationFilePath } = model;
+        let param = {
+            product: product,
+            quantity: quantity,
+            radiox: radiox,
+            radioy: radioy,
+            unit: unit,
+            listPrice: listPrice,
+            price: price,
+            currency: currency,
+            isTaxIn: isTaxIn,
+            isTransFeeIn: isTransFeeIn,
+            transFee: transFee,
+            transFeecurrency: transFeecurrency,
+            packingFee: packingFee,
+            packingcurrency: packingcurrency,
+            otherFee: otherFee,
+            customized: customized,
+            customizeUpto: customizeUpto,
+            validUpto: validUpto,
+            minArriveDate: minArriveDate,
+            maxArriveDate: maxArriveDate,
+            invoiceType: invoiceType,
+            vatRate: vatRate,
+            tariffRate: tariffRate,
+            packType: packType,
+            remarks: remarks,
+            coaFilePath: coaFilePath,
+            msdsFilePath: msdsFilePath,
+            quotationFilePath: quotationFilePath,
+        };
+        await this.uqs.rms.AddInquiryResultHistory.submit(param);
+        this.closePage();
+        await this.loadList();
     }
 
     loadList = async () => {
@@ -84,7 +131,7 @@ export class VProductView extends View<CInquiry> {
         let pro = this.controller.productdata;
         if (pro !== undefined) {
             let { description, CAS } = pro;
-            LocationUI = <span className="text-muted small">{description} {CAS}</span>;
+            LocationUI = <span className="text-muted small">{description}&nbsp;{CAS}</span>;
         }
         return LocationUI;
     });
@@ -107,10 +154,4 @@ export function groupByPack(packItems: any[]) {
         cpi.packs.push(packRow);
     }
     return result;
-}
-
-export class OrderItem {
-
-    product: BoxId;
-    @observable packs: PackRow[];
 }

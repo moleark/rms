@@ -17,7 +17,7 @@ export class VInquiryList extends VPage<CInquiry> {
         let { openInquiryDetail } = this.controller;
 
         return <div className="m-3 justify-content-between cursor-pointer" onClick={() => openInquiryDetail(id)}>
-            <div><span className="small text-muted">订单编号: </span><strong>{no}</strong></div>
+            <div><span className="small text-muted">询价单号: </span><strong>{no}</strong></div>
             <div className="small text-muted"><EasyDate date={date} /></div>
         </div>;
     }

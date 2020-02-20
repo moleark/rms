@@ -19,13 +19,8 @@ export class VPendingInquiryList extends VPage<CPendingInquiry> {
         let right = <div className="p-2 cursor-pointer text-info" onClick={() => onAddInquiry(item)}>
             <FA name="edit" />
         </div>
-        return <LMR right={right} className="py-2">
-            <div onClick={() => onShowPendingInquiryDetail(item)}>
-                <div>
-                    <FA name="location-arrow" className="px-2 text-primary"></FA>
-                    {tv(supplier, v => <>{v.name}</>)}
-                </div>
-            </div>
+        return <LMR right={right} className="m-2 justify-content-between cursor-pointer">
+            <div onClick={() => onShowPendingInquiryDetail(item)}><span className="small text-muted">供应商: </span>{tv(supplier, v => <>{v.name}</>)}</div>
         </LMR >
     }
 
@@ -46,7 +41,9 @@ export class VPendingInquiryList extends VPage<CPendingInquiry> {
             <span className="h5 align-middle" style={{ textAlign: 'center' }}>待询价</span>
         </header>;
         return <Page header={header} right={right} onScrollBottom={this.onScrollBottom} headerClassName="bg-primary">
-            <List items={pendingInquirys} item={{ render: this.renderRootCategory }} none="目前还没待询价记录哦！" />
+            <div className="py-2">
+                <List items={pendingInquirys} item={{ render: this.renderRootCategory }} none="目前还没待询价记录哦！" />
+            </div>
         </Page>;
     })
 

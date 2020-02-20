@@ -13,6 +13,7 @@ import { CPickSupplier } from 'information/supplier/CPickSupplier';
 import { CPickProduct } from 'information/product/CPickProduct';
 import { CPendingInquiry } from 'information/PendingInquiry/CPendingInquiry';
 import { CInquiry } from 'information/Inquiry/CInquiry';
+import { CCurrency } from 'information/Inquiry/CCurrency';
 
 export class CApp extends CAppBase {
     get uqs(): UQs { return this._uqs as UQs };
@@ -29,6 +30,7 @@ export class CApp extends CAppBase {
     cPackage: CPackage;
     cPendingInquiry: CPendingInquiry;
     cInquiry: CInquiry;
+    cCurrency: CCurrency;
 
     protected newC<T extends CUqBase>(type: IConstructor<T>): T {
         return new type(this);
@@ -47,6 +49,7 @@ export class CApp extends CAppBase {
         this.cSupplierContact = this.newC(CSupplierContact);
         this.cPendingInquiry = this.newC(CPendingInquiry);
         this.cInquiry = this.newC(CInquiry);
+        this.cCurrency = this.newC(CCurrency);
         let promises: PromiseLike<void>[] = [];
         promises.push(this.cSupplier.start());
         await Promise.all(promises);

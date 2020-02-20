@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { VPage, Page, BoxId, EasyTime, EasyDate } from 'tonva';
+import { VPage, Page, BoxId, EasyTime, EasyDate, FA } from 'tonva';
 import { tv } from 'tonva';
 import { List } from 'tonva';
-import { OrderItem } from './CInquiry';
 import { CInquiry } from './CInquiry';
+import { start } from 'repl';
 
 export class VInquiryDetail extends VPage<CInquiry> {
 
@@ -16,14 +16,9 @@ export class VInquiryDetail extends VPage<CInquiry> {
         let radio = (radiox !== 1) ? <>{radiox} * {radioy}{unit}</> : <>{radioy}{unit}</>;
         let { id } = product;
         return <div>
-            <div className="row p-1 my-1">
-                <div className="col-lg-6">{
-                    <div key={index} className="px-2 py-2 border-top">
-                        <div className="d-flex align-items-center">
-                            <div className="flex-grow-1 small"><b>{this.controller.renderProduct(id)}  {radio}</b></div>
-                        </div>
-                    </div>
-                }</div>
+            <div className="d-flex px-3 py-2 bg-white align-items-center">
+                <div key={index} className="w-6c" onClick={() => this.controller.openInquiry(item)}><FA name="edit" className="text-primary" />&nbsp;{radio}</div>
+                <div className="flex-fill d-flex justify-content-end text-right"><small className="text-muted">{this.controller.renderProduct(id)}</small></div>
             </div>
         </div>;
     }

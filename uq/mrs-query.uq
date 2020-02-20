@@ -286,8 +286,8 @@ ACTION AddInquiryResultHistory(
     if(packid is null){
         --新建包装
         VAR npackid ID;
-        TUID Product.Pack into npackid set
-            owner=product,radiox=radiox,radioy=radioy,unit=unit,type=packType,isValid=1;
+        TUID Product.Pack OF product into npackid ID 1 set
+            radiox=radiox,radioy=radioy,unit=unit,type=packType,isValid=1;
 
         --新建包装价格
         BOOK PackPrice at (Product, npackid) set price = price,currency=currency,
