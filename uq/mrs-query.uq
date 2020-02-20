@@ -235,3 +235,70 @@ returns ret(
     from    [$sheet] as st 
     order by st.id desc;
 };
+
+--添加询价结果
+ACTION AddInquiryResultHistory(
+    product ID Product,
+    quantity int,                       --数量
+    radiox dec(12,2),                   --套
+    radioy dec(12,4),                   --包装规格
+    unit char(10),                      --单位
+    listPrice dec(12,2),                --目录单价
+    price dec(12,2),                    --结算单价
+    currency ID Currency,               --结算币种
+    isTaxIn smallint,                   --结算单价中是否已经包含税费；0：不包含；1：包含
+    isTransFeeIn smallint,              --结算单价中是否已经包含税费；0：不包含；1：包含
+    transFee dec(12,2),                 --运费
+    transFeecurrency ID Currency,       --运费币种
+    packingFee dec(12,2),               --包装费
+    packingcurrency ID Currency,        --包装费币种
+    otherFee dec(12,2),                 --其他费用
+    customized smallint,                --产品是否需要定制；0：不需要；1：需要定制
+    customizeUpto datetime,             --用于计算定制周期。产品需要定制时，用于计算定制周期，CustomizeUpto减去CreateDate为定制周期
+    validUpto datetime,                 --报价有效期
+    minArriveDate datetime,             --最短到货期
+    maxArriveDate datetime,             --最长到货期
+    invoiceType ID InvoiceType,         --发票类型
+    vatRate dec(12,2),                  --增值税率
+    tariffRate dec(12,2),               --关税税率
+    packType smallint,                  --包装类型，分为两种：1.目录包装，2.非目录包装
+    remarks char(1000),                 --备注
+    coaFilePath char(1000),             --供应商所提供的COA文件路径
+    msdsFilePath char(1000),            --供应商所提供的MSDS文件的上传路径
+    quotationFilePath char(1000)
+){
+    history InquiryResultHistory
+        set product = product, quantity = quantity, radiox = radiox, radioy = radioy, unit = unit, listPrice = listPrice, price = price,currency=currency,
+            isTaxIn = isTaxIn, isTransFeeIn = isTransFeeIn, transFee = transFee, transFeecurrency = transFeecurrency,packingFee=packingFee,packingcurrency=packingcurrency,
+            otherFee = otherFee,customized=customized,customizeUpto=customizeUpto,validUpto=validUpto,minArriveDate=minArriveDate,maxArriveDate=maxArriveDate,
+            invoiceType=invoiceType,vatRate=vatRate,tariffRate=tariffRate,packType=packType,remarks=remarks,coaFilePath=coaFilePath,msdsFilePath=msdsFilePath,quotationFilePath=quotationFilePath;
+
+    VAR packid ID;
+    set packid=pp.id
+    from  Product as p 
+          join Product.Pack as pp on p.id = pp.owner
+    where p.id=product
+          and pp.radiox=radiox
+          and pp.radioy=radioy
+          and pp.unit=unit
+    limit 1;
+
+    if(packid is null){
+        --新建包装
+        VAR npackid ID;
+        TUID Product.Pack into npackid set
+            owner=product,radiox=radiox,radioy=radioy,unit=unit,type=packType,isValid=1;
+
+        --新建包装价格
+        BOOK PackPrice at (Product, npackid) set price = price,currency=currency,
+            isTaxIn = isTaxIn, isTransFeeIn = isTransFeeIn, transFee = transFee, transFeecurrency = transFeecurrency,packingFee=packingFee,packingcurrency=packingcurrency,
+            otherFee = otherFee,customized=customized,customizeUpto=customizeUpto,validUpto=validUpto,minArriveDate=minArriveDate,maxArriveDate=maxArriveDate,
+            invoiceType=invoiceType,vatRate=vatRate,tariffRate=tariffRate;       
+    }else{
+        --更新包装价格
+         BOOK PackPrice at (Product, packid) set price = price,currency=currency,
+            isTaxIn = isTaxIn, isTransFeeIn = isTransFeeIn, transFee = transFee, transFeecurrency = transFeecurrency,packingFee=packingFee,packingcurrency=packingcurrency,
+            otherFee = otherFee,customized=customized,customizeUpto=customizeUpto,validUpto=validUpto,minArriveDate=minArriveDate,maxArriveDate=maxArriveDate,
+            invoiceType=invoiceType,vatRate=vatRate,tariffRate=tariffRate;
+    };
+};
