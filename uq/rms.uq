@@ -155,8 +155,8 @@ History InquiryResultHistory(
 );
 
 --包装价格
-MAP PackPrice ver 0.1 (
-    key product ID Product,
+MAP PackPrice ver 1.0 (
+    key product ID Product,             --产品
     key pack OF product.Pack,           --包装
     price dec(12,2),                    --结算单价
     currency ID Currency,               --结算币种
