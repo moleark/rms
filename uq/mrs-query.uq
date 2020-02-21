@@ -237,8 +237,8 @@ returns ret(
 };
 
 --添加询价结果
-ACTION AddInquiryResultHistory(
-    product ID Product,
+ACTION AddInquiryResultHistory ver 1.8(
+    product ID Product,                 --产品
     quantity int,                       --数量
     radiox dec(12,2),                   --套
     radioy dec(12,4),                   --包装规格
@@ -247,7 +247,7 @@ ACTION AddInquiryResultHistory(
     price dec(12,2),                    --结算单价
     currency ID Currency,               --结算币种
     isTaxIn smallint,                   --结算单价中是否已经包含税费；0：不包含；1：包含
-    isTransFeeIn smallint,              --结算单价中是否已经包含税费；0：不包含；1：包含
+    isTransFeeIn smallint,              --结算单价中是否已经包含运费；0：不包含；1：包含
     transFee dec(12,2),                 --运费
     transFeecurrency ID Currency,       --运费币种
     packingFee dec(12,2),               --包装费
@@ -285,20 +285,12 @@ ACTION AddInquiryResultHistory(
 
     if(packid is null){
         --新建包装
-        VAR npackid ID;
-        TUID Product.Pack OF product into npackid ID 1 set
-            radiox=radiox,radioy=radioy,unit=unit,type=packType,isValid=1;
-
-        --新建包装价格
-        BOOK PackPrice at (Product, npackid) set price = price,currency=currency,
-            isTaxIn = isTaxIn, isTransFeeIn = isTransFeeIn, transFee = transFee, transFeecurrency = transFeecurrency,packingFee=packingFee,packingcurrency=packingcurrency,
-            otherFee = otherFee,customized=customized,customizeUpto=customizeUpto,validUpto=validUpto,minArriveDate=minArriveDate,maxArriveDate=maxArriveDate,
-            invoiceType=invoiceType,vatRate=vatRate,tariffRate=tariffRate;       
-    }else{
-        --更新包装价格
-         BOOK PackPrice at (Product, packid) set price = price,currency=currency,
-            isTaxIn = isTaxIn, isTransFeeIn = isTransFeeIn, transFee = transFee, transFeecurrency = transFeecurrency,packingFee=packingFee,packingcurrency=packingcurrency,
-            otherFee = otherFee,customized=customized,customizeUpto=customizeUpto,validUpto=validUpto,minArriveDate=minArriveDate,maxArriveDate=maxArriveDate,
-            invoiceType=invoiceType,vatRate=vatRate,tariffRate=tariffRate;
-    };
+        TUID Product.Pack OF product into packid set
+            radiox=radiox,radioy=radioy,unit=unit,type=packType,isValid=1;  
+    }
+    --更新包装价格
+    BOOK PackPrice at (Product, packid) set price = price,currency=currency,
+        isTaxIn = isTaxIn, isTransFeeIn = isTransFeeIn, transFee = transFee, transFeecurrency = transFeecurrency,packingFee=packingFee,packingcurrency=packingcurrency,
+        otherFee = otherFee,customized=customized,customizeUpto=customizeUpto,validUpto=validUpto,minArriveDate=minArriveDate,maxArriveDate=maxArriveDate,
+        invoiceType=invoiceType,vatRate=vatRate,tariffRate=tariffRate;
 };
