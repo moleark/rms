@@ -5,8 +5,6 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { VInquiryList } from './VInquiryList';
 import { VInquiryDetail } from './VInquiryDetail';
-import { VInquiry } from './VInquiry';
-import { CCurrency } from './CCurrency';
 
 class PageInquiry extends PageItems<any> {
 
@@ -48,15 +46,6 @@ export class CInquiry extends CUqBase {
         let inquiryItemssGrouped = groupByPack(inquiryitems);
         data.InquiryItems = inquiryItemssGrouped;
         this.openVPage(VInquiryDetail, inquiry);
-    }
-
-    openInquiry = async (item: any) => {
-        this.openVPage(VInquiry, item);
-    }
-
-    pickCurrency = async (context: Context, name: string, value: number): Promise<number> => {
-        let cCurrency = this.newC(CCurrency);
-        return await cCurrency.call<number>();
     }
 
     renderProduct = (id: BoxId) => {

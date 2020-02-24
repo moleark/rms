@@ -99,7 +99,7 @@ PENDING InquiryPending ver 0.2 (
     date,
     supplier ID Supplier not null,          --供应商编号
     status smallint default 0,              --询价状态（0 未询出 1 已询出）
-    contact ID SupplierContact,             --供应商默认联系人
+    contact ID SupplierContact null,        --供应商默认联系人
     contactName char(50) null,              --供应商联系人姓名
     contactSalutation char(10),
     contactDepartmentName char(100),
@@ -116,11 +116,11 @@ PENDING InquiryPending ver 0.2 (
 
 --询价任务明细
 Map InquiryPendingItem (
-    key inquiryPending ID InquiryPending,
+    key inquiryPending ID,
     key inquiryPackage ID InquiryPackage,
     user ID [$user],                        --创建人
-    createDate datetime,                    --创建时间
-    isValid smallint default 1              --是否有效（1 有效、0 无效）
+    createDate datetime,
+    jsonStr char(1000)                      --询价结果json串
 );
 
 --询价单（询价需求+询价结果）
@@ -163,7 +163,7 @@ SHEET InquirySheet ver 0.2 (
         vatRate dec(12,2),                  --增值税率
         tariffRate dec(12,2),               --关税税率
         packType smallint,                  --包装类型，分为两种：1.目录包装，2.非目录包装
-        remarks char(1000),                 --备注
+        remarks char(1000),                 --备注：资源部新建的询价单需要国际部完成询价时，填写的询价要求
         coaFilePath char(1000),             --供应商所提供的COA文件路径
         msdsFilePath char(1000),            --供应商所提供的MSDS文件的上传路径
         quotationFilePath char(1000),       --供应商提供的报价单的上传路径
@@ -172,7 +172,7 @@ SHEET InquirySheet ver 0.2 (
     result smallint,                        --询价结果（1: 正常询价有结果; 2: 供应商无回复; 3: 供应商有回复,但无价格; 4: 未在询价单中的结果）
     inquiryUser ID [$user],                 --询价人
     inquiryDate datetime,                   --询出时间
-    remarks char(1000)                      --备注：资源部新建的询价单需要国际部完成询价时，填写的询价要求
+    inquiryRemarks char(1000)               --备注
 )
 Action submit {
 

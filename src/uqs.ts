@@ -11,16 +11,19 @@ export interface UqRMS {
     SearchProduct: Query;
     SearchBrand: Query;
     GetPack: Query;
+    SearchNewInquiryPending: Query;
     SearchInquiryPending: Query;
     SearchInquiryPendingBySupplier: Query;
     AddInquiryPending: Action;
     DeleteInquiryPending: Action;
+    DeleteInquiryPackage: Action;
     DeleteInquiryPendingBySupplier: Action;
     InquirySheet: Sheet;
     GetInquirySheet: Query;
     $user: Tuid;
     SearchProductById: Query;
     AddInquiryResultHistory: Action;
+    UpdateInquiryPending: Action;
 }
 
 export interface UqCommon {

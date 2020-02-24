@@ -2,7 +2,7 @@ import * as React from 'react';
 import { VPage, Page, UiSchema, UiInputItem, Form, Context, UiTextItem, UiRadio, tv, UiIdItem } from 'tonva';
 import { Schema } from 'tonva';
 import _ from 'lodash';
-import { CInquiry } from './CInquiry';
+import { CPendingInquiry } from './CPendingInquiry';
 
 const schema: Schema = [
     { name: 'id', type: 'id', required: false },
@@ -35,7 +35,7 @@ const schema: Schema = [
     { name: 'quotationFilePath', type: 'string', required: false },
 ];
 
-export class VInquiry extends VPage<CInquiry> {
+export class VPendingInquiryResult extends VPage<CPendingInquiry> {
 
     private form: Form;
     private inquiryData: any;

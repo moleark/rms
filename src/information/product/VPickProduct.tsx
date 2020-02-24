@@ -10,7 +10,7 @@ export class VPickProduct extends VPage<CPickProduct> {
 
     private page = observer(() => {
         let { products, searchProductByKey } = this.controller;
-        let { onNewPendingInquiry } = this.controller.cApp.cPendingInquiry;
+        let { onNewPendingInquiry } = this.controller.cApp.cNewPendingInquiry;
 
         let header = <header className="py-2 px-2 text-center text-white">
             <span className="h5 align-middle" style={{ textAlign: 'center' }}>选择产品</span>

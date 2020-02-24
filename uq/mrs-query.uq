@@ -153,28 +153,68 @@ returns ret (
     order by pp.id;
 };
 
---查询待询价供应商  
-QUERY SearchInquiryPending(key char(100))
+
+--查询待询出供应商  
+QUERY SearchNewInquiryPending(key char(100))
 PAGE (
     id bigint start 0,
-    supplier ID Supplier not null         --供应商编号
+    supplier ID Supplier not null,        --供应商编号
+    user ID [$user], 
+    date datetime,
+    remarks char(1000)
 ) {
     var key2 char(102);
     set key2 = concat('%', key, '%');
 
-    PAGE select distinct s.id,p.supplier
+    PAGE select p.id,p.supplier,p.user,p.date,p.remarks
     from    InquiryPending as p
             join Supplier as s on p.supplier=s.id
     where   (key is null or ( s.name like key2 or s.no like key2))
-            and s.id > $pageStart 
+            and p.status=0
+            and p.id > $pageStart
+    order  by p.id 
+    limit $pageSize;
+};
+
+
+--查询已询出供应商  
+QUERY SearchInquiryPending  ver 1.0 (key char(100))
+PAGE (
+    id bigint start 0,
+    supplier ID Supplier,        --供应商编号
+    contactName char(50),              --供应商联系人姓名
+    contactSalutation char(10),
+    contactDepartmentName char(100),
+    contactTelephone char(50),
+    contactMobile char(50),
+    contactEmail char(50),
+    contactfax char(20),
+    way smallint,                      --询价方式：2：电话询价；3：传真询价；1：Email询价
+    inquiryUser ID [$user],                 --询价人
+    inquiryDate datetime,                  --询出时间
+    user ID [$user], 
+    date datetime
+) {
+    var key2 char(102);
+    set key2 = concat('%', key, '%');
+
+    PAGE select p.id,p.supplier,p.contactName,p.contactSalutation,p.contactDepartmentName,p.contactTelephone,p.contactMobile,p.contactEmail,p.contactfax,p.way,p.inquiryUser,p.inquiryDate,p.user,p.date
+    from    InquiryPending as p
+            join Supplier as s on p.supplier=s.id
+    where   (key is null or ( s.name like key2 or s.no like key2))
+            and p.status=1
+            and p.id > $pageStart 
+    order  by p.id
     limit $pageSize;
 };
 
 --查询待询价包装   
-QUERY SearchInquiryPendingBySupplier(_id ID Supplier)
+QUERY SearchInquiryPendingBySupplier(_id ID)
 returns ret (
     id bigint,
+    inquiryPackage ID InquiryPackage,
     user id [$user],
+    createDate datetime,
     supplier ID Supplier not null,          --供应商编号
     product ID Product not null,            --产品编号
     quantity int,                           --数量
@@ -186,12 +226,14 @@ returns ret (
     purity char(80)
 ) {
 
-    into ret select p.id, p.user,p.supplier,p.product,p.quantity,p.radiox,p.radioy,p.unit, p.date,c.CAS,c.purity
+    into ret select p.id,i.inquiryPackage, i.user,i.createDate,p.supplier,k.product,k.quantity,k.radiox,k.radioy,k.unit, p.date,c.CAS,c.purity
     from    InquiryPending as p
             join Supplier as s on p.supplier=s.id
-            join Product as t on p.product=t.id
+            join InquiryPendingItem as i on p.id=i.inquiryPending
+            join InquiryPackage as k on i.inquiryPackage=k.id
+            join Product as t on k.product=t.id
             join ProductChemical as c on t.id=c.product
-    where   p.supplier=_id
+    where   p.id=_id
     order by p.id;
 };
 
@@ -202,95 +244,103 @@ ACTION AddInquiryPending(
     quantity int,                           --数量
     radiox dec(12,2),                       --套
     radioy dec(12,4),                       --包装规格
-    unit char(10)                         --单位
+    unit char(10),                          --单位
+    remarks char(1000)                      --备注
 ){
-
     var pid ID;
-    PENDING InquiryPending +(supplier:supplier,product:product,quantity:quantity,radiox:radiox,radioy:radioy,unit:unit) to pid;
+    set     pid=i.id
+    from    InquiryPending as i
+    where   i.supplier=supplier
+            and i.status=0
+    order by i.date desc;
+
+    --新建询价产品包装
+    var packid ID;
+    TUID InquiryPackage into packid set
+        supplier=supplier,product=product,quantity=quantity,radiox=radiox,radioy=radioy,unit=unit;  
+
+    if(pid is null){
+        PENDING InquiryPending +(supplier:supplier,status:0,contact:null,contactName:null,contactSalutation:null,contactDepartmentName:null,contactTelephone:null,contactMobile:null,contactEmail:null,contactfax:null,way:null,inquiryUser:null,inquiryDate:null,remarks:remarks) to pid;
+    }
+
+    --更新pending的map
+    BOOK InquiryPendingItem at (pid, packid) set user = $user,createDate=now();
 };
 
---删除待询价Pending
+--删除待询出Pending
 ACTION DeleteInquiryPending(
     id bigint
 ) {
+
+    VAR packid ID;
+    set packid=pp.id
+    from  InquiryPendingItem as p 
+          join InquiryPackage as pp on p.inquiryPackage = pp.id
+    where p.inquiryPending=id
+    limit 1;
+
+    delete from InquiryPackage where id=packid;
+    delete from InquiryPendingItem where inquiryPending=id;
     Pending InquiryPending - at id;
 };
 
---删除供应商待询价Pending
-ACTION DeleteInquiryPendingBySupplier(
-    _supplier ID Supplier
+--删除待询出Pending的包装
+ACTION DeleteInquiryPackage(
+    id bigint,
+    inquiryPackage bigint
 ) {
-    delete from InquiryPending where supplier=_supplier;
+
+    delete from InquiryPackage where id=inquiryPackage;
+    delete from InquiryPendingItem where inquiryPending=id and inquiryPackage=inquiryPackage;
+};
+
+--将询价任务更新为已询出状态
+ACTION UpdateInquiryPending(
+    id bigint,
+    supplier bigint,
+    way smallint, 
+    remarks char(1000)                      --备注
+) {
+
+    var contact ID;        --供应商默认联系人
+    var contactName char(50);             --供应商联系人姓名
+    var contactSalutation char(10);
+    var contactDepartmentName char(100);
+    var contactTelephone char(50);
+    var contactMobile char(50);
+    var contactEmail char(50);
+    var contactfax char(20);
+    set contact=s.defaultContact,
+        contactName=c.name,
+        contactSalutation=c.salutation,
+        contactDepartmentName=c.departmentName,
+        contactTelephone=c.telephone,
+        contactMobile=c.mobile,
+        contactEmail=c.email,
+        contactfax=c.fax
+    from  Supplier as s
+          join SupplierContact as c on s.defaultContact = c.id
+    where s.id=supplier
+    limit 1;
+
+    if(contact>0){
+        PENDING InquiryPending =(remarks:remarks,way:way,status:1,contact:contact,contactName:contactName,contactSalutation:contactSalutation,contactDepartmentName:contactDepartmentName,
+        contactTelephone:contactTelephone,contactMobile:contactMobile,contactEmail:contactEmail,contactfax:contactfax,inquiryUser:$user,inquiryDate:now()) at id;
+    }
 };
 
 
 QUERY GetInquirySheet ver 1.0()
 returns ret(
-    id bigint,
-    no char(30),
-    description char(50),
-    date datetime
+    supplier ID Supplier,                   --供应商编号
+    contactName char(50) null,              --供应商联系人姓名
+    inquiryUser ID [$user],                 --询价人
+    sheet bigint,
+    way smallint not null,                  --询价方式：2：电话询价；3：传真询价；1：Email询价  
+    result smallint                         --询价结果（1: 正常询价有结果; 2: 供应商无回复; 3: 供应商有回复,但无价格; 4: 未在询价单中的结果）   
 ) {
-    into ret select st.id, st.no, st.discription as description, st.date
-    from    [$sheet] as st 
-    order by st.id desc;
+    into ret select st.supplier, st.contactName, st.inquiryUser, st.sheet,st.way,st.result
+    from   InquiryHistory as st 
+    order by st.supplier desc;
 };
 
---添加询价结果
-ACTION AddInquiryResultHistory ver 1.8(
-    product ID Product,                 --产品
-    quantity int,                       --数量
-    radiox dec(12,2),                   --套
-    radioy dec(12,4),                   --包装规格
-    unit char(10),                      --单位
-    listPrice dec(12,2),                --目录单价
-    price dec(12,2),                    --结算单价
-    currency ID Currency,               --结算币种
-    isTaxIn smallint,                   --结算单价中是否已经包含税费；0：不包含；1：包含
-    isTransFeeIn smallint,              --结算单价中是否已经包含运费；0：不包含；1：包含
-    transFee dec(12,2),                 --运费
-    transFeecurrency ID Currency,       --运费币种
-    packingFee dec(12,2),               --包装费
-    packingcurrency ID Currency,        --包装费币种
-    otherFee dec(12,2),                 --其他费用
-    customized smallint,                --产品是否需要定制；0：不需要；1：需要定制
-    customizeUpto datetime,             --用于计算定制周期。产品需要定制时，用于计算定制周期，CustomizeUpto减去CreateDate为定制周期
-    validUpto datetime,                 --报价有效期
-    minArriveDate datetime,             --最短到货期
-    maxArriveDate datetime,             --最长到货期
-    invoiceType ID InvoiceType,         --发票类型
-    vatRate dec(12,2),                  --增值税率
-    tariffRate dec(12,2),               --关税税率
-    packType smallint,                  --包装类型，分为两种：1.目录包装，2.非目录包装
-    remarks char(1000),                 --备注
-    coaFilePath char(1000),             --供应商所提供的COA文件路径
-    msdsFilePath char(1000),            --供应商所提供的MSDS文件的上传路径
-    quotationFilePath char(1000)
-){
-    history InquiryResultHistory
-        set product = product, quantity = quantity, radiox = radiox, radioy = radioy, unit = unit, listPrice = listPrice, price = price,currency=currency,
-            isTaxIn = isTaxIn, isTransFeeIn = isTransFeeIn, transFee = transFee, transFeecurrency = transFeecurrency,packingFee=packingFee,packingcurrency=packingcurrency,
-            otherFee = otherFee,customized=customized,customizeUpto=customizeUpto,validUpto=validUpto,minArriveDate=minArriveDate,maxArriveDate=maxArriveDate,
-            invoiceType=invoiceType,vatRate=vatRate,tariffRate=tariffRate,packType=packType,remarks=remarks,coaFilePath=coaFilePath,msdsFilePath=msdsFilePath,quotationFilePath=quotationFilePath;
-
-    VAR packid ID;
-    set packid=pp.id
-    from  Product as p 
-          join Product.Pack as pp on p.id = pp.owner
-    where p.id=product
-          and pp.radiox=radiox
-          and pp.radioy=radioy
-          and pp.unit=unit
-    limit 1;
-
-    if(packid is null){
-        --新建包装
-        TUID Product.Pack OF product into packid set
-            radiox=radiox,radioy=radioy,unit=unit,type=packType,isValid=1;  
-    }
-    --更新包装价格
-    BOOK PackPrice at (Product, packid) set price = price,currency=currency,
-        isTaxIn = isTaxIn, isTransFeeIn = isTransFeeIn, transFee = transFee, transFeecurrency = transFeecurrency,packingFee=packingFee,packingcurrency=packingcurrency,
-        otherFee = otherFee,customized=customized,customizeUpto=customizeUpto,validUpto=validUpto,minArriveDate=minArriveDate,maxArriveDate=maxArriveDate,
-        invoiceType=invoiceType,vatRate=vatRate,tariffRate=tariffRate;
-};

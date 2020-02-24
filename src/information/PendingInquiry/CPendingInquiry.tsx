@@ -3,11 +3,12 @@ import { View, BoxId, Image, PageItems, Query, Context } from 'tonva';
 import { CUqBase } from 'CBase';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { VPendingInquiry } from './VPendingInquiry';
 import { VPendingInquiryList } from './VPendingInquiryList';
 import { VPendingInquiryDetail } from './VPendingInquiryDetail';
 import { SupplierItem } from "model/supplierItem";
 import { VAddInquiry } from './VAddInquiry';
+import { CCurrency } from '../PendingInquiry/CCurrency';
+import { VPendingInquiryResult } from '../PendingInquiry/VPendingInquiryResult';
 
 class PagePendingInquiry extends PageItems<any> {
 
@@ -43,10 +44,6 @@ export class CPendingInquiry extends CUqBase {
         this.pendingInquirys.first({ key: key });
     }
 
-    pickProduct = async (): Promise<any> => {
-        let mode: any = await this.cApp.cPickProduct.call();
-    }
-
     savePendingInquiryData = async (model: any) => {
 
         if (model.id === undefined) {
@@ -65,16 +62,6 @@ export class CPendingInquiry extends CUqBase {
                 await this.uqs.rms.AddInquiryPending.submit(param);
             }
         }
-        this.closePage();
-        await this.loadList();
-    }
-
-    deletePendingInquiryData = async (item: any) => {
-        let { id } = item;
-        let param = {
-            id: id,
-        };
-        await this.uqs.rms.DeleteInquiryPending.submit(param);
         this.closePage();
         await this.loadList();
     }
@@ -122,21 +109,13 @@ export class CPendingInquiry extends CUqBase {
     }
 
     /**
-    * 打开新建界面
-    */
-    onNewPendingInquiry = async (model: any) => {
-        this.product = model;
-        this.openVPage(VPendingInquiry, { pendingInquiry: undefined });
-    }
-
-    /**
     * 打开详情界面
     */
-    onShowPendingInquiryDetail = async (supplier: any) => {
-        let { id } = supplier;
+    onShowPendingInquiryDetail = async (item: any) => {
+        let { id } = item;
         let pitem = await this.uqs.rms.SearchInquiryPendingBySupplier.query({ _id: id });
         let param: SupplierItem = {
-            parent: supplier,
+            parent: item,
             item: pitem.ret[0],
             child: pitem.ret,
         }
@@ -155,6 +134,15 @@ export class CPendingInquiry extends CUqBase {
             child: pitem.ret,
         }
         this.openVPage(VAddInquiry, param);
+    }
+
+    pickCurrency = async (context: Context, name: string, value: number): Promise<number> => {
+        let cCurrency = this.newC(CCurrency);
+        return await cCurrency.call<number>();
+    }
+
+    openPendingInquiryResult = async (item: any) => {
+        this.openVPage(VPendingInquiryResult, item);
     }
 
     loadList = async () => {

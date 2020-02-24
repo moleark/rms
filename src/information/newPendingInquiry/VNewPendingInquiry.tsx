@@ -2,7 +2,7 @@ import * as React from 'react';
 import { VPage, Page, UiSchema, UiInputItem, Form, Context, UiIdItem, tv, FA, UiTextItem } from 'tonva';
 import { Schema } from 'tonva';
 import _ from 'lodash';
-import { CPendingInquiry } from './CPendingInquiry';
+import { CNewPendingInquiry } from './CNewPendingInquiry';
 
 const schema: Schema = [
     { name: 'id', type: 'id', required: false },
@@ -12,7 +12,7 @@ const schema: Schema = [
     { name: 'unit', type: 'string', required: true },
 ];
 
-export class VPendingInquiry extends VPage<CPendingInquiry> {
+export class VNewPendingInquiry extends VPage<CNewPendingInquiry> {
 
     private form: Form;
     private pendingInquiryData: any;
@@ -34,10 +34,10 @@ export class VPendingInquiry extends VPage<CPendingInquiry> {
     }
 
     private onFormButtonClick = async (name: string, context: Context) => {
-        await this.controller.savePendingInquiryData(context.form.data);
+        await this.controller.saveNewPendingInquiryData(context.form.data);
     }
 
-    private onSavePendingInquiryData = async () => {
+    private onSaveNewPendingInquiryData = async () => {
         if (!this.form) return;
         await this.form.buttonClick("submit");
     }
@@ -70,9 +70,9 @@ export class VPendingInquiry extends VPage<CPendingInquiry> {
         let footer: any;
         footer = <button type="button"
             className="btn btn-primary w-100"
-            onClick={this.onSavePendingInquiryData}>保存</button>;
+            onClick={this.onSaveNewPendingInquiryData}>保存</button>;
 
-        return <Page header="待询单" footer={footer} headerClassName="bg-primary">
+        return <Page header="待询出" footer={footer} headerClassName="bg-primary">
             {this.showProductlData()}
             <div className="bg-white">
                 <Form ref={v => this.form = v} className="m-3"
