@@ -16,11 +16,11 @@ export class VNewPendingInquiryList extends VPage<CNewPendingInquiry> {
         let { supplier, date } = item;
         let { onShowNewPendingInquiryDetail } = this.controller;
 
-        let right = <div className="p-2 cursor-pointer text-muted">
+        let right = <div className="cursor-pointer text-info">
             <EasyDate date={date} />
         </div>
-        return <LMR right={right} className="m-2 justify-content-between cursor-pointer" onClick={() => onShowNewPendingInquiryDetail(item)}>
-            <div><span className="small text-muted"></span>{tv(supplier, v => <>{v.name}</>)}</div>
+        return <LMR right={right} className="px-3 py-2" onClick={() => onShowNewPendingInquiryDetail(item)}>
+            <div>{tv(supplier, v => <>{v.name}</>)}</div>
         </LMR >
     }
 
@@ -41,9 +41,7 @@ export class VNewPendingInquiryList extends VPage<CNewPendingInquiry> {
             <span className="h5 align-middle" style={{ textAlign: 'center' }}>待询出</span>
         </header>;
         return <Page header={header} right={right} onScrollBottom={this.onScrollBottom} headerClassName="bg-primary">
-            <div className="py-2">
-                <List items={newpendingInquirys} item={{ render: this.renderRootCategory }} none="目前还没待询出记录哦！" />
-            </div>
+            <List items={newpendingInquirys} item={{ render: this.renderRootCategory }} none="目前还没待询出记录哦！" />
         </Page>;
     })
 

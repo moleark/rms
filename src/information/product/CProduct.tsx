@@ -38,7 +38,7 @@ export class CProduct extends CUqBase {
 
     async internalStart(param: any) {
         this.searchProductByKey(param);
-        this.openVPage(VProductList);
+        //this.openVPage(VProductList);
     }
 
     searchProductByKey = async (key: string) => {
@@ -120,7 +120,7 @@ export class CProduct extends CUqBase {
     }
 
     loadList = async () => {
-        await this.searchProductByKey("");
+        await this.searchProductByKey("李");
     }
 
     render = observer(() => {

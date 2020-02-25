@@ -59,8 +59,8 @@ export class VPendingInquiryResult extends VPage<CPendingInquiry> {
                     </>;
                 }
             } as UiIdItem,
-            isTaxIn: { widget: 'radio', label: '含税费', list: [{ value: 0, title: '否' }, { value: 1, title: '是' }] } as UiRadio,
-            isTransFeeIn: { widget: 'radio', label: '含运费', list: [{ value: 0, title: '否' }, { value: 1, title: '是' }] } as UiRadio,
+            isTaxIn: { widget: 'radio', label: '含税费', list: [{ value: "0", title: '否' }, { value: "1", title: '是' }] } as UiRadio,
+            isTransFeeIn: { widget: 'radio', label: '含运费', list: [{ value: "0", title: '否' }, { value: "1", title: '是' }] } as UiRadio,
             transFee: { widget: 'text', label: '运费' } as UiInputItem,
             transFeecurrency: {
                 widget: 'id', label: '运费币种', placeholder: '运费币种',
@@ -84,15 +84,15 @@ export class VPendingInquiryResult extends VPage<CPendingInquiry> {
                 }
             } as UiIdItem,
             otherFee: { widget: 'text', label: '其他费' } as UiInputItem,
-            customized: { widget: 'radio', label: '定制', list: [{ value: 0, title: '否' }, { value: 1, title: '是' }] } as UiRadio,
+            customized: { widget: 'radio', label: '定制', list: [{ value: "0", title: '否' }, { value: "1", title: '是' }] } as UiRadio,
             customizeUpto: { widget: 'date', label: '定制截止日期' } as UiInputItem,
             validUpto: { widget: 'date', label: '报价有效期', placeholder: '必填' } as UiInputItem,
             minArriveDate: { widget: 'date', label: '最短到货期', placeholder: '必填' } as UiInputItem,
             maxArriveDate: { widget: 'date', label: '最长到货期', placeholder: '必填' } as UiInputItem,
-            invoiceType: { widget: 'radio', label: '发票类型', list: [{ value: 1, title: '增值税专用发票' }, { value: 2, title: '增值税普通发票' }, { value: 3, title: '形式发票' }] } as UiRadio,
+            invoiceType: { widget: 'radio', label: '发票类型', list: [{ value: "1", title: '增值税专用发票' }, { value: "2", title: '增值税普通发票' }, { value: "3", title: '形式发票' }] } as UiRadio,
             vatRate: { widget: 'text', label: '增值税率' } as UiInputItem,
             tariffRate: { widget: 'text', label: '关税税率' } as UiInputItem,
-            packType: { widget: 'radio', label: '包装类型', list: [{ value: 1, title: '目录包装' }, { value: 2, title: '非目录包装' }] } as UiRadio,
+            packType: { widget: 'radio', label: '包装类型', list: [{ value: "1", title: '目录包装' }, { value: "2", title: '非目录包装' }] } as UiRadio,
             remarks: { widget: 'text', label: '备注', row: 10 } as UiInputItem,
             coaFilePath: { widget: 'text', label: 'COA文件路径', } as UiInputItem,
             msdsFilePath: { widget: 'text', label: 'MSOS文件路径' } as UiInputItem,
@@ -107,8 +107,7 @@ export class VPendingInquiryResult extends VPage<CPendingInquiry> {
     }
 
     private onFormButtonClick = async (name: string, context: Context) => {
-        let { product } = this.inquiryData;
-        await this.controller.saveInquiryData(context.form.data, product);
+        await this.controller.saveInquiryPackage(context.form.data, this.inquiryData);
     }
 
     private onSaveInquiryData = async () => {

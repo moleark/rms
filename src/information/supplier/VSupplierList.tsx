@@ -9,11 +9,11 @@ export class VSupplierList extends View<CSupplier> {
         let { no, name, createTime } = item;
         let { onEditSupplier } = this.controller;
 
-        let right = <div className="p-2 cursor-pointer text-info" onClick={() => onEditSupplier(item)}>
+        let right = <div className="cursor-pointer text-info" onClick={() => onEditSupplier(item)}>
             <FA name="edit" />
         </div>
-        return <LMR right={right} className="m-2 justify-content-between cursor-pointer">
-            <div><span className="small">{name}</span></div>
+        return <LMR right={right} className="py-2 px-3">
+            <div>{name}</div>
         </LMR>
     }
 

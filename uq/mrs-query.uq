@@ -182,6 +182,7 @@ QUERY SearchInquiryPending  ver 1.0 (key char(100))
 PAGE (
     id bigint start 0,
     supplier ID Supplier,        --供应商编号
+    contact ID SupplierContact,
     contactName char(50),              --供应商联系人姓名
     contactSalutation char(10),
     contactDepartmentName char(100),
@@ -198,7 +199,7 @@ PAGE (
     var key2 char(102);
     set key2 = concat('%', key, '%');
 
-    PAGE select p.id,p.supplier,p.contactName,p.contactSalutation,p.contactDepartmentName,p.contactTelephone,p.contactMobile,p.contactEmail,p.contactfax,p.way,p.inquiryUser,p.inquiryDate,p.user,p.date
+    PAGE select p.id,p.supplier,p.contact,p.contactName,p.contactSalutation,p.contactDepartmentName,p.contactTelephone,p.contactMobile,p.contactEmail,p.contactfax,p.way,p.inquiryUser,p.inquiryDate,p.user,p.date
     from    InquiryPending as p
             join Supplier as s on p.supplier=s.id
     where   (key is null or ( s.name like key2 or s.no like key2))
@@ -223,10 +224,12 @@ returns ret (
     unit char(10),                          --单位
     date datetime,
     CAS char(20),
-    purity char(80)
+    purity char(80),
+    jsonStr char(1000),
+    remarks char(1000)
 ) {
 
-    into ret select p.id,i.inquiryPackage, i.user,i.createDate,p.supplier,k.product,k.quantity,k.radiox,k.radioy,k.unit, p.date,c.CAS,c.purity
+    into ret select p.id,i.inquiryPackage, i.user,i.createDate,p.supplier,k.product,k.quantity,k.radiox,k.radioy,k.unit, p.date,c.CAS,c.purity,i.jsonStr,p.remarks
     from    InquiryPending as p
             join Supplier as s on p.supplier=s.id
             join InquiryPendingItem as i on p.id=i.inquiryPending
@@ -335,12 +338,68 @@ returns ret(
     supplier ID Supplier,                   --供应商编号
     contactName char(50) null,              --供应商联系人姓名
     inquiryUser ID [$user],                 --询价人
+    startDate datetime,                     --开始时间   
+    inquiryDate datetime,                   --询出时间 
+    date  datetime,                         --结束时间 
     sheet bigint,
     way smallint not null,                  --询价方式：2：电话询价；3：传真询价；1：Email询价  
     result smallint                         --询价结果（1: 正常询价有结果; 2: 供应商无回复; 3: 供应商有回复,但无价格; 4: 未在询价单中的结果）   
 ) {
-    into ret select st.supplier, st.contactName, st.inquiryUser, st.sheet,st.way,st.result
+    into ret select st.supplier, st.contactName, st.inquiryUser,st.startDate,st.inquiryDate,st.date, st.sheet,st.way,st.result
     from   InquiryHistory as st 
     order by st.supplier desc;
 };
 
+--添加询价结果
+ACTION AddPackagePrice ver 1.0(
+    product ID Product,                 --产品
+    quantity int,                       --数量
+    radiox dec(12,2),                   --套
+    radioy dec(12,4),                   --包装规格
+    unit char(10),                      --单位
+    listPrice dec(12,2),                --目录单价
+    price dec(12,2),                    --结算单价
+    currency ID Currency,               --结算币种
+    isTaxIn smallint,                   --结算单价中是否已经包含税费；0：不包含；1：包含
+    isTransFeeIn smallint,              --结算单价中是否已经包含运费；0：不包含；1：包含
+    transFee dec(12,2),                 --运费
+    transFeecurrency ID Currency,       --运费币种
+    packingFee dec(12,2),               --包装费
+    packingcurrency ID Currency,        --包装费币种
+    otherFee dec(12,2),                 --其他费用
+    customized smallint,                --产品是否需要定制；0：不需要；1：需要定制
+    customizeUpto datetime,             --用于计算定制周期。产品需要定制时，用于计算定制周期，CustomizeUpto减去CreateDate为定制周期
+    validUpto datetime,                 --报价有效期
+    minArriveDate datetime,             --最短到货期
+    maxArriveDate datetime,             --最长到货期
+    invoiceType ID InvoiceType,         --发票类型
+    vatRate dec(12,2),                  --增值税率
+    tariffRate dec(12,2),               --关税税率
+    packType smallint,                  --包装类型，分为两种：1.目录包装，2.非目录包装
+    remarks char(1000),                 --备注
+    coaFilePath char(1000),             --供应商所提供的COA文件路径
+    msdsFilePath char(1000),            --供应商所提供的MSDS文件的上传路径
+    quotationFilePath char(1000)
+){
+
+    VAR packid ID;
+    set packid=pp.id
+    from  Product as p 
+          join Product.Pack as pp on p.id = pp.owner
+    where p.id=product
+          and pp.radiox=radiox
+          and pp.radioy=radioy
+          and pp.unit=unit
+    limit 1;
+
+    if(packid is null){
+        --新建包装
+        TUID Product.Pack OF product into packid set
+            radiox=radiox,radioy=radioy,unit=unit,type=packType,isValid=1;  
+    }
+    --更新包装价格
+    BOOK PackPrice at (Product, packid) set price = price,currency=currency,
+        isTaxIn = isTaxIn, isTransFeeIn = isTransFeeIn, transFee = transFee, transFeecurrency = transFeecurrency,packingFee=packingFee,packingcurrency=packingcurrency,
+        otherFee = otherFee,customized=customized,customizeUpto=customizeUpto,validUpto=validUpto,minArriveDate=minArriveDate,maxArriveDate=maxArriveDate,
+        invoiceType=invoiceType,vatRate=vatRate,tariffRate=tariffRate;
+};

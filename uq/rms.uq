@@ -140,6 +140,8 @@ SHEET InquirySheet ver 0.2 (
         inquiryRadiox dec(12,2),            --询价套
         inquiryRadioy dec(12,4),            --询价包装规格
         inquiryUnit char(10),               --询价单位  
+        itemuser ID [$user],                --创建人
+        itemcreateDate datetime,            --创建时间
         quantity int,                       --反馈数量
         radiox dec(12,2),                   --反馈套
         radioy dec(12,4),                   --反馈包装规格
@@ -163,19 +165,25 @@ SHEET InquirySheet ver 0.2 (
         vatRate dec(12,2),                  --增值税率
         tariffRate dec(12,2),               --关税税率
         packType smallint,                  --包装类型，分为两种：1.目录包装，2.非目录包装
-        remarks char(1000),                 --备注：资源部新建的询价单需要国际部完成询价时，填写的询价要求
         coaFilePath char(1000),             --供应商所提供的COA文件路径
         msdsFilePath char(1000),            --供应商所提供的MSDS文件的上传路径
         quotationFilePath char(1000),       --供应商提供的报价单的上传路径
+        inquiryRemarks char(1000),          --报价备注
     ),
     way smallint not null,                  --询价方式：2：电话询价；3：传真询价；1：Email询价
     result smallint,                        --询价结果（1: 正常询价有结果; 2: 供应商无回复; 3: 供应商有回复,但无价格; 4: 未在询价单中的结果）
+    user ID [$user],                        --创建人
+    createDate datetime,                    --创建时间
     inquiryUser ID [$user],                 --询价人
     inquiryDate datetime,                   --询出时间
-    inquiryRemarks char(1000)               --备注
+    remarks char(1000)                      --备注：资源部新建的询价单需要国际部完成询价时，填写的询价要求
 )
 Action submit {
-
+        history InquiryHistory
+            set supplier = supplier, contact = contact, contactName = contactName, contactSalutation = contactSalutation, contactDepartmentName = contactDepartmentName
+            , contactTelephone = contactTelephone, contactMobile = contactMobile,contactEmail = contactEmail, contactfax = contactfax
+            , inquiryUser = inquiryUser, startDate = createDate,inquiryDate=inquiryDate,way=way,result=result;
+        STATE TO END;
 };
 
 --询价历史
@@ -193,7 +201,6 @@ History InquiryHistory(
     inquiryUser ID [$user],                 --询价人
     startDate datetime,                     --开始时间   
     inquiryDate datetime,                   --询出时间 
-    endDate datetime,                       --结束时间 
     way smallint not null,                  --询价方式：2：电话询价；3：传真询价；1：Email询价  
     result smallint,                        --询价结果（1: 正常询价有结果; 2: 供应商无回复; 3: 供应商有回复,但无价格; 4: 未在询价单中的结果）    
     sheet,

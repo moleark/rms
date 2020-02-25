@@ -19,7 +19,7 @@ export class VProductList extends VPage<CProduct> {
         let right = <div className="p-2 cursor-pointer text-info" onClick={() => onEditProduct(item)}>
             <FA name="edit" />
         </div>
-        return <LMR right={right} className="m-2 justify-content-between cursor-pointer">
+        return <LMR right={right} className="px-3 m-2 justify-content-between cursor-pointer">
             <div onClick={() => showProductDetail(item)}>
                 <div><span className="small text-muted">&nbsp; CAS: </span>{CAS}</div>
                 <div><span className="small text-muted">英文名: </span>{description}</div>
@@ -44,14 +44,11 @@ export class VProductList extends VPage<CProduct> {
         let header = <header className="py-2 px-4 text-center text-white">
             <span className="h5 align-middle" style={{ textAlign: 'center' }}>产品</span>
         </header>;
-        return <Page header={header} right={right} onScrollBottom={this.onScrollBottom} headerClassName="bg-primary">
+        return <Page header={header} right={right} headerClassName="bg-primary">
             <div className="py-2">
                 <List items={products} item={{ render: this.renderRootCategory }} />
             </div>
         </Page >;
     })
 
-    private onScrollBottom = async () => {
-        await this.controller.products.more();
-    }
 }

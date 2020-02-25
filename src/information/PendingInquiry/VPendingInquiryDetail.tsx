@@ -1,20 +1,41 @@
 import * as React from 'react';
-import { VPage, Page, FA, EasyDate, tv, LMR, List } from 'tonva';
+import { VPage, Page, FA, EasyDate, tv, LMR, List, Schema, UiSchema, UiRadio, Form, Context } from 'tonva';
 import { observer } from 'mobx-react';
 import _ from 'lodash';
 import { CPendingInquiry } from './CPendingInquiry';
 
+const schema: Schema = [
+    { name: 'result', type: 'number', required: true },
+];
+
 export class VPendingInquiryDetail extends VPage<CPendingInquiry> {
-    private suppplier: any;
+    private form: Form;
+    private pending: any;
     private firstPackage: any;
     private packages: any[] = [];
 
+    private uiSchema: UiSchema = {
+        items: {
+            result: { widget: 'radio', label: '询价结果', list: [{ value: 1, title: '有价格' }, { value: 2, title: '无价格' }] } as UiRadio,
+            submit: { widget: 'button', label: '提交' },
+        }
+    }
+
     async open(param: any) {
         let { parent, item, child } = param;
-        this.suppplier = parent;
+        this.pending = parent;
         this.firstPackage = item;
         this.packages = child;
         this.openPage(this.page);
+    }
+
+    private onFormButtonClick = async (name: string, context: Context) => {
+        await this.controller.saveInquiryData(context.form.data, this.pending, this.packages);
+    }
+
+    private onSaveInquiryData = async () => {
+        if (!this.form) return;
+        await this.form.buttonClick("submit");
     }
 
     private getPackage = () => {
@@ -24,7 +45,7 @@ export class VPendingInquiryDetail extends VPage<CPendingInquiry> {
     }
 
     private renderPackage = (item: any, index: number) => {
-        let { onAddInquiry } = this.controller;
+
         let { id, inquiryPackage, user, createDate, product, quantity, radiox, radioy, unit, CAS, purity } = item;
         let { brand, description, descriptionC } = product.obj;
         let radio = (radiox !== 1) ? <>{radiox} * {radioy}{unit}</> : <>{radioy}{unit}</>;
@@ -41,8 +62,7 @@ export class VPendingInquiryDetail extends VPage<CPendingInquiry> {
         </LMR>;
     }
 
-    private rowTop = () => {
-        let suppplierData = _.clone(this.suppplier);
+    private rowTop = (suppplierData: any) => {
 
         let { supplier, contactName, contactSalutation, contactDepartmentName, contactTelephone, contactMobile, contactEmail, contactfax, way, inquiryUser, inquiryDate, user, date, remarks } = suppplierData;
         let { id } = user;
@@ -56,26 +76,36 @@ export class VPendingInquiryDetail extends VPage<CPendingInquiry> {
                 &nbsp;<FA className="align-middle text-warning" name="user-circle-o" /><span className="h6 py-2 px-2 align-middle">联系人：<b>{contactName}</b>&nbsp;&nbsp;联系电话：<b>{contactMobile}</b></span>
             </div>
             <div className="py-2 cursor-pointer">
-                &nbsp;<FA className="align-middle text-warning" name="user-circle-o" /><span className="h6 py-2 px-2 align-middle">创建人：<b>{id}</b>&nbsp;&nbsp;创建时间：<b><EasyDate date={date} /></b></span>
+                &nbsp;<span className="h6 py-2 px-4 align-middle">创建人：<b>{id}</b>&nbsp;&nbsp;创建时间：<b><EasyDate date={date} /></b></span>
             </div>
             <div className="py-2 cursor-pointer">
                 &nbsp;<FA className="align-middle text-warning" name="user-circle-o" /><span className="h6 py-2 px-2 align-middle">询价人：<b>{inid}</b>&nbsp;&nbsp;询价时间：<b><EasyDate date={inquiryDate} /></b></span>
             </div>
             <div className="py-2 cursor-pointer">
-                &nbsp;<FA className="align-middle text-warning" name="user-circle-o" /><span className="h6 py-2 px-2 align-middle">询价方式：<b>{way === 1 ? "Email询价" : (way === 2 ? "电话询价" : "传真询价")}</b></span>
+                &nbsp;<span className="h6 py-2 px-4 align-middle">询价方式：<b>{way === 1 ? "Email询价" : (way === 2 ? "电话询价" : "传真询价")}</b></span>
             </div>
         </div>;
     }
 
     private page = () => {
-
+        let suppplierData = _.clone(this.pending);
         let header = <header className="py-2 text-center text-white">
             <span className="h5 align-middle">询价详情</span>
         </header>;
 
-        return <Page header={header} headerClassName="bg-primary">
-            {this.rowTop()}
+        let footer = <button type="button"
+            className="btn btn-primary w-100"
+            onClick={this.onSaveInquiryData}>提交</button>;
+        return <Page header={header} footer={footer} headerClassName="bg-primary">
+            {this.rowTop(suppplierData)}
             {this.getPackage()}
+            <Form ref={v => this.form = v} className="m-3"
+                schema={schema}
+                uiSchema={this.uiSchema}
+                formData={suppplierData}
+                onButtonClick={this.onFormButtonClick}
+                fieldLabelSize={3}
+            />
         </Page >
     }
 }

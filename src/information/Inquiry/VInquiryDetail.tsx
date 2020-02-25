@@ -16,8 +16,8 @@ export class VInquiryDetail extends VPage<CInquiry> {
         let radio = (radiox !== 1) ? <>{radiox} * {radioy}{unit}</> : <>{radioy}{unit}</>;
         let { id } = product;
         return <div>
-            <div className="d-flex px-3 py-2 bg-white align-items-center">
-                <div key={index} className="w-6c" ><FA name="edit" className="text-primary" />&nbsp;{radio}</div>
+            <div className="d-flex px-3 py-2 bg-white align-items-center" onClick={() => this.controller.openPackageDetail(item)}>
+                <div key={index} className="w-6c" ><FA name="circle" className="text-primary" />&nbsp;{radio}</div>
                 <div className="flex-fill d-flex justify-content-end text-right"><small className="text-muted">{this.controller.renderProduct(id)}</small></div>
             </div>
         </div>;
@@ -27,7 +27,7 @@ export class VInquiryDetail extends VPage<CInquiry> {
 
         let { brief, data } = inquiry;
         let { id, no, state, description, date, user } = brief;
-        let { supplier, contactName, contactSalutation, contactDepartmentName, contactTelephone, contactMobile, contactEmail, contactfax, way, remarks, inquiryitems } = data;
+        let { supplier, contactName, contactSalutation, contactDepartmentName, contactTelephone, contactMobile, contactEmail, contactfax, way, remarks, inquiryitems, result } = data;
 
         let header = <>询价单详情: {no}</>
         return <Page header={header} headerClassName="bg-primary">
@@ -69,11 +69,15 @@ export class VInquiryDetail extends VPage<CInquiry> {
                 <div className="col-9">{way === 1 ? "Email询价" : (way === 2 ? "电话询价" : "传真询价")}</div>
             </div>
             <div className="bg-white row no-gutters p-3 my-1">
+                <div className="col-3 text-muted">询价结果:</div>
+                <div className="col-9">{result === 1 ? "有价格" : (way === 2 ? "有价格" : "无")}</div>
+            </div>
+            <div className="bg-white row no-gutters p-3 my-1">
                 <div className="col-3 text-muted">备注:</div>
                 <div className="col-9">{remarks}</div>
             </div>
             <div className="bg-white row no-gutters p-3 my-1">
-                <div className="col-3 text-muted">下单时间:</div>
+                <div className="col-3 text-muted">询出时间:</div>
                 <div className="col-9"><EasyDate date={date} /></div>
             </div>
             <div className="bg-white row no-gutters p-3 my-1">
