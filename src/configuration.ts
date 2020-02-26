@@ -14,6 +14,6 @@ export const appConfig: AppConfig = {
 };
 // 生产配置
 export const GLOABLE = {
-    CHINA: 44,
+    CHINA: 43,
     TIPDISPLAYTIME: 2000
 }

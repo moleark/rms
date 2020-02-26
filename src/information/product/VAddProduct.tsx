@@ -11,6 +11,7 @@ const schema: Schema = [
     { name: 'origin', type: 'string', required: false },
     { name: 'purity', type: 'string', required: false },
     { name: 'isTrue', type: 'boolean', required: true },
+    { name: 'submit', type: 'submit' }
 ];
 
 export class VAddProduct extends VPage<CProduct> {
@@ -43,10 +44,10 @@ export class VAddProduct extends VPage<CProduct> {
                     </>;
                 }
             } as UiIdItem,
-            origin: { widget: 'text', label: '供应商自编号' } as UiInputItem,
-            purity: { widget: 'text', label: '纯度' } as UiInputItem,
+            origin: { widget: 'text', label: '供应商自编号', placeholder: '供应商自编号' } as UiInputItem,
+            purity: { widget: 'text', label: '纯度', placeholder: '纯度' } as UiInputItem,
             isTrue: { widget: 'checkbox', label: '有效', defaultValue: true },
-            submit: { widget: 'button', label: '提交' },
+            submit: { widget: 'button', label: '提交', className: "btn btn-primary mr-3 px-6" }
         }
     }
 
@@ -59,11 +60,6 @@ export class VAddProduct extends VPage<CProduct> {
         await this.controller.saveProductData(context.form.data);
     }
 
-    private onSaveProductData = async () => {
-        if (!this.form) return;
-        await this.form.buttonClick("submit");
-    }
-
     private showChemicalData = () => {
 
         let { chemical } = this.controller;
@@ -73,13 +69,25 @@ export class VAddProduct extends VPage<CProduct> {
             <div className="cursor-pointer">
                 &nbsp;<FA className="align-middle text-warning" name="credit-card" /><span className="h6 py-2 px-1 align-middle"><b>标准库信息</b></span>
             </div>
-            <div className="py-2 cat-root-sub">
-                <div><span className="px-4 align-middle">&nbsp;chemid:</span><span> {no}</span></div>
-                <div><span className="px-4 align-middle ">&nbsp;&nbsp; CAS:</span><span> {CAS}</span></div>
-                <div><span className="px-4 align-middle ">英文名称：</span><span>{description}</span></div>
-                <div><span className="px-4 align-middle ">中文名称：</span><span>{descriptoinCN}</span></div>
-                <div><span className="px-4 align-middle ">&nbsp;分子式：</span><span>{molecularFomula}</span></div>
-                <div><span className="px-4 align-middle ">&nbsp;分子量：</span><span>{molecularWeight}</span></div>
+            <div className="py-2 cat-root-sub small">
+                <div className="bg-white row no-gutters px-4 my-1">
+                    <div className="col-3 text-muted">chemid:</div><div className="col-9">{no}</div>
+                </div>
+                <div className="bg-white row no-gutters px-4 my-1">
+                    <div className="col-3 text-muted">CAS:</div><div className="col-9">{CAS}</div>
+                </div>
+                <div className="bg-white row no-gutters px-4 my-1">
+                    <div className="col-3 text-muted">英文名称:</div><div className="col-9">{description}</div>
+                </div>
+                <div className="bg-white row no-gutters px-4 my-1">
+                    <div className="col-3 text-muted">中文名称:</div><div className="col-9">{descriptoinCN}</div>
+                </div>
+                <div className="bg-white row no-gutters px-4 my-1">
+                    <div className="col-3 text-muted">分子式:</div><div className="col-9">{molecularFomula}</div>
+                </div>
+                <div className="bg-white row no-gutters px-4 my-1">
+                    <div className="col-3 text-muted">分子量:</div><div className="col-9">{molecularWeight}</div>
+                </div>
             </div>
         </div>;
     }
@@ -87,12 +95,7 @@ export class VAddProduct extends VPage<CProduct> {
     private page = () => {
         let descriptionData = _.clone(this.productData);
 
-        let footer: any;
-        footer = <button type="button"
-            className="btn btn-primary w-100"
-            onClick={this.onSaveProductData}>保存</button>;
-
-        return <Page header="添加产品" footer={footer} headerClassName="bg-primary">
+        return <Page header="添加产品" headerClassName="bg-primary">
             {this.showChemicalData()}
             <div className="bg-white">
                 <Form ref={v => this.form = v} className="m-3"

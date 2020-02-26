@@ -19,12 +19,12 @@ export class VProductList extends VPage<CProduct> {
         let right = <div className="p-2 cursor-pointer text-info" onClick={() => onEditProduct(item)}>
             <FA name="edit" />
         </div>
-        return <LMR right={right} className="px-3 m-2 justify-content-between cursor-pointer">
-            <div onClick={() => showProductDetail(item)}>
-                <div><span className="small text-muted">&nbsp; CAS: </span>{CAS}</div>
-                <div><span className="small text-muted">英文名: </span>{description}</div>
-                <div><span className="small text-muted">供应商: </span>{tv(supplier, v => <>{v.name}</>)}</div>
-            </div>
+        let left = <div onClick={() => showProductDetail(item)}>
+            <div className="text-muted small">CAS：{CAS}</div>
+            <div className="text-muted small">英文名：{description}</div>
+            <div className="text-muted small">供应商：{tv(supplier, v => <>{v.name}</>)}</div>
+        </div>
+        return <LMR left={left} right={right} className="py-2 px-3 border-top">
         </LMR >
     }
 
@@ -45,9 +45,7 @@ export class VProductList extends VPage<CProduct> {
             <span className="h5 align-middle" style={{ textAlign: 'center' }}>产品</span>
         </header>;
         return <Page header={header} right={right} headerClassName="bg-primary">
-            <div className="py-2">
-                <List items={products} item={{ render: this.renderRootCategory }} />
-            </div>
+            <List items={products} item={{ render: this.renderRootCategory }} />
         </Page >;
     })
 

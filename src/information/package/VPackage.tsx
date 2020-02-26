@@ -21,23 +21,20 @@ export class VPackage extends VPage<CPackage> {
         { name: 'unit', type: 'string', required: true },
         { name: 'type', type: 'string', required: true },
         { name: 'isValid', type: 'boolean', required: true },
+        { name: 'submit', type: 'submit' }
     ];
 
     private uiSchema: UiSchema = {
         items: {
             radiox: { widget: 'text', label: '套', placeholder: '必填', defaultValue: 1 } as UiInputItem,
             radioy: { widget: 'text', label: '包装规格', placeholder: '必填', defaultValue: 1 } as UiInputItem,
-            unit: { widget: 'text', label: '单位', placeholder: '必填' } as UiTextItem,
+            unit: { widget: 'text', label: '单位', placeholder: '必填' } as UiInputItem,
             type: { widget: 'radio', label: '类型', list: [{ value: 1, title: '目录包装' }, { value: 2, title: '非目录包装' }] } as UiRadio,
             isValid: { widget: 'checkbox', label: '有效', defaultValue: true },
-            submit: { widget: 'button', label: '提交' }
+            submit: { widget: 'button', label: '提交', className: "btn btn-primary mr-3 px-6" }
         }
     };
 
-    private onSavePackage = async () => {
-        if (!this.form) return;
-        await this.form.buttonClick("submit");
-    }
     private onFormButtonClick = async (name: string, context: Context) => {
         let { savePackage } = this.controller;
         let id = this.item && this.item.id;
@@ -47,13 +44,7 @@ export class VPackage extends VPage<CPackage> {
 
     private page = observer(() => {
 
-        let footer = <div className="d-flex">
-            <div className="flex-grow-1 justify-content-end">
-                <button type="button" className="btn btn-primary mr-3 px-6" onClick={this.onSavePackage} ><span className="px-4">保存</span></button>
-            </div>
-        </div>;
-
-        return <Page header="编辑包装" footer={footer} headerClassName="bg-primary">
+        return <Page header="编辑包装" headerClassName="bg-primary">
             <Form ref={v => this.form = v} className="my-3 mx-3"
                 formData={this.item}
                 schema={this.schema}

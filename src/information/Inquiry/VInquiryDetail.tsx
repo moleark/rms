@@ -17,7 +17,7 @@ export class VInquiryDetail extends VPage<CInquiry> {
         let { id } = product;
         return <div>
             <div className="d-flex px-3 py-2 bg-white align-items-center" onClick={() => this.controller.openPackageDetail(item)}>
-                <div key={index} className="w-6c" ><FA name="circle" className="text-primary" />&nbsp;{radio}</div>
+                <div key={index} className="w-6c" ><FA name="angle-right" className="text-primary" />&nbsp;{radio}</div>
                 <div className="flex-fill d-flex justify-content-end text-right"><small className="text-muted">{this.controller.renderProduct(id)}</small></div>
             </div>
         </div>;

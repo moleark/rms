@@ -21,7 +21,7 @@ const schema: Schema = [
     { name: 'packingcurrency', type: 'id', required: false },
     { name: 'otherFee', type: 'number', required: false },
     { name: 'customized', type: 'number', required: true },
-    { name: 'customizeUpto', type: 'date', required: true },
+    { name: 'customizeUpto', type: 'date', required: false },
     { name: 'validUpto', type: 'date', required: true },
     { name: 'minArriveDate', type: 'date', required: true },
     { name: 'maxArriveDate', type: 'date', required: true },
@@ -33,6 +33,7 @@ const schema: Schema = [
     { name: 'coaFilePath', type: 'string', required: false },
     { name: 'msdsFilePath', type: 'string', required: false },
     { name: 'quotationFilePath', type: 'string', required: false },
+    { name: 'submit', type: 'submit' }
 ];
 
 export class VPendingInquiryResult extends VPage<CPendingInquiry> {
@@ -47,7 +48,7 @@ export class VPendingInquiryResult extends VPage<CPendingInquiry> {
             radiox: { widget: 'text', label: '套', placeholder: '必填', defaultValue: 1 } as UiInputItem,
             radioy: { widget: 'text', label: '包装规格', placeholder: '必填' } as UiInputItem,
             unit: { widget: 'text', label: '单位', placeholder: '必填' } as UiTextItem,
-            listPrice: { widget: 'text', label: '目录价', } as UiInputItem,
+            listPrice: { widget: 'text', label: '目录价', placeholder: '目录价' } as UiInputItem,
             price: { widget: 'text', label: '结算价', placeholder: '必填' } as UiInputItem,
             currency: {
                 widget: 'id', label: '结算币种', placeholder: '结算币种',
@@ -61,7 +62,7 @@ export class VPendingInquiryResult extends VPage<CPendingInquiry> {
             } as UiIdItem,
             isTaxIn: { widget: 'radio', label: '含税费', list: [{ value: "0", title: '否' }, { value: "1", title: '是' }] } as UiRadio,
             isTransFeeIn: { widget: 'radio', label: '含运费', list: [{ value: "0", title: '否' }, { value: "1", title: '是' }] } as UiRadio,
-            transFee: { widget: 'text', label: '运费' } as UiInputItem,
+            transFee: { widget: 'text', label: '运费', placeholder: '运费' } as UiInputItem,
             transFeecurrency: {
                 widget: 'id', label: '运费币种', placeholder: '运费币种',
                 pickId: async (context: Context, name: string, value: number) => await this.controller.pickCurrency(context, name, value),
@@ -72,7 +73,7 @@ export class VPendingInquiryResult extends VPage<CPendingInquiry> {
                     </>;
                 }
             } as UiIdItem,
-            packingFee: { widget: 'text', label: '包装费', } as UiInputItem,
+            packingFee: { widget: 'text', label: '包装费', placeholder: '包装费' } as UiInputItem,
             packingcurrency: {
                 widget: 'id', label: '包装费币种', placeholder: '包装费币种',
                 pickId: async (context: Context, name: string, value: number) => await this.controller.pickCurrency(context, name, value),
@@ -83,21 +84,21 @@ export class VPendingInquiryResult extends VPage<CPendingInquiry> {
                     </>;
                 }
             } as UiIdItem,
-            otherFee: { widget: 'text', label: '其他费' } as UiInputItem,
+            otherFee: { widget: 'text', label: '其他费', placeholder: '其他费' } as UiInputItem,
             customized: { widget: 'radio', label: '定制', list: [{ value: "0", title: '否' }, { value: "1", title: '是' }] } as UiRadio,
             customizeUpto: { widget: 'date', label: '定制截止日期' } as UiInputItem,
             validUpto: { widget: 'date', label: '报价有效期', placeholder: '必填' } as UiInputItem,
             minArriveDate: { widget: 'date', label: '最短到货期', placeholder: '必填' } as UiInputItem,
             maxArriveDate: { widget: 'date', label: '最长到货期', placeholder: '必填' } as UiInputItem,
             invoiceType: { widget: 'radio', label: '发票类型', list: [{ value: "1", title: '增值税专用发票' }, { value: "2", title: '增值税普通发票' }, { value: "3", title: '形式发票' }] } as UiRadio,
-            vatRate: { widget: 'text', label: '增值税率' } as UiInputItem,
-            tariffRate: { widget: 'text', label: '关税税率' } as UiInputItem,
+            vatRate: { widget: 'text', label: '增值税率', placeholder: '增值税率' } as UiInputItem,
+            tariffRate: { widget: 'text', label: '关税税率', placeholder: '关税税率' } as UiInputItem,
             packType: { widget: 'radio', label: '包装类型', list: [{ value: "1", title: '目录包装' }, { value: "2", title: '非目录包装' }] } as UiRadio,
-            remarks: { widget: 'text', label: '备注', row: 10 } as UiInputItem,
-            coaFilePath: { widget: 'text', label: 'COA文件路径', } as UiInputItem,
-            msdsFilePath: { widget: 'text', label: 'MSOS文件路径' } as UiInputItem,
-            quotationFilePath: { widget: 'text', label: '报价单文件路径' } as UiInputItem,
-            submit: { widget: 'button', label: '提交' },
+            remarks: { widget: 'text', label: '备注', row: 10, placeholder: '备注' } as UiInputItem,
+            coaFilePath: { widget: 'text', label: 'COA文件路径', placeholder: 'COA文件路径' } as UiInputItem,
+            msdsFilePath: { widget: 'text', label: 'MSOS文件路径', placeholder: 'MSOS文件路径' } as UiInputItem,
+            quotationFilePath: { widget: 'text', label: '报价单文件路径', placeholder: '报价单文件路径' } as UiInputItem,
+            submit: { widget: 'button', label: '提交', className: "btn btn-primary mr-3 px-6" }
         }
     }
 
@@ -110,20 +111,10 @@ export class VPendingInquiryResult extends VPage<CPendingInquiry> {
         await this.controller.saveInquiryPackage(context.form.data, this.inquiryData);
     }
 
-    private onSaveInquiryData = async () => {
-        if (!this.form) return;
-        await this.form.buttonClick("submit");
-    }
-
     private page = () => {
         let descriptionData = _.clone(this.inquiryData);
 
-        let footer: any;
-        footer = <button type="button"
-            className="btn btn-primary w-100"
-            onClick={this.onSaveInquiryData}>保存</button>;
-
-        return <Page header="录入询价结果" footer={footer} headerClassName="bg-primary">
+        return <Page header="录入询价结果" headerClassName="bg-primary">
             <div className="bg-white">
                 <Form ref={v => this.form = v} className="m-3"
                     schema={schema}

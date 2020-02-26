@@ -6,6 +6,7 @@ import { CPendingInquiry } from './CPendingInquiry';
 
 const schema: Schema = [
     { name: 'result', type: 'number', required: true },
+    { name: 'submit', type: 'submit' }
 ];
 
 export class VPendingInquiryDetail extends VPage<CPendingInquiry> {
@@ -17,7 +18,7 @@ export class VPendingInquiryDetail extends VPage<CPendingInquiry> {
     private uiSchema: UiSchema = {
         items: {
             result: { widget: 'radio', label: '询价结果', list: [{ value: 1, title: '有价格' }, { value: 2, title: '无价格' }] } as UiRadio,
-            submit: { widget: 'button', label: '提交' },
+            submit: { widget: 'button', label: '提交', className: "btn btn-primary mr-3 px-6" }
         }
     }
 
@@ -31,11 +32,6 @@ export class VPendingInquiryDetail extends VPage<CPendingInquiry> {
 
     private onFormButtonClick = async (name: string, context: Context) => {
         await this.controller.saveInquiryData(context.form.data, this.pending, this.packages);
-    }
-
-    private onSaveInquiryData = async () => {
-        if (!this.form) return;
-        await this.form.buttonClick("submit");
     }
 
     private getPackage = () => {
@@ -55,7 +51,7 @@ export class VPendingInquiryDetail extends VPage<CPendingInquiry> {
             <div className="px-2 text-muted text-right">
                 <span onClick={() => this.controller.openPendingInquiryResult(item)}><FA className="align-middle p-2 cursor-pointer text-info" name="edit" /></span>
             </div>;
-        return <LMR right={right} className="py-2 samll">
+        return <LMR right={right} className="py-2 small">
             <div><FA name="circle" className="px-2 text-primary"></FA>CAS：{CAS}</div>
             <div className="px-4 text-muted small">名称：{description}</div>
             <div className="px-4 text-muted small">包装：{quantity} * {radio}</div>
@@ -93,10 +89,7 @@ export class VPendingInquiryDetail extends VPage<CPendingInquiry> {
             <span className="h5 align-middle">询价详情</span>
         </header>;
 
-        let footer = <button type="button"
-            className="btn btn-primary w-100"
-            onClick={this.onSaveInquiryData}>提交</button>;
-        return <Page header={header} footer={footer} headerClassName="bg-primary">
+        return <Page header={header} headerClassName="bg-primary">
             {this.rowTop(suppplierData)}
             {this.getPackage()}
             <Form ref={v => this.form = v} className="m-3"

@@ -6,6 +6,10 @@ export class CAddress extends CUqBase {
         this.openVPage(VAddress);
     }
 
+    getCountry = async (): Promise<any[]> => {
+        return await this.uqs.common.Country.search("", 0, 300);
+    }
+
     getCountryProvince = async (countryId: number): Promise<any[]> => {
         return await this.uqs.common.GetCountryProvinces.table({ country: countryId });
     }
@@ -18,7 +22,7 @@ export class CAddress extends CUqBase {
         return await this.uqs.common.GetCityCounties.table({ city: cityId });
     }
 
-    saveAddress = async (countryId: number, provinceId: number, cityId?: number, countyId?: number): Promise<any> => {
+    saveAddress = async (countryId: number, provinceId?: number, cityId?: number, countyId?: number): Promise<any> => {
         let { Address } = this.uqs.common;
         let newAddress = await Address.save(undefined, { country: countryId, province: provinceId, city: cityId, county: countyId });
         let addressId = newAddress && Address.boxId(newAddress.id);

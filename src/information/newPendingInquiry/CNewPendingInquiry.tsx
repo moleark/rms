@@ -92,7 +92,7 @@ export class CNewPendingInquiry extends CUqBase {
 
         let param = {
             id: pendingid,
-            inquiryPackage: packid,
+            pid: packid,
         };
         await this.uqs.rms.DeleteInquiryPackage.submit(param);
         this.closePage();

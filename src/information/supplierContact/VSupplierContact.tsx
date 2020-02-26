@@ -32,10 +32,11 @@ export class VSupplierContact extends VPage<CSupplierContact> {
         { name: 'wechatId', type: 'string', required: false },
         { name: 'email', type: 'string' },
         { name: 'fax', type: 'string', required: false },
-        { name: 'address', type: 'id', required: false },
-        { name: 'addressString', type: 'string', required: false },
+        { name: 'address', type: 'id', required: true },
+        { name: 'addressString', type: 'string', required: true },
         { name: 'zipCode', type: 'string', required: false },
         { name: 'isDefault', type: 'boolean', required: false },
+        { name: 'submit', type: 'submit' }
     ];
 
     private uiSchema: UiSchema = {
@@ -44,13 +45,13 @@ export class VSupplierContact extends VPage<CSupplierContact> {
             gender: { widget: 'radio', label: '性别', list: [{ value: '1', title: '男' }, { value: '0', title: '女' }] } as UiRadio,
             firstName: { widget: 'text', label: '名', placeholder: '名', rules: nameValidation } as UiInputItem,
             lastName: { widget: 'text', label: '姓氏', placeholder: '姓氏' } as UiInputItem,
-            salutation: { widget: 'text', label: '称谓', rules: salutationValidation } as UiTextItem,
-            departmentName: { widget: 'text', label: '部门名称', rules: departmentNameValidation } as UiTextItem,
-            telephone: { widget: 'text', label: '固定电话', rules: telephoneValidation } as UiTextItem,
-            mobile: { widget: 'text', label: '手机号', rules: mobileValidation } as UiTextItem,
-            wechatId: { widget: 'text', label: '微信号', } as UiTextItem,
-            email: { widget: 'text', label: 'Email', rules: emailValidation, placeholder: 'Email' } as UiTextItem,
-            fax: { widget: 'text', label: '传真', rules: faxValidation } as UiTextItem,
+            salutation: { widget: 'text', label: '称谓', placeholder: '称谓', rules: salutationValidation } as UiTextItem,
+            departmentName: { widget: 'text', label: '部门名称', placeholder: '部门名称', rules: departmentNameValidation } as UiTextItem,
+            telephone: { widget: 'text', label: '固定电话', placeholder: '固定电话', rules: telephoneValidation } as UiTextItem,
+            mobile: { widget: 'text', label: '手机号', placeholder: '手机号', rules: mobileValidation } as UiTextItem,
+            wechatId: { widget: 'text', label: '微信号', placeholder: '微信号' } as UiTextItem,
+            email: { widget: 'text', label: 'Email', placeholder: 'Email', rules: emailValidation } as UiTextItem,
+            fax: { widget: 'text', label: '传真', placeholder: '传真', rules: faxValidation } as UiTextItem,
             address: {
                 widget: 'id', label: '所在地区',
                 pickId: async (context: Context, name: string, value: number) => await this.controller.pickAddress(context, name, value),
@@ -70,17 +71,13 @@ export class VSupplierContact extends VPage<CSupplierContact> {
                     })
                 }
             } as UiIdItem,
-            addressString: { widget: 'text', label: '详细地址', rules: addressDetailValidation } as UiTextItem,
-            zipCode: { widget: 'text', label: '邮编', rules: zipCodeValidation } as UiTextItem,
+            addressString: { widget: 'text', label: '详细地址', placeholder: '详细地址', rules: addressDetailValidation } as UiTextItem,
+            zipCode: { widget: 'text', label: '邮编', placeholder: '邮编', rules: zipCodeValidation } as UiTextItem,
             isDefault: { widget: 'checkbox', label: '默认联系人', defaultValue: false },
-            submit: { widget: 'button', label: '提交' }
+            submit: { widget: 'button', label: '提交', className: "btn btn-primary mr-3 px-6" }
         }
     };
 
-    private onSaveSupplierContact = async () => {
-        if (!this.form) return;
-        await this.form.buttonClick("submit");
-    }
     private onFormButtonClick = async (name: string, context: Context) => {
         let { saveSupplierContact } = this.controller;
         let id = this.item && this.item.id;
@@ -90,13 +87,7 @@ export class VSupplierContact extends VPage<CSupplierContact> {
 
     private page = observer(() => {
 
-        let footer = <div className="d-flex">
-            <div className="flex-grow-1 justify-content-end">
-                <button type="button" className="btn btn-primary mr-3 px-6" onClick={this.onSaveSupplierContact} ><span className="px-4">保存</span></button>
-            </div>
-        </div>;
-
-        return <Page header="编辑联系人" footer={footer} headerClassName="bg-primary">
+        return <Page header="编辑联系人" headerClassName="bg-primary">
             <Form ref={v => this.form = v} className="my-3 mx-3"
                 formData={this.item}
                 schema={this.schema}

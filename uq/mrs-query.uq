@@ -139,16 +139,37 @@ QUERY GetPack(_id ID Product)
 returns ret (
     id bigint,
     product ID Product,
-    radiox dec(12,2),                  --套
-    radioy dec(12,4),                  --包装规格
-    unit char(10),                     --单位
-    type smallint
+    radiox dec(12,2),                   --套
+    radioy dec(12,4),                   --包装规格
+    unit char(10),                      --单位
+    type smallint,                      --包装类型
+    price dec(12,2),                    --结算单价
+    currency ID Currency,               --结算币种
+    isTaxIn smallint,                   --结算单价中是否已经包含税费；0：不包含；1：包含
+    isTransFeeIn smallint,              --结算单价中是否已经包含税费；0：不包含；1：包含
+    transFee dec(12,2),                 --运费
+    transFeecurrency ID Currency,       --运费币种
+    packingFee dec(12,2),               --包装费
+    packingcurrency ID Currency,        --包装费币种
+    otherFee dec(12,2),                 --其他费用
+    customized smallint,                --产品是否需要定制；0：不需要；1：需要定制
+    customizeUpto datetime,             --用于计算定制周期。产品需要定制时，用于计算定制周期，CustomizeUpto减去CreateDate为定制周期
+    validUpto datetime,                 --报价有效期
+    minArriveDate datetime,             --最短到货期
+    maxArriveDate datetime,             --最长到货期
+    invoiceType ID InvoiceType,         --发票类型
+    vatRate dec(12,2),                  --增值税率
+    tariffRate dec(12,2)                --关税税率
 ) {
     into ret select pp.id,p.id as product, pp.radiox, pp.radioy,pp.unit,pp.type
+                    ,pr.price,pr.currency,pr.isTaxIn,pr.isTransFeeIn,pr.transFee
+                    ,pr.transFeecurrency,pr.packingFee,pr.packingcurrency,pr.otherFee
+                    ,pr.customized,pr.customizeUpto,pr.validUpto,pr.minArriveDate
+                    ,pr.maxArriveDate,pr.invoiceType,pr.vatRate,pr.tariffRate
     from    Product as p 
             join Product.Pack as pp on p.id = pp.owner
-    where   1=1 
-            and p.id=_id
+            left join PackPrice as pr on pp.id=pr.pack and p.id=pr.product
+    where   p.id=_id
             and pp.isValid = 1 
     order by pp.id;
 };
@@ -290,11 +311,10 @@ ACTION DeleteInquiryPending(
 --删除待询出Pending的包装
 ACTION DeleteInquiryPackage(
     id bigint,
-    inquiryPackage bigint
+    pid bigint
 ) {
-
-    delete from InquiryPackage where id=inquiryPackage;
-    delete from InquiryPendingItem where inquiryPending=id and inquiryPackage=inquiryPackage;
+    delete from InquiryPendingItem where inquiryPending=id and inquiryPackage=pid;
+    delete from InquiryPackage where id=pid;
 };
 
 --将询价任务更新为已询出状态
@@ -333,21 +353,29 @@ ACTION UpdateInquiryPending(
 };
 
 
-QUERY GetInquirySheet ver 1.0()
-returns ret(
+QUERY GetInquirySheet ver 1.0(key char(100))
+PAGE (
+    sheet bigint start 0,
     supplier ID Supplier,                   --供应商编号
     contactName char(50) null,              --供应商联系人姓名
     inquiryUser ID [$user],                 --询价人
     startDate datetime,                     --开始时间   
     inquiryDate datetime,                   --询出时间 
     date  datetime,                         --结束时间 
-    sheet bigint,
     way smallint not null,                  --询价方式：2：电话询价；3：传真询价；1：Email询价  
     result smallint                         --询价结果（1: 正常询价有结果; 2: 供应商无回复; 3: 供应商有回复,但无价格; 4: 未在询价单中的结果）   
 ) {
-    into ret select st.supplier, st.contactName, st.inquiryUser,st.startDate,st.inquiryDate,st.date, st.sheet,st.way,st.result
+
+    var key2 char(102);
+    set key2 = concat('%', key, '%');
+
+    PAGE select st.sheet,st.supplier, st.contactName, st.inquiryUser,st.startDate,st.inquiryDate,st.date, st.way,st.result
     from   InquiryHistory as st 
-    order by st.supplier desc;
+            join Supplier as s on st.supplier=s.id
+    where   (key is null or ( s.name like key2 or s.no like key2))
+            and st.sheet > $pageStart 
+    order by st.sheet desc
+    limit $pageSize;
 };
 
 --添加询价结果

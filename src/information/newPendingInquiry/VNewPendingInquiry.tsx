@@ -10,6 +10,7 @@ const schema: Schema = [
     { name: 'radiox', type: 'number', required: true },
     { name: 'radioy', type: 'number', required: true },
     { name: 'unit', type: 'string', required: true },
+    { name: 'submit', type: 'submit' }
 ];
 
 export class VNewPendingInquiry extends VPage<CNewPendingInquiry> {
@@ -24,7 +25,7 @@ export class VNewPendingInquiry extends VPage<CNewPendingInquiry> {
             radiox: { widget: 'text', label: '套', placeholder: '必填', defaultValue: 1 } as UiInputItem,
             radioy: { widget: 'text', label: '包装规格', placeholder: '必填' } as UiInputItem,
             unit: { widget: 'text', label: '单位', placeholder: '必填' } as UiTextItem,
-            submit: { widget: 'button', label: '提交' },
+            submit: { widget: 'button', label: '提交', className: "btn btn-primary mr-3 px-6" }
         }
     }
 
@@ -36,12 +37,6 @@ export class VNewPendingInquiry extends VPage<CNewPendingInquiry> {
     private onFormButtonClick = async (name: string, context: Context) => {
         await this.controller.saveNewPendingInquiryData(context.form.data);
     }
-
-    private onSaveNewPendingInquiryData = async () => {
-        if (!this.form) return;
-        await this.form.buttonClick("submit");
-    }
-
     private showProductlData = () => {
 
         let { product } = this.controller;
@@ -54,12 +49,21 @@ export class VNewPendingInquiry extends VPage<CNewPendingInquiry> {
                 &nbsp;<FA className="align-middle text-warning" name="credit-card" /><span className="h6 py-2 px-1 align-middle"><b>产品信息</b></span>
             </div>
             <div className="py-2 cat-root-sub small">
-                <div><span className="px-4 align-middle text-righ ">供应商:</span><span> {name}</span></div>
-                <div><span className="px-4 align-middle text-right">品牌:</span><span> {brandname}</span></div>
-                <div><span className="px-4 align-middle text-right">CAS：</span><span>{CAS}</span></div>
-                <div><span className="px-4 align-middle ">英文名称：</span><span>{description}</span></div>
-                <div><span className="px-4 align-middle ">中文名称：</span><span>{descriptionC}</span></div>
-                <div><span className="px-4 align-middle ">纯度：</span><span>{purity}</span></div>
+                <div className="bg-white row no-gutters px-4 my-1">
+                    <div className="col-3 text-muted">供应商:</div><div className="col-9">{name}</div>
+                </div>
+                <div className="bg-white row no-gutters px-4 my-1">
+                    <div className="col-3 text-muted">品牌:</div><div className="col-9">{brandname}</div>
+                </div>
+                <div className="bg-white row no-gutters px-4 my-1">
+                    <div className="col-3 text-muted">CAS:</div><div className="col-9">{CAS}</div>
+                </div>
+                <div className="bg-white row no-gutters px-4 my-1">
+                    <div className="col-3 text-muted">英文名称:</div><div className="col-9">{description}</div>
+                </div>
+                <div className="bg-white row no-gutters px-4 my-1">
+                    <div className="col-3 text-muted">中文名称:</div><div className="col-9">{descriptionC}</div>
+                </div>
             </div>
         </div>;
     }
@@ -68,11 +72,8 @@ export class VNewPendingInquiry extends VPage<CNewPendingInquiry> {
         let descriptionData = _.clone(this.pendingInquiryData);
 
         let footer: any;
-        footer = <button type="button"
-            className="btn btn-primary w-100"
-            onClick={this.onSaveNewPendingInquiryData}>保存</button>;
 
-        return <Page header="待询出" footer={footer} headerClassName="bg-primary">
+        return <Page header="待询出" headerClassName="bg-primary">
             {this.showProductlData()}
             <div className="bg-white">
                 <Form ref={v => this.form = v} className="m-3"

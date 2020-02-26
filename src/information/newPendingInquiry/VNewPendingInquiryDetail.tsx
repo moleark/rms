@@ -8,6 +8,7 @@ const schema: Schema = [
     { name: 'id', type: 'id', required: false },
     { name: 'way', type: 'number', required: true },
     { name: 'remarks', type: 'number', required: false },
+    { name: 'submit', type: 'submit' }
 ];
 
 export class VNewPendingInquiryDetail extends VPage<CNewPendingInquiry> {
@@ -20,8 +21,8 @@ export class VNewPendingInquiryDetail extends VPage<CNewPendingInquiry> {
         items: {
             id: { visible: false },
             way: { widget: 'radio', label: '询价方式', list: [{ value: 1, title: 'Email询价' }, { value: 2, title: '电话询价' }, { value: 3, title: '传真询价' }] } as UiRadio,
-            remarks: { widget: 'text', label: '备注', rows: 5 } as UiInputItem,
-            submit: { widget: 'button', label: '提交' },
+            remarks: { widget: 'text', label: '备注', placeholder: '备注', rows: 5 } as UiInputItem,
+            submit: { widget: 'button', label: '提交', className: "btn btn-primary mr-3 px-6" }
         }
     }
 
@@ -35,11 +36,6 @@ export class VNewPendingInquiryDetail extends VPage<CNewPendingInquiry> {
 
     private onFormButtonClick = async (name: string, context: Context) => {
         await this.controller.updatePendingInquiryState(context.form.data, this.suppplier);
-    }
-
-    private onUpdatePendingInquiryData = async () => {
-        if (!this.form) return;
-        await this.form.buttonClick("submit");
     }
 
     private getPackage = () => {
@@ -60,7 +56,7 @@ export class VNewPendingInquiryDetail extends VPage<CNewPendingInquiry> {
             <div className="px-2 text-muted text-right">
                 <span onClick={() => deletePendingInquiryPackage(id, packid)}><FA className="align-middle p-2 cursor-pointer text-danger" name="remove" /></span>
             </div>;
-        return <LMR right={right} className="py-2 samll">
+        return <LMR right={right} className="py-2 small">
             <div><FA name="circle" className="px-2 text-primary"></FA>CAS：{CAS}</div>
             <div className="px-4 text-muted small">名称：{description}</div>
             <div className="px-4 text-muted small">包装：{quantity} * {radio}</div>
@@ -99,10 +95,7 @@ export class VNewPendingInquiryDetail extends VPage<CNewPendingInquiry> {
                 <i className="fa fa-remove fa-stack-1x text-danger"></i>
             </span>
         </div>;
-        let footer = <button type="button"
-            className="btn btn-primary w-100"
-            onClick={this.onUpdatePendingInquiryData}>保存</button>;
-        return <Page header={header} footer={footer} right={right} headerClassName="bg-primary">
+        return <Page header={header} right={right} headerClassName="bg-primary">
             {this.rowTop(suppplierData)}
             <Form ref={v => this.form = v} className="m-3"
                 schema={schema}

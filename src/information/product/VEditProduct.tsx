@@ -9,6 +9,7 @@ const schema: Schema = [
     { name: 'origin', type: 'string', required: false },
     { name: 'purity', type: 'string', required: false },
     { name: 'isTrue', type: 'boolean', required: true },
+    { name: 'submit', type: 'submit' }
 ];
 
 export class VEditProduct extends VPage<CProduct> {
@@ -19,10 +20,10 @@ export class VEditProduct extends VPage<CProduct> {
     private uiSchema: UiSchema = {
         items: {
             id: { visible: false },
-            origin: { widget: 'text', label: '供应商自编号' } as UiInputItem,
-            purity: { widget: 'text', label: '纯度' } as UiInputItem,
+            origin: { widget: 'text', label: '供应商自编号', placeholder: '供应商自编号' } as UiInputItem,
+            purity: { widget: 'text', label: '纯度', placeholder: '纯度' } as UiInputItem,
             isTrue: { widget: 'checkbox', label: '有效', defaultValue: true },
-            submit: { widget: 'button', label: '提交' },
+            submit: { widget: 'button', label: '提交', className: "btn btn-primary mr-3 px-6" }
         }
     }
 
@@ -35,11 +36,6 @@ export class VEditProduct extends VPage<CProduct> {
         await this.controller.updateProductData(this.productData, context.form.data);
     }
 
-    private onSaveProductData = async () => {
-        if (!this.form) return;
-        await this.form.buttonClick("submit");
-    }
-
     private showProductData = (product: any) => {
 
         let { supplier, brand, origin, description, descriptionC, createTime, chemical, CAS, purity, molecularFomula, molecularWeight } = product;
@@ -50,14 +46,28 @@ export class VEditProduct extends VPage<CProduct> {
             <div className="cursor-pointer">
                 &nbsp;<FA className="align-middle text-warning" name="credit-card" /><span className="h6 py-2 px-1 align-middle"><b>产品信息</b></span>
             </div>
-            <div className="py-2 cat-root-sub">
-                <div><span className="px-4 align-middle ">&nbsp;供应商：</span><span>{suppliername}</span></div>
-                <div><span className="px-4 align-middle ">&nbsp;&nbsp;品牌：</span><span>{brandno}</span></div>
-                <div><span className="px-4 align-middle ">&nbsp;&nbsp; CAS：</span><span>{CAS}</span></div>
-                <div><span className="px-4 align-middle ">英文名称：</span><span>{description}</span></div>
-                <div><span className="px-4 align-middle ">中文名称：</span><span>{descriptionC}</span></div>
-                <div><span className="px-4 align-middle ">&nbsp;分子式：</span><span>{molecularFomula}</span></div>
-                <div><span className="px-4 align-middle ">&nbsp;分子量：</span><span>{molecularWeight}</span></div>
+            <div className="py-2 cat-root-sub small">
+                <div className="bg-white row no-gutters px-4 my-1">
+                    <div className="col-3 text-muted">供应商:</div><div className="col-9">{suppliername}</div>
+                </div>
+                <div className="bg-white row no-gutters px-4 my-1">
+                    <div className="col-3 text-muted">品牌:</div><div className="col-9">{brandno}</div>
+                </div>
+                <div className="bg-white row no-gutters px-4 my-1">
+                    <div className="col-3 text-muted">CAS:</div><div className="col-9">{CAS}</div>
+                </div>
+                <div className="bg-white row no-gutters px-4 my-1">
+                    <div className="col-3 text-muted">英文名称:</div><div className="col-9">{description}</div>
+                </div>
+                <div className="bg-white row no-gutters px-4 my-1">
+                    <div className="col-3 text-muted">中文名称:</div><div className="col-9">{descriptionC}</div>
+                </div>
+                <div className="bg-white row no-gutters px-4 my-1">
+                    <div className="col-3 text-muted">分子式:</div><div className="col-9">{molecularFomula}</div>
+                </div>
+                <div className="bg-white row no-gutters px-4 my-1">
+                    <div className="col-3 text-muted">分子量:</div><div className="col-9">{molecularWeight}</div>
+                </div>
             </div>
         </div>;
     }
@@ -66,12 +76,7 @@ export class VEditProduct extends VPage<CProduct> {
     private page = () => {
         let descriptionData = _.clone(this.productData);
 
-        let footer: any;
-        footer = <button type="button"
-            className="btn btn-primary w-100"
-            onClick={this.onSaveProductData}>保存</button>;
-
-        return <Page header="修改产品" footer={footer} headerClassName="bg-primary">
+        return <Page header="修改产品" headerClassName="bg-primary">
             {this.showProductData(descriptionData)}
             <div className="bg-white">
                 <Form ref={v => this.form = v} className="m-3"

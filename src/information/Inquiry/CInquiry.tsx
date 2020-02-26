@@ -28,7 +28,7 @@ class PageInquiry extends PageItems<any> {
 
 export class CInquiry extends CUqBase {
 
-    @observable inquirys: any;
+    @observable inquirys: PageInquiry;
     @observable productdata: any;
 
     async internalStart(param: any) {
@@ -36,7 +36,8 @@ export class CInquiry extends CUqBase {
     }
 
     searchInquiryByKey = async (key: string) => {
-        this.inquirys = await this.uqs.rms.GetInquirySheet.table(undefined);;
+        this.inquirys = new PageInquiry(this.uqs.rms.GetInquirySheet);
+        this.inquirys.first({ key: key });
     }
 
     openInquiryDetail = async (id: number) => {
@@ -88,7 +89,7 @@ export class VProductView extends View<CInquiry> {
         let pro = this.controller.productdata;
         if (pro !== undefined) {
             let { description, CAS } = pro;
-            LocationUI = <span className="text-muted small">{description}&nbsp;{CAS}</span>;
+            LocationUI = <span className="text-muted small">{description}y&nbsp;&nbsp;{CAS}</span>;
         }
         return LocationUI;
     });

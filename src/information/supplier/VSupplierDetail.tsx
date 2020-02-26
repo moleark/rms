@@ -42,7 +42,7 @@ export class VSupplierDetail extends VPage<CSupplier> {
             {fa_gender}
             {name} - {mobile === undefined ? "无" : mobile}</div>
         let right =
-            <div className="px-2 text-muted text-right samll">
+            <div className="px-2 text-muted text-right small">
                 <span onClick={() => delSupplierContact(this.supplier, item)}><FA className="align-middle text-danger" name="remove" /></span>
                 <span onClick={() => showEditSupplierContact(this.supplier, item)}><FA className="align-middle p-2 cursor-pointer text-info" name="edit" /></span>
             </div>;
@@ -59,10 +59,18 @@ export class VSupplierDetail extends VPage<CSupplier> {
                 &nbsp;<FA className="align-middle text-warning" name="credit-card" /><span className="h6 py-2 px-1 align-middle"><b> 供应商基本信息</b></span>
             </div>
             <div className="py-2 cat-root-sub small">
-                <div><span className="px-4 align-middle">&nbsp;&nbsp;编号：</span><span>{no}</span></div>
-                <div><span className="px-4 align-middle ">&nbsp;&nbsp;名称：</span><span>{name}</span></div>
-                <div><span className="px-4 align-middle ">&nbsp;&nbsp;简称：</span><span>{abbreviation}</span></div>
-                <div><p><span className="px-4 align-middle ">创建时间：</span><span>{<EasyDate date={createTime} />}</span></p></div>
+                <div className="bg-white row no-gutters px-4 my-1">
+                    <div className="col-3 text-muted">编号:</div><div className="col-9">{no}</div>
+                </div>
+                <div className="bg-white row no-gutters px-4 my-1">
+                    <div className="col-3 text-muted">名称:</div><div className="col-9">{name}</div>
+                </div>
+                <div className="bg-white row no-gutters px-4 my-1">
+                    <div className="col-3 text-muted">简称:</div><div className="col-9">{abbreviation}</div>
+                </div>
+                <div className="bg-white row no-gutters px-4 my-1">
+                    <div className="col-3 text-muted">创建时间:</div><div className="col-9">{<EasyDate date={createTime} />}</div>
+                </div>
             </div>
         </div>;
     }

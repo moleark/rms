@@ -7,13 +7,13 @@ export class VSupplierList extends View<CSupplier> {
 
     private renderRootCategory = (item: any, parent: any) => {
         let { no, name, createTime } = item;
-        let { onEditSupplier } = this.controller;
+        let { onEditSupplier, onSupplierSelected } = this.controller;
 
         let right = <div className="cursor-pointer text-info" onClick={() => onEditSupplier(item)}>
             <FA name="edit" />
         </div>
-        return <LMR right={right} className="py-2 px-3">
-            <div>{name}</div>
+        return <LMR right={right} className="py-2 px-3 ">
+            <div onClick={() => onSupplierSelected(item)}>{name}</div>
         </LMR>
     }
 

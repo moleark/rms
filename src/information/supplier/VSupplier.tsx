@@ -9,6 +9,7 @@ const schema: Schema = [
     { name: 'name', type: 'string', required: true },
     { name: 'abbreviation', type: 'string', required: false },
     { name: 'isValid', type: 'boolean', required: true },
+    { name: 'submit', type: 'submit' }
 ];
 
 export class VSupplier extends VPage<CSupplier> {
@@ -20,9 +21,9 @@ export class VSupplier extends VPage<CSupplier> {
         items: {
             id: { visible: false },
             name: { widget: 'text', label: '供应商名称', placeholder: '必填' } as UiInputItem,
-            abbreviation: { widget: 'text', label: '供应商简称' } as UiInputItem,
+            abbreviation: { widget: 'text', label: '供应商简称', placeholder: '供应商简称' } as UiInputItem,
             isValid: { widget: 'checkbox', label: '有效', defaultValue: true },
-            submit: { widget: 'button', label: '提交' },
+            submit: { widget: 'button', label: '提交', className: "btn btn-primary mr-3 px-6" }
         }
     }
 
@@ -35,20 +36,10 @@ export class VSupplier extends VPage<CSupplier> {
         await this.controller.saveSupplierData(context.form.data);
     }
 
-    private onSavesupplierData = async () => {
-        if (!this.form) return;
-        await this.form.buttonClick("submit");
-    }
-
     private page = () => {
         let descriptionData = _.clone(this.supplierData);
 
-        let footer: any;
-        footer = <button type="button"
-            className="btn btn-primary w-100"
-            onClick={this.onSavesupplierData}>保存</button>;
-
-        return <Page header="编辑供应商" footer={footer} headerClassName="bg-primary">
+        return <Page header="编辑供应商" headerClassName="bg-primary">
             <div className="p-3 bg-white">
                 <Form ref={v => this.form = v} className="m-3"
                     schema={schema}
