@@ -7,7 +7,7 @@ import { CProduct } from './CProduct';
 const schema: Schema = [
     { name: 'id', type: 'id', required: false },
     { name: 'supplier', type: 'id', required: true },
-    { name: 'brand', type: 'id', required: true },
+    { name: 'brand', type: 'id', required: false },
     { name: 'origin', type: 'string', required: false },
     { name: 'purity', type: 'string', required: false },
     { name: 'isTrue', type: 'boolean', required: true },
