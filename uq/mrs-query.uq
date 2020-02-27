@@ -39,21 +39,35 @@ returns ret (
 
 
 /** 搜索供应商*/
-QUERY SearchSupplier(key char(100))
+QUERY SearchSupplier ver 2.0(key char(100))
 PAGE (
     id bigint start 0,
     no char(10) ,
     name char(200),
     abbreviation char(200),
-    defaultContact ID SupplierContact
+    defaultContact ID SupplierContact,
+    webSite char(500),                  --供应商网址1
+    addressString char(400),
+    address ID Address,
+    productionAddress char(500),        --生产厂址
+    profile char(1000),                 --企业简介(供应商信息概况)
+    bankAddress char(500),              --供应商银行地址
+    bankSWIFT char(100),                --供应商开户行SWIFT/BIC
+    bankIBAN char(100),                 --供应商开户行IBAN
+    bankRTN char(20),                   --供应商开户行的RTN   
+    bank char(100),                     --供应商开户银行
+    accountNo char(60),                 --供应商在开户银行的帐号 
+    taxNo char(50)
 ) {
     var key2 char(102);
     set key2 = concat('%', key, '%');
 
-    PAGE select w.id, w.no, w.name,w.abbreviation,w.defaultContact
+    PAGE select w.id, w.no, w.name,w.abbreviation,w.defaultContact,w.webSite,w.addressString,w.address,w.productionAddress,w.profile
+            ,b.bankAddress,b.bankSWIFT,b.bankIBAN,b.bankRTN,b.bank,b.accountNo,b.taxNo
     from    Supplier as w
-    where   1=1 
-            and ( w.name like key2 or w.no like key2 )
+            left join SupplierBankAccount as m on w.id=m.supplier
+            left join BankAccount as b on m.bankAccount=b.id
+    where   ( w.name like key2 or w.no like key2 )
             and w.id > $pageStart and w.isValid = 1 
     order by w.id
     limit $pageSize;

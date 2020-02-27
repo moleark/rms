@@ -1,14 +1,35 @@
 --供应商
-TUID Supplier(
+TUID Supplier ver 2.0(
     id,
     main no char(10) null,
     main name char(200),                     -- 供应商名称
     main abbreviation char(200),             -- 简称
-    main isValid smallint default 1, --是否有效（0 无效、1 有效）
-    main createTime datetime,                --创建时间
+    main webSite char(500),                  --供应商网址1
+    main addressString char(400),
+    main address ID Address,
+    main productionAddress char(500),        --生产厂址
+    main profile char(1000),                 --企业简介(供应商信息概况) 
+    main isValid smallint default 1,         --是否有效（0 无效、1 有效）
     main defaultContact ID SupplierContact,  --默认联系人
     search(name),
     unique(no),
+);
+
+--银行账户信息
+TUID BankAccount (
+    id,
+    main bankAddress char(500),              --供应商银行地址
+    main bankSWIFT char(100),                --供应商开户行SWIFT/BIC
+    main bankIBAN char(100),                 --供应商开户行IBAN
+    main bankRTN char(20),                   --供应商开户行的RTN   
+    main bank char(100),                     --供应商开户银行
+    main accountNo char(60),                 --供应商在开户银行的帐号 
+    main taxNo char(50),                     --税号  
+);
+
+MAP SupplierBankAccount (
+    key supplier ID Supplier,
+    key bankAccount ID BankAccount,
 );
 
 --供应商联系人

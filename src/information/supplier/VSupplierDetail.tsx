@@ -52,25 +52,29 @@ export class VSupplierDetail extends VPage<CSupplier> {
 
     private rowTop = () => {
         let supplierData = _.clone(this.supplier);
-        let { name, no, abbreviation, createTime } = supplierData;
+        let { name, no, abbreviation, webSite, address, addressString, productionAddress, profile, bankAddress, bankSWIFT, bankIBAN, bankRTN, bank, accountNo, taxNo } = supplierData;
 
-        return <div className="py-2 bg-white mb-3">
-            <div className="cursor-pointer">
-                &nbsp;<FA className="align-middle text-warning" name="credit-card" /><span className="h6 py-2 px-1 align-middle"><b> 供应商基本信息</b></span>
+        return <div className="py-2">
+            <div className="bg-white row no-gutters px-4 my-1">
+                <div className="col-3 text-muted">编号:</div><div className="col-9">{no}</div>
             </div>
-            <div className="py-2 cat-root-sub small">
-                <div className="bg-white row no-gutters px-4 my-1">
-                    <div className="col-3 text-muted">编号:</div><div className="col-9">{no}</div>
-                </div>
-                <div className="bg-white row no-gutters px-4 my-1">
-                    <div className="col-3 text-muted">名称:</div><div className="col-9">{name}</div>
-                </div>
-                <div className="bg-white row no-gutters px-4 my-1">
-                    <div className="col-3 text-muted">简称:</div><div className="col-9">{abbreviation}</div>
-                </div>
-                <div className="bg-white row no-gutters px-4 my-1">
-                    <div className="col-3 text-muted">创建时间:</div><div className="col-9">{<EasyDate date={createTime} />}</div>
-                </div>
+            <div className="bg-white row no-gutters px-4 my-1">
+                <div className="col-3 text-muted">名称:</div><div className="col-9">{name}</div>
+            </div>
+            <div className="bg-white row no-gutters px-4 my-1">
+                <div className="col-3 text-muted">简称:</div><div className="col-9">{abbreviation}</div>
+            </div>
+            <div className="bg-white row no-gutters px-4 my-1">
+                <div className="col-3 text-muted">网址:</div><div className="col-9">{webSite}</div>
+            </div>
+            <div className="bg-white row no-gutters px-4 my-1">
+                <div className="col-3 text-muted">地址:</div><div className="col-9">{tv(address)}</div>
+            </div>
+            <div className="bg-white row no-gutters px-4 my-1">
+                <div className="col-3 text-muted">生产厂址:</div><div className="col-9">{abbreviation}</div>
+            </div>
+            <div className="bg-white row no-gutters px-4 my-1">
+                <div className="col-3 text-muted">企业简介:</div><div className="col-9">{abbreviation}</div>
             </div>
         </div>;
     }

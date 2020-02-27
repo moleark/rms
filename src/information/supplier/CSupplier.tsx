@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, BoxId, Image, PageItems, Query } from 'tonva';
+import { View, BoxId, Image, PageItems, Query, Context } from 'tonva';
 import { CUqBase } from 'CBase';
 import { nav } from 'tonva';
 import { observable } from 'mobx';
@@ -10,6 +10,7 @@ import { VSupplierList } from './VSupplierList';
 import { VHome } from '../VHome';
 import { VSupplierDetail } from './VSupplierDetail';
 import { SupplierItem } from "model/supplierItem";
+import { CAddress } from "../supplierContact/CAddress";
 
 class PageSupplier extends PageItems<any> {
 
@@ -44,6 +45,11 @@ export class CSupplier extends CUqBase {
         this.suppliers.first({ key: key });
     }
 
+    pickAddress = async (context: Context, name: string, value: number): Promise<number> => {
+        let cAddress = this.newC(CAddress);
+        return await cAddress.call<number>();
+    }
+
     renderRootList() {
         return this.renderView(VSupplierList);
     }
@@ -51,11 +57,20 @@ export class CSupplier extends CUqBase {
     saveSupplierData = async (supplier: any) => {
 
         if (supplier.id === undefined) {
-            supplier.createTime = Date.now();
             supplier.defaultContact = undefined;
-            await this.uqs.rms.Supplier.save(undefined, supplier);
+            supplier.isValid = 1;
+            let newSupplier = await this.uqs.rms.Supplier.save(undefined, supplier);
+            let newBank = await this.uqs.rms.BankAccount.save(undefined, supplier);
+            await this.uqs.rms.SupplierBankAccount.add({ supplier: newSupplier.id, arr1: [{ bankAccount: newBank.id }] });
         } else {
-            await this.uqs.rms.Supplier.save(supplier.id, supplier);
+            let { id } = supplier;
+            let bankmap: any[] = [];
+            supplier.isValid = 1;
+            bankmap = await this.uqs.rms.SupplierBankAccount.table({ supplier: id });
+            for (let bank of bankmap) {
+                await this.uqs.rms.BankAccount.save(bank.bankAccount.id, supplier);
+            }
+            await this.uqs.rms.Supplier.save(id, supplier);
         }
         await this.cApp.cHome.start();
     }
@@ -87,6 +102,16 @@ export class CSupplier extends CUqBase {
             child: contact.ret,
         }
         this.openVPage(VSupplierDetail, param);
+    }
+
+    delSupplier = async (supplier: any) => {
+        let { id } = supplier;
+        supplier.isValid = 0;
+        await this.uqs.rms.Supplier.save(id, supplier);
+    }
+
+    loadList = async () => {
+        await this.searchSupplierByKey("");
     }
 }
 
