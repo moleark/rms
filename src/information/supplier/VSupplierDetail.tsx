@@ -24,7 +24,7 @@ export class VSupplierDetail extends VPage<CSupplier> {
 
         return <div>
             <div className="cursor-pointer text-center py-2" onClick={() => showCreateSupplierContact(this.supplier)}>
-                <button className="btn btn-sm " >
+                <button className="btn btn-sm bg-white" >
                     <span className="px-2"><FA className="text-warning px-1" name="user" /><b>联系人</b></span>
                     <span><FA name="plus fa-1x" /></span>
                 </button>
@@ -73,10 +73,10 @@ export class VSupplierDetail extends VPage<CSupplier> {
                 <div className="col-3">地址:</div><div className="col-9 text-right">{tv(address)}</div>
             </div>
             <div className="row no-gutters px-3 my-1">
-                <div className="col-3">生产厂址:</div><div className="col-9 text-right">{abbreviation}</div>
+                <div className="col-3">生产厂址:</div><div className="col-9 text-right">{productionAddress}</div>
             </div>
             <div className="row no-gutters px-3 my-1">
-                <div className="col-3">企业简介:</div><div className="col-9 text-right">{abbreviation}</div>
+                <div className="col-3">企业简介:</div><div className="col-9 text-right">{profile}</div>
             </div>
         </div>;
     }
@@ -86,12 +86,9 @@ export class VSupplierDetail extends VPage<CSupplier> {
         let { pickChemical } = this.controller;
         let supplierData = _.clone(this.supplier);
 
-        let header = <header className="py-2 text-center text-white">
-            <span className="h5 align-middle">供应商详情</span>
-        </header>;
         let right = <button className="btn btn-sm btn-success" onClick={() => pickChemical(supplierData)} >+产品</ button>;
 
-        return <Page header={header} right={right} headerClassName="bg-primary">
+        return <Page header="供应商详情" right={right} headerClassName="py-1 bg-primary">
             {this.rowTop(supplierData)}
             {this.getSupplierContact()}
         </Page>
