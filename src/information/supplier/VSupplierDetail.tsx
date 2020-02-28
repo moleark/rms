@@ -22,30 +22,33 @@ export class VSupplierDetail extends VPage<CSupplier> {
     private getSupplierContact = () => {
         let { showCreateSupplierContact } = this.controller.cApp.cSupplierContact;
 
-        return <div className="bg-white mb-3">
-            <div className="cursor-pointer mb-3">
-                &nbsp;<FA className="align-middle text-warning" name="users" /><span className="px-1 align-middle"><b> 供应商联系人</b></span>
+        return <div>
+            <div className="cursor-pointer bg-white text-center" onClick={() => showCreateSupplierContact(this.supplier)}>
+                <button className="btn btn-sm" >
+                    <span className="px-2"><FA className="text-warning px-1" name="user" /><b>联系人</b></span>
+                    <span><FA name="plus fa-1x" /></span>
+                </button>
             </div>
-            {this.firstSupplierContact && <List items={this.supplierContacts} item={{ render: this.renderContact }} />}
-            <div className="text-primary text-center small bg-white py-2" onClick={() => showCreateSupplierContact(this.supplier)}><FA name="plus" />联系人</div>
-
-        </div>
+            <div className="py-2">
+                {this.firstSupplierContact && <List items={this.supplierContacts} item={{ render: this.renderContact }} />}
+            </div>
+        </div >
     }
 
     private renderContact = (item: any, index: number) => {
         let { showEditSupplierContact, showSupplierContactDetail } = this.controller.cApp.cSupplierContact;
         let { no, name, id, gender, mobile } = item;
         let { defaultContact } = this.supplier;
-        let fa_text = defaultContact === undefined ? "px-2 small" : (defaultContact.id === id ? "px-2 text-info small" : "px-2 small");
+        let fa_text = defaultContact === undefined ? "px-2" : (defaultContact.id === id ? "px-2 text-info " : "px-2 ");
         let fa_gender = gender === "0" ? <FA name="female" className="px-2 text-danger"></FA> : <FA name="male" className="px-2 text-primary"></FA>;
         let left = <div className={fa_text} onClick={() => showSupplierContactDetail(item)}>
             {fa_gender}
             {name}&nbsp;&nbsp;{mobile === undefined ? "无" : mobile}</div>
         let right =
-            <div className="px-2 text-right small">
+            <div className="px-2 text-right">
                 <span onClick={() => showEditSupplierContact(this.supplier, item)}><FA className="align-middle p-2 cursor-pointer text-info" name="edit" /></span>
             </div>;
-        return <LMR left={left} right={right} className="py-2">
+        return <LMR left={left} right={right} className=" d-flex p-1 cursor-pointer">
         </LMR>;
     }
 
@@ -54,26 +57,26 @@ export class VSupplierDetail extends VPage<CSupplier> {
         let { name, no, abbreviation, webSite, address, addressString, productionAddress, profile, bankAddress, bankSWIFT, bankIBAN, bankRTN, bank, accountNo, taxNo } = supplierData;
 
         return <div className="bg-white py-2">
-            <div className="bg-white row no-gutters px-4 my-1">
-                <div className="col-3 text-muted">编号:</div><div className="col-9">{no}</div>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">编号:</div><div className="col-9 text-right">{no}</div>
             </div>
-            <div className="bg-white row no-gutters px-4 my-1">
-                <div className="col-3 text-muted">名称:</div><div className="col-9">{name}</div>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">名称:</div><div className="col-9 text-right">{name}</div>
             </div>
-            <div className="bg-white row no-gutters px-4 my-1">
-                <div className="col-3 text-muted">简称:</div><div className="col-9">{abbreviation}</div>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">简称:</div><div className="col-9 text-right">{abbreviation}</div>
             </div>
-            <div className="bg-white row no-gutters px-4 my-1">
-                <div className="col-3 text-muted">网址:</div><div className="col-9">{webSite}</div>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">网址:</div><div className="col-9 text-right">{webSite}</div>
             </div>
-            <div className="bg-white row no-gutters px-4 my-1">
-                <div className="col-3 text-muted">地址:</div><div className="col-9">{tv(address)}</div>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">地址:</div><div className="col-9 text-right">{tv(address)}</div>
             </div>
-            <div className="bg-white row no-gutters px-4 my-1">
-                <div className="col-3 text-muted">生产厂址:</div><div className="col-9">{abbreviation}</div>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">生产厂址:</div><div className="col-9 text-right">{abbreviation}</div>
             </div>
-            <div className="bg-white row no-gutters px-4 my-1">
-                <div className="col-3 text-muted">企业简介:</div><div className="col-9">{abbreviation}</div>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">企业简介:</div><div className="col-9 text-right">{abbreviation}</div>
             </div>
         </div>;
     }
