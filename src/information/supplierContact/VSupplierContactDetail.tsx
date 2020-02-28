@@ -24,9 +24,6 @@ export class VSupplierContactDetail extends VPage<CSupplierContact> {
 
         return <Page header={header} headerClassName="bg-primary">
             <div className="py-2 bg-white mb-3">
-                <div className="cursor-pointer">
-                    &nbsp;<FA className="align-middle text-warning" name="credit-card" /><span className="h6 py-2 px-1 align-middle"><b> 供应商联系人基本信息</b></span>
-                </div>
                 <div className="py-2 cat-root-sub">
                     <div className="bg-white row no-gutters px-4 my-1">
                         <div className="col-3 text-muted">编号:</div><div className="col-9">{no}</div>
@@ -40,7 +37,7 @@ export class VSupplierContactDetail extends VPage<CSupplierContact> {
                     <div className="bg-white row no-gutters px-4 my-1">
                         <div className="col-3 text-muted">名:</div><div className="col-9">{firstName}</div>
                     </div>
-                    <div className="bg-white row no-gutters px-4 my-1">:
+                    <div className="bg-white row no-gutters px-4 my-1">
                         <div className="col-3 text-muted">性别:</div><div className="col-9">{gender === "0" ? "女" : (gender === "1" ? "男" : "")}</div>
                     </div>
                     <div className="bg-white row no-gutters px-4 my-1">
