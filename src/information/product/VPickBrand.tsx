@@ -11,17 +11,17 @@ export class VPickBrand extends VPage<CBrand> {
     private page = observer(() => {
         let { brands, searchBrandByKey, onNewBrand } = this.controller;
 
-        let right = <div className="w-19c d-flex">
-            <span onClick={() => onNewBrand()} className="fa-stack">
-                <i className="fa fa-square fa-stack-2x text-primary"></i>
-                <i className="fa fa-plus fa-stack-1x"></i>
+        let right = <div className="d-flex align-items-center">
+            <div><span onClick={() => onNewBrand()} className="fa-stack">
+                <i className="fa fa-plus-square fa-stack-2x cursor-pointer my-1" style={{ fontSize: '1.6rem' }}></i>
             </span>
+            </div>
         </div>;
-        let header = <header className="py-2 px-2 text-center text-white">
-            <span className="h5 align-middle" style={{ textAlign: 'center' }}>选择品牌</span>
+        let header = <header>
+            <div>选择品牌</div>
         </header>;
-        return <Page header={header} right={right} onScrollBottom={this.onScrollBottom} headerClassName="bg-primary" >
-            <SearchBox className="w-60"
+        return <Page header={header} right={right} onScrollBottom={this.onScrollBottom} headerClassName="py-1 bg-primary" >
+            <SearchBox
                 size='sm'
                 onSearch={(key: string) => searchBrandByKey(key)}
                 placeholder="请输入关键字" />

@@ -31,7 +31,7 @@ export class VSupplierDetail extends VPage<CSupplier> {
                 </button>
                 <div className="flex-grow-1"></div>
                 <button className="btn btn-sm btn-success" onClick={() => this.controller.pickChemical(this.supplier)} >
-                    <span className="px-2"><FA className="text-warning px-1" name="filter" /><b>产品&nbsp;&nbsp;&nbsp;</b></span>
+                    <span className="px-2"><FA className="text-warning px-1" name="filter" /><b>产&nbsp;&nbsp;品&nbsp;</b></span>
                     <span className="px-2"><FA name="plus fa-1x" /></span>
                 </ button>
             </div>
@@ -54,7 +54,7 @@ export class VSupplierDetail extends VPage<CSupplier> {
             <div className="px-2 text-right">
                 <span onClick={() => showEditSupplierContact(this.supplier, item)}><FA className="align-middle p-2 cursor-pointer text-info" name="edit" /></span>
             </div>;
-        return <LMR left={left} right={right} className=" d-flex cursor-pointer">
+        return <LMR left={left} right={right} className="p-1 d-flex cursor-pointer">
         </LMR>;
     }
 

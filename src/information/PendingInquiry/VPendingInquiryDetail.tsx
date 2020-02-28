@@ -85,11 +85,8 @@ export class VPendingInquiryDetail extends VPage<CPendingInquiry> {
 
     private page = () => {
         let suppplierData = _.clone(this.pending);
-        let header = <header className="py-2 text-center text-white">
-            <span className="h5 align-middle">询价详情</span>
-        </header>;
 
-        return <Page header={header} headerClassName="bg-primary">
+        return <Page header="询价详情" headerClassName="py-1 bg-primary">
             {this.rowTop(suppplierData)}
             {this.getPackage()}
             <div className="App-container container text-left">

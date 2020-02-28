@@ -11,11 +11,8 @@ export class VChemical extends VPage<CChemical> {
     private page = observer(() => {
         let { chemicals, searchChemicalByKey } = this.controller;
 
-        let header = <header className="py-2 px-2 text-center text-white">
-            <span className="h5 align-middle" style={{ textAlign: 'center' }}>选择chemid</span>
-        </header>;
-        return <Page header={header} onScrollBottom={this.onScrollBottom} headerClassName="bg-primary">
-            <SearchBox className="w-80 mt-1 mr-2"
+        return <Page header="选择chemid" onScrollBottom={this.onScrollBottom} headerClassName="bg-primary">
+            <SearchBox
                 size='sm'
                 onSearch={(key: string) => searchChemicalByKey(key)}
                 placeholder="请输入CAS、名称关键字" />

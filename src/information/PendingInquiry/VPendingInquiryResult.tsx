@@ -114,9 +114,9 @@ export class VPendingInquiryResult extends VPage<CPendingInquiry> {
     private page = () => {
         let descriptionData = _.clone(this.inquiryData);
 
-        return <Page header="录入询价结果" headerClassName="bg-primary">
-            <div className="bg-white">
-                <Form ref={v => this.form = v} className="m-3"
+        return <Page header="录入询价结果" headerClassName="py-1 bg-primary">
+            <div className="App-container container text-left">
+                <Form ref={v => this.form = v} className="my-3"
                     schema={schema}
                     uiSchema={this.uiSchema}
                     formData={descriptionData}

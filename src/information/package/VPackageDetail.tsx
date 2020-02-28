@@ -20,11 +20,11 @@ export class VPackageDetail extends VPage<CPackage> {
             , maxArriveDate, invoiceType, vatRate, tariffRate } = packageData;
         let radio = (radiox !== 1) ? <>{radiox} * {radioy}{unit}</> : <>{radioy}{unit}</>;
 
-        let header = <header className="py-2 text-center text-white">
-            <span className="h5 align-middle">包装详情: {radio}</span>
+        let header = <header>
+            <span>包装详情: {radio}</span>
         </header>;
 
-        return <Page header={header} headerClassName="bg-primary">
+        return <Page header={header} headerClassName="py-1 bg-primary" >
             <div className="bg-white row no-gutters p-3 my-1">
                 <div className="col-3 text-muted">包装类型:</div>
                 <div className="col-9">{type === 1 ? "目录包装" : (type === 2 ? "非目录包装" : "")}</div>

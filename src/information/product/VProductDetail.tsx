@@ -108,12 +108,9 @@ export class VProductDetail extends VPage<CProduct> {
     private page = () => {
 
         let { onNewPendingInquiry } = this.controller.cApp.cNewPendingInquiry;
-        let header = <header className="py-2 text-center text-white">
-            <span className="h5 align-middle">产品详情</span>
-        </header>;
         let right = <button className="btn btn-sm btn-success" onClick={() => onNewPendingInquiry(this.product)} >+询价</ button>;
 
-        return <Page header={header} right={right} headerClassName="bg-primary">
+        return <Page right={right} header="产品详情" headerClassName="py-1 bg-primary">
             {this.rowTop()}
             {this.getPackage()}
         </Page >

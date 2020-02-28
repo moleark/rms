@@ -94,7 +94,7 @@ export class VAddProduct extends VPage<CProduct> {
     private page = () => {
         let descriptionData = _.clone(this.productData);
 
-        return <Page header="添加产品" headerClassName="bg-primary">
+        return <Page header="添加产品" headerClassName="py-1 bg-primary">
             {this.showChemicalData()}
             <div className="App-container container text-left">
                 <Form ref={v => this.form = v} className="my-3"

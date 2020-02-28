@@ -30,7 +30,7 @@ export class VInquiryDetail extends VPage<CInquiry> {
         let { supplier, contactName, contactSalutation, contactDepartmentName, contactTelephone, contactMobile, contactEmail, contactfax, way, remarks, inquiryitems, result } = data;
 
         let header = <>询价单详情: {no}</>
-        return <Page header={header} headerClassName="bg-primary">
+        return <Page header={header} headerClassName="py-1 bg-primary">
             <List items={inquiryitems} item={{ render: this.renderOrderItem }} />
             <div className="bg-white row no-gutters p-3 my-1">
                 <div className="col-3 text-muted">供应商:</div>

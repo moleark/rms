@@ -12,10 +12,10 @@ export class VPickProduct extends VPage<CPickProduct> {
         let { products, searchProductByKey } = this.controller;
         let { onNewPendingInquiry } = this.controller.cApp.cNewPendingInquiry;
 
-        let header = <header className="py-2 px-2 text-center text-white">
-            <span className="h5 align-middle" style={{ textAlign: 'center' }}>选择产品</span>
+        let header = <header>
+            <div className="px-3" >选择产品</div>
         </header>;
-        return <Page header={header} onScrollBottom={this.onScrollBottom} headerClassName="bg-primary">
+        return <Page header={header} onScrollBottom={this.onScrollBottom} headerClassName="py-1 bg-primary">
             <SearchBox className="w-80 mt-1 mr-2"
                 size='sm'
                 onSearch={(key: string) => searchProductByKey(key)}

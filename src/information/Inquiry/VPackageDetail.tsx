@@ -20,7 +20,7 @@ export class VPackageDetail extends VPage<CInquiry> {
         let radio = (radiox !== 1) ? <>{radiox} * {radioy}{unit}</> : <>{radioy}{unit}</>;
 
         let header = <>询价包装详情: {inquiryQuantity} * {inquiryRadio}</>
-        return <Page header={header} headerClassName="bg-primary">
+        return <Page header={header} headerClassName="py-1 bg-primary">
             <div className="bg-white row no-gutters p-3 my-1">
                 <div className="col-3 text-muted">报价包装:</div>
                 <div className="col-9">{quantity} * {radio}</div>

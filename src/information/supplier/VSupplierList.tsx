@@ -26,6 +26,6 @@ export class VSupplierList extends View<CSupplier> {
 
     private content = observer(() => {
         let { suppliers } = this.controller;
-        return <div className="py-2"><List items={suppliers} item={{ render: this.renderRootCategory }} /></div>;
+        return <List items={suppliers} item={{ render: this.renderRootCategory }} />;
     });
 } 

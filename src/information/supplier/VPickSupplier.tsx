@@ -11,11 +11,11 @@ export class VPickSupplier extends VPage<CPickSupplier> {
     private page = observer(() => {
         let { suppliers, searchSupplierByKey } = this.controller;
 
-        let header = <header className="py-2 px-2 text-center text-white">
-            <span className="h5 align-middle" style={{ textAlign: 'center' }}>选择供应商</span>
+        let header = <header>
+            <div>选择供应商</div>
         </header>;
-        return <Page header={header} onScrollBottom={this.onScrollBottom} headerClassName="bg-primary">
-            <SearchBox className="w-80 mt-1 mr-2"
+        return <Page header={header} onScrollBottom={this.onScrollBottom} headerClassName="py-1 bg-primary">
+            <SearchBox
                 size='sm'
                 onSearch={(key: string) => searchSupplierByKey(key)}
                 placeholder="请输入关键字" />

@@ -86,16 +86,13 @@ export class VNewPendingInquiryDetail extends VPage<CNewPendingInquiry> {
         let suppplierData = _.clone(this.suppplier);
 
         let { deletePendingInquiryData } = this.controller;
-        let header = <header className="py-2 text-center text-white">
-            <span className="h5 align-middle">询价详情</span>
-        </header>;
         let right = <div className="w-19c d-flex">
             <span onClick={() => deletePendingInquiryData(suppplierData)} className="fa-stack">
                 <i className="fa fa-square fa-stack-2x text-primary"></i>
                 <i className="fa fa-remove fa-stack-1x text-danger"></i>
             </span>
         </div>;
-        return <Page header={header} right={right} headerClassName="bg-primary">
+        return <Page right={right} header="询价详情" headerClassName="py-1 bg-primary">
             {this.rowTop(suppplierData)}
             <Form ref={v => this.form = v} className="m-3"
                 schema={schema}
