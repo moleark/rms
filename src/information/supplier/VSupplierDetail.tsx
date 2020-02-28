@@ -23,8 +23,8 @@ export class VSupplierDetail extends VPage<CSupplier> {
         let { showCreateSupplierContact } = this.controller.cApp.cSupplierContact;
 
         return <div>
-            <div className="cursor-pointer bg-white text-center" onClick={() => showCreateSupplierContact(this.supplier)}>
-                <button className="btn btn-sm" >
+            <div className="cursor-pointer text-center py-2" onClick={() => showCreateSupplierContact(this.supplier)}>
+                <button className="btn btn-sm " >
                     <span className="px-2"><FA className="text-warning px-1" name="user" /><b>联系人</b></span>
                     <span><FA name="plus fa-1x" /></span>
                 </button>
