@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import _ from 'lodash';
 import { CSupplier } from "./CSupplier";
 import { SupplierItem } from "model/supplierItem";
+import { TuidBoxDiv } from 'tonva/dist/uq/tuid/tuid';
 
 export class VSupplierDetail extends VPage<CSupplier> {
 
@@ -23,11 +24,16 @@ export class VSupplierDetail extends VPage<CSupplier> {
         let { showCreateSupplierContact } = this.controller.cApp.cSupplierContact;
 
         return <div>
-            <div className="cursor-pointer text-center py-2" onClick={() => showCreateSupplierContact(this.supplier)}>
-                <button className="btn btn-sm bg-white" >
+            <div className=" d-flex px-3 py-2">
+                <button className="btn btn-sm btn-success" onClick={() => showCreateSupplierContact(this.supplier)}>
                     <span className="px-2"><FA className="text-warning px-1" name="user" /><b>联系人</b></span>
-                    <span><FA name="plus fa-1x" /></span>
+                    <span className="px-2"><FA name="plus fa-1x" /></span>
                 </button>
+                <div className="flex-grow-1"></div>
+                <button className="btn btn-sm btn-success" onClick={() => this.controller.pickChemical(this.supplier)} >
+                    <span className="px-2"><FA className="text-warning px-1" name="filter" /><b>产品&nbsp;&nbsp;&nbsp;</b></span>
+                    <span className="px-2"><FA name="plus fa-1x" /></span>
+                </ button>
             </div>
             <div className="py-2">
                 {this.firstSupplierContact && <List items={this.supplierContacts} item={{ render: this.renderContact }} />}
@@ -48,7 +54,7 @@ export class VSupplierDetail extends VPage<CSupplier> {
             <div className="px-2 text-right">
                 <span onClick={() => showEditSupplierContact(this.supplier, item)}><FA className="align-middle p-2 cursor-pointer text-info" name="edit" /></span>
             </div>;
-        return <LMR left={left} right={right} className=" d-flex p-1 cursor-pointer">
+        return <LMR left={left} right={right} className=" d-flex cursor-pointer">
         </LMR>;
     }
 
@@ -83,14 +89,13 @@ export class VSupplierDetail extends VPage<CSupplier> {
 
     private page = () => {
 
-        let { pickChemical } = this.controller;
         let supplierData = _.clone(this.supplier);
 
-        let right = <button className="btn btn-sm btn-success" onClick={() => pickChemical(supplierData)} >+产品</ button>;
-
-        return <Page header="供应商详情" right={right} headerClassName="py-1 bg-primary">
-            {this.rowTop(supplierData)}
-            {this.getSupplierContact()}
+        return <Page header="供应商详情" headerClassName="py-1 bg-primary">
+            <div>
+                {this.rowTop(supplierData)}
+                {this.getSupplierContact()}
+            </div>
         </Page>
     }
 }

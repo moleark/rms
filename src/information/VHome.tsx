@@ -21,7 +21,7 @@ export class VHome extends View<CHome> {
                 onSearch={(key: string) => searchSupplierByKey(key)}
                 placeholder="请输入关键字" />
             <div><span onClick={() => onNewSupplier()} className="fa-stack">
-                <i className="fa fa-plus-square fa-stack-2x cursor-pointer my-1" style={{ fontSize: '1.5rem' }}></i>
+                <i className="fa fa-plus-square fa-stack-2x cursor-pointer my-1" style={{ fontSize: '1.6rem' }}></i>
             </span></div>
         </div>;
         let header = <header>
