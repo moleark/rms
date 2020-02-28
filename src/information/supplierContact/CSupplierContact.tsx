@@ -77,13 +77,6 @@ export class CSupplierContact extends CUqBase {
         this.cApp.cHome.start();
     }
 
-    delSupplierContact = async (parent: any, model: any) => {
-        let { id, no, name, firstName, lastName, isDefault, isValid, supplier, gender, salutation, departmentName, telephone, mobile, email, fax, zipCode, wechatId, addressString, address } = model;
-        await this.uqs.rms.SupplierContact.save(id, { no: no, name: name, firstName: firstName, lastName: lastName, supplier: supplier, gender: gender, salutation: salutation, departmentName: departmentName, telephone: telephone, mobile: mobile, email: email, fax: fax, zipCode: zipCode, wechatId: wechatId, addressString: addressString, address: address, isDefault: isDefault, isValid: 0 });
-        await this.uqs.rms.SearchSupplierContact.query({ _id: model.id });
-        this.closePage();
-    }
-
     loadList = async (parent: any) => {
         await this.cApp.cSupplier.onSupplierSelected(parent);
     }
@@ -99,5 +92,11 @@ export class CSupplierContact extends CUqBase {
             child: child,
         }
         this.openVPage(VSupplierDetail, param);
+    }
+
+    delSupplierContact = async (supplierContact: any, supplier: any) => {
+        let { id } = supplierContact;
+        supplierContact.isValid = 0;
+        await this.uqs.rms.SupplierContact.save(id, supplierContact);
     }
 }

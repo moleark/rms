@@ -10,7 +10,6 @@ const schema: Schema = [
     { name: 'brand', type: 'id', required: false },
     { name: 'origin', type: 'string', required: false },
     { name: 'purity', type: 'string', required: false },
-    { name: 'isTrue', type: 'boolean', required: true },
     { name: 'submit', type: 'submit' }
 ];
 
@@ -18,15 +17,15 @@ export class VAddProduct extends VPage<CProduct> {
 
     private form: Form;
     private productData: any;
+    private model: any = this.controller.supplier;
 
     private uiSchema: UiSchema = {
         items: {
             id: { visible: false },
             supplier: {
-                widget: 'id', label: '供应商', placeholder: '请选择供应商',
-                pickId: async (context: Context, name: string, value: number) => await this.controller.pickSupplier(context, name, value),
+                widget: 'id', label: '供应商', placeholder: '请选择供应商', defaultValue: this.model,
+                pickId: async (context: Context, name: string, value: number) => this.model !== undefined ? this.model : await this.controller.pickSupplier(context, name, value),
                 Templet: (item: any) => {
-                    //let { obj } = item;
                     if (!item) return <small className="text-muted">请选择供应商</small>;
                     return <>
                         {tv(item, v => <>{v.name}</>)}
@@ -46,10 +45,10 @@ export class VAddProduct extends VPage<CProduct> {
             } as UiIdItem,
             origin: { widget: 'text', label: '供应商自编号', placeholder: '供应商自编号' } as UiInputItem,
             purity: { widget: 'text', label: '纯度', placeholder: '纯度' } as UiInputItem,
-            isTrue: { widget: 'checkbox', label: '有效', defaultValue: true },
             submit: { widget: 'button', label: '提交', className: "btn btn-primary mr-3 px-6" }
         }
     }
+
 
     async open(productData: any) {
         this.productData = productData;
@@ -97,8 +96,8 @@ export class VAddProduct extends VPage<CProduct> {
 
         return <Page header="添加产品" headerClassName="bg-primary">
             {this.showChemicalData()}
-            <div className="bg-white">
-                <Form ref={v => this.form = v} className="m-3"
+            <div className="App-container container text-left">
+                <Form ref={v => this.form = v} className="my-3"
                     schema={schema}
                     uiSchema={this.uiSchema}
                     formData={descriptionData}

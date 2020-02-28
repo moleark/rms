@@ -10,7 +10,6 @@ export class VChemical extends VPage<CChemical> {
 
     private page = observer(() => {
         let { chemicals, searchChemicalByKey } = this.controller;
-        let { onNewProduct } = this.controller.cApp.cProduct;
 
         let header = <header className="py-2 px-2 text-center text-white">
             <span className="h5 align-middle" style={{ textAlign: 'center' }}>选择chemid</span>
@@ -20,19 +19,19 @@ export class VChemical extends VPage<CChemical> {
                 size='sm'
                 onSearch={(key: string) => searchChemicalByKey(key)}
                 placeholder="请输入CAS、名称关键字" />
-            <List items={chemicals} item={{ render: this.renderItem, onClick: onNewProduct }} />
+            <List items={chemicals} item={{ render: this.renderItem }} />
         </Page>;
     });
-
 
     private onScrollBottom = async () => {
         await this.controller.chemicals.more();
     }
 
-
     private renderItem = (item: any, index: number) => {
         let { CAS, description } = item;
-        return <LMR className="py-2 border">
+        let { supplier } = this.controller;
+        let { onNewProduct } = this.controller.cApp.cProduct;
+        return <LMR className="py-2 border" onClick={() => onNewProduct(item, supplier)}>
             <div><FA name="circle" className="px-2 text-primary"></FA>CAS:{CAS}</div>
             <div className="px-4 text-muted small">英文：{description}</div>
         </LMR >;

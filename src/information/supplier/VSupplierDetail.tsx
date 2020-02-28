@@ -23,8 +23,8 @@ export class VSupplierDetail extends VPage<CSupplier> {
         let { showCreateSupplierContact } = this.controller.cApp.cSupplierContact;
 
         return <div className="bg-white mb-3">
-            <div className="cursor-pointer">
-                &nbsp;<FA className="align-middle text-warning" name="users" /><span className="h6 py-2 px-1 align-middle"><b> 供应商联系人</b></span>
+            <div className="cursor-pointer mb-3">
+                &nbsp;<FA className="align-middle text-warning" name="users" /><span className="px-1 align-middle"><b> 供应商联系人</b></span>
             </div>
             {this.firstSupplierContact && <List items={this.supplierContacts} item={{ render: this.renderContact }} />}
             <div className="text-primary text-center small bg-white py-2" onClick={() => showCreateSupplierContact(this.supplier)}><FA name="plus" />联系人</div>
@@ -33,28 +33,27 @@ export class VSupplierDetail extends VPage<CSupplier> {
     }
 
     private renderContact = (item: any, index: number) => {
-        let { delSupplierContact, showEditSupplierContact, showSupplierContactDetail } = this.controller.cApp.cSupplierContact;
+        let { showEditSupplierContact, showSupplierContactDetail } = this.controller.cApp.cSupplierContact;
         let { no, name, id, gender, mobile } = item;
         let { defaultContact } = this.supplier;
-        let fa_text = defaultContact === undefined ? "px-2 text-muted small" : (defaultContact.id === id ? "px-2 text-info small" : "px-2 text-muted small");
+        let fa_text = defaultContact === undefined ? "px-2 small" : (defaultContact.id === id ? "px-2 text-info small" : "px-2 small");
         let fa_gender = gender === "0" ? <FA name="female" className="px-2 text-danger"></FA> : <FA name="male" className="px-2 text-primary"></FA>;
         let left = <div className={fa_text} onClick={() => showSupplierContactDetail(item)}>
             {fa_gender}
-            {name} - {mobile === undefined ? "无" : mobile}</div>
+            {name}&nbsp;&nbsp;{mobile === undefined ? "无" : mobile}</div>
         let right =
-            <div className="px-2 text-muted text-right small">
-                <span onClick={() => delSupplierContact(this.supplier, item)}><FA className="align-middle text-danger" name="remove" /></span>
+            <div className="px-2 text-right small">
                 <span onClick={() => showEditSupplierContact(this.supplier, item)}><FA className="align-middle p-2 cursor-pointer text-info" name="edit" /></span>
             </div>;
         return <LMR left={left} right={right} className="py-2">
         </LMR>;
     }
 
-    private rowTop = () => {
-        let supplierData = _.clone(this.supplier);
+    private rowTop = (supplierData: any) => {
+
         let { name, no, abbreviation, webSite, address, addressString, productionAddress, profile, bankAddress, bankSWIFT, bankIBAN, bankRTN, bank, accountNo, taxNo } = supplierData;
 
-        return <div className="py-2">
+        return <div className="bg-white py-2">
             <div className="bg-white row no-gutters px-4 my-1">
                 <div className="col-3 text-muted">编号:</div><div className="col-9">{no}</div>
             </div>
@@ -81,13 +80,48 @@ export class VSupplierDetail extends VPage<CSupplier> {
 
     private page = () => {
 
+        let { pickChemical } = this.controller;
+        let supplierData = _.clone(this.supplier);
+
         let header = <header className="py-2 text-center text-white">
             <span className="h5 align-middle">供应商详情</span>
         </header>;
+        let right = <button className="btn btn-sm btn-success" onClick={() => pickChemical(supplierData)} >+产品</ button>;
 
-        return <Page header={header} headerClassName="bg-primary">
-            {this.rowTop()}
+        return <Page header={header} right={right} headerClassName="bg-primary">
+            {this.rowTop(supplierData)}
             {this.getSupplierContact()}
         </Page>
+    }
+}
+
+class VConfirmDeleteContact extends VPage<CSupplier> {
+    async open(contact: any) {
+        this.openPage(this.page, contact);
+    }
+
+    private onConfirm = async () => {
+        await this.returnCall(true);
+        this.closePage();
+    }
+
+    private onCancel = async () => {
+        await this.returnCall(false);
+        this.closePage();
+    }
+
+    private page = (contact: any) => {
+        return <Page header="删除联系人" back="close">
+            <div className="w-75 mx-auto border border-primary rounded my-3 p-3 bg-white">
+                <div className="p-4 position-relative">
+                    <i className="fa fa-question-circle position-absolute fa-2x text-warning" style={{ left: 0, top: 0 }} />
+                    <b className="">是否删除该联系人？</b>
+                </div>
+                <div className="d-flex mt-3 justify-content-end">
+                    <button className="btn btn-danger mr-3" onClick={this.onConfirm}>删除供联系人</button>
+                    <button className="btn btn-outline-info mr-3" onClick={this.onCancel}>取消</button>
+                </div>
+            </div>
+        </Page>;
     }
 }

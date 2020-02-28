@@ -20,9 +20,9 @@ export class VProductList extends VPage<CProduct> {
             <FA name="edit" />
         </div>
         let left = <div onClick={() => showProductDetail(item)}>
-            <div className="text-muted small">CAS：{CAS}</div>
-            <div className="text-muted small">英文名：{description}</div>
-            <div className="text-muted small">供应商：{tv(supplier, v => <>{v.name}</>)}</div>
+            <div className="">{CAS}</div>
+            <div className="">{description}</div>
+            <div className="text-muted small">{tv(supplier, v => <>{v.name}</>)}</div>
         </div>
         return <LMR left={left} right={right} className="py-2 px-3 border-top">
         </LMR >

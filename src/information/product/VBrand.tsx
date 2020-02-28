@@ -40,8 +40,8 @@ export class VBrand extends VPage<CBrand> {
         let descriptionData = _.clone(this.brandData);
 
         return <Page header="添加品牌" headerClassName="bg-primary">
-            <div className="bg-white">
-                <Form ref={v => this.form = v} className="m-3"
+            <div className="App-container container text-left">
+                <Form ref={v => this.form = v} className="my-3"
                     schema={schema}
                     uiSchema={this.uiSchema}
                     formData={descriptionData}

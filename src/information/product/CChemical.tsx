@@ -28,9 +28,11 @@ class PageChemical extends PageItems<any> {
 export class CChemical extends CUqBase {
 
     @observable chemicals: PageChemical;
+    @observable supplier: any;
 
     async internalStart(param: any) {
-        this.searchChemicalByKey(param);
+        this.supplier = param;
+        this.searchChemicalByKey("");
         this.openVPage(VChemical);
     }
 

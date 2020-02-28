@@ -92,13 +92,15 @@ export class VPendingInquiryDetail extends VPage<CPendingInquiry> {
         return <Page header={header} headerClassName="bg-primary">
             {this.rowTop(suppplierData)}
             {this.getPackage()}
-            <Form ref={v => this.form = v} className="m-3"
-                schema={schema}
-                uiSchema={this.uiSchema}
-                formData={suppplierData}
-                onButtonClick={this.onFormButtonClick}
-                fieldLabelSize={3}
-            />
+            <div className="App-container container text-left">
+                <Form ref={v => this.form = v} className="my-3"
+                    schema={schema}
+                    uiSchema={this.uiSchema}
+                    formData={suppplierData}
+                    onButtonClick={this.onFormButtonClick}
+                    fieldLabelSize={3}
+                />
+            </div>
         </Page >
     }
 }

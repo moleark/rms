@@ -50,6 +50,10 @@ export class CSupplier extends CUqBase {
         return await cAddress.call<number>();
     }
 
+    pickChemical = async (supplier: any): Promise<any> => {
+        let mode: any = await this.cApp.cChemical.call(supplier);
+    }
+
     renderRootList() {
         return this.renderView(VSupplierList);
     }

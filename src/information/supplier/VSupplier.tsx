@@ -77,7 +77,7 @@ export class VSupplier extends VPage<CSupplier> {
         await this.controller.saveSupplierData(context.form.data);
     }
 
-    private onDelContact = async () => {
+    private onDelSupplier = async () => {
         if (await this.vCall(VConfirmDeleteSupplier, this.supplierData) === true) {
             await this.controller.delSupplier(this.supplierData);
             await this.controller.loadList();
@@ -88,8 +88,8 @@ export class VSupplier extends VPage<CSupplier> {
     private page = () => {
         let descriptionData = _.clone(this.supplierData);
         let buttonDel: any;
-        if (descriptionData !== undefined) {
-            buttonDel = <button className="btn btn-sm btn-danger" onClick={this.onDelContact}>删除</button>;
+        if (descriptionData.id !== undefined) {
+            buttonDel = <button className="btn btn-sm btn-danger" onClick={this.onDelSupplier}>删除</button>;
         }
 
         return <Page header="编辑供应商" right={buttonDel} headerClassName="bg-primary">

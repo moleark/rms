@@ -62,7 +62,7 @@ export class CPackage extends CUqBase {
     }
 
     savePackage = async (id: number, param: any, parent: any) => {
-
+        param.isValid = 1;
         await this.uqs.rms.Product.saveArr("Pack", parent.id, id, param);
         this.closePage();
     }

@@ -75,8 +75,8 @@ export class VNewPendingInquiry extends VPage<CNewPendingInquiry> {
 
         return <Page header="待询出" headerClassName="bg-primary">
             {this.showProductlData()}
-            <div className="bg-white">
-                <Form ref={v => this.form = v} className="m-3"
+            <div className="App-container container text-left">
+                <Form ref={v => this.form = v} className="my-3"
                     schema={schema}
                     uiSchema={this.uiSchema}
                     formData={descriptionData}

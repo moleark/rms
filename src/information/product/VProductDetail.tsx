@@ -31,23 +31,30 @@ export class VProductDetail extends VPage<CProduct> {
         </div>
     }
 
+    private onDelPackage = async (item: any) => {
+        if (await this.vCall(VConfirmDeletePakage, item) === true) {
+            await this.controller.delPakage(item);
+            await this.controller.loadList();
+            this.closePage();
+        };
+    }
+
     private renderPackage = (item: any, index: number) => {
         let { showEditPackage, showPackageDetail } = this.controller.cApp.cPackage;
         let { id, radiox, radioy, unit, type, price, currency, validUpto } = item;
         let { defaultContact } = this.product;
         let radio = (radiox !== 1) ? <>{radiox} * {radioy}{unit}</> : <>{radioy}{unit}</>;
-        let left = <div className="px-2 small" onClick={() => showPackageDetail(item)}>
-            <FA name="cube" className="px-2 text-primary"></FA>
-            {radio} <div className="text-muted small px-4">{type === 1 ? "目录包装" : "非目录包装"}</div></div>
-
         let right =
             price === undefined ?
-                <div className="px-2 text-muted text-right small">
-                    <span onClick={() => showEditPackage(this.product, item)}><FA className="align-middle p-2 cursor-pointer text-info" name="edit" /></span>
-                </div> : <div className="px-2 text-info text-right small">
-                    <span>{price}{tv(currency, v => <>{v.name}</>)}</span>
-                    <div className="small"><EasyDate date={validUpto} /></div>
+                <div className="px-2 cursor-pointer text-danger" onClick={() => this.onDelPackage(item)}>
+                    <FA name="remove" />
+                </div> : <div className="px-2 text-info small">
+                    <span>{price}{tv(currency, v => <>{v.name}</>)} <EasyDate date={validUpto} /></span>
                 </div>;
+        let left = <div className="px-2" onClick={() => showPackageDetail(item)}>
+            <FA name="cube" className="px-2 text-primary"></FA>
+            {radio} <span className="small">{type === 1 ? "目录" : "非目录"}</span>
+        </div>;
         return <LMR left={left} right={right} className="py-2">
         </LMR>;
     }
@@ -100,13 +107,46 @@ export class VProductDetail extends VPage<CProduct> {
 
     private page = () => {
 
+        let { onNewPendingInquiry } = this.controller.cApp.cNewPendingInquiry;
         let header = <header className="py-2 text-center text-white">
             <span className="h5 align-middle">产品详情</span>
         </header>;
+        let right = <button className="btn btn-sm btn-success" onClick={() => onNewPendingInquiry(this.product)} >+询价</ button>;
 
-        return <Page header={header} headerClassName="bg-primary">
+        return <Page header={header} right={right} headerClassName="bg-primary">
             {this.rowTop()}
             {this.getPackage()}
         </Page >
+    }
+}
+
+class VConfirmDeletePakage extends VPage<CProduct> {
+    async open(pakage: any) {
+        this.openPage(this.page, pakage);
+    }
+
+    private onConfirm = async () => {
+        await this.returnCall(true);
+        this.closePage();
+    }
+
+    private onCancel = async () => {
+        await this.returnCall(false);
+        this.closePage();
+    }
+
+    private page = (pakage: any) => {
+        return <Page header="删除包装" back="close">
+            <div className="w-75 mx-auto border border-primary rounded my-3 p-3 bg-white">
+                <div className="p-4 position-relative">
+                    <i className="fa fa-question-circle position-absolute fa-2x text-warning" style={{ left: 0, top: 0 }} />
+                    <b className="">是否删除该包装？</b>
+                </div>
+                <div className="d-flex mt-3 justify-content-end">
+                    <button className="btn btn-danger mr-3" onClick={this.onConfirm}>删除包装</button>
+                    <button className="btn btn-outline-info mr-3" onClick={this.onCancel}>取消</button>
+                </div>
+            </div>
+        </Page>;
     }
 }

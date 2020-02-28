@@ -20,7 +20,6 @@ export class VPackage extends VPage<CPackage> {
         { name: 'radioy', type: 'number', required: true },
         { name: 'unit', type: 'string', required: true },
         { name: 'type', type: 'string', required: true },
-        { name: 'isValid', type: 'boolean', required: true },
         { name: 'submit', type: 'submit' }
     ];
 
@@ -30,7 +29,6 @@ export class VPackage extends VPage<CPackage> {
             radioy: { widget: 'text', label: '包装规格', placeholder: '必填', defaultValue: 1 } as UiInputItem,
             unit: { widget: 'text', label: '单位', placeholder: '必填' } as UiInputItem,
             type: { widget: 'radio', label: '类型', list: [{ value: 1, title: '目录包装' }, { value: 2, title: '非目录包装' }] } as UiRadio,
-            isValid: { widget: 'checkbox', label: '有效', defaultValue: true },
             submit: { widget: 'button', label: '提交', className: "btn btn-primary mr-3 px-6" }
         }
     };
@@ -45,13 +43,15 @@ export class VPackage extends VPage<CPackage> {
     private page = observer(() => {
 
         return <Page header="编辑包装" headerClassName="bg-primary">
-            <Form ref={v => this.form = v} className="my-3 mx-3"
-                formData={this.item}
-                schema={this.schema}
-                uiSchema={this.uiSchema}
-                onButtonClick={this.onFormButtonClick}
-                requiredFlag={true}
-            />
+            <div className="App-container container text-left">
+                <Form ref={v => this.form = v} className="my-3"
+                    formData={this.item}
+                    schema={this.schema}
+                    uiSchema={this.uiSchema}
+                    onButtonClick={this.onFormButtonClick}
+                    requiredFlag={true}
+                />
+            </div>
         </Page>;
     })
 }

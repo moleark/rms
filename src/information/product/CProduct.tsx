@@ -35,6 +35,7 @@ export class CProduct extends CUqBase {
 
     @observable products: PageProduct;
     chemical: any;
+    supplier: any;
 
     async internalStart(param: any) {
         this.searchProductByKey(param);
@@ -68,6 +69,7 @@ export class CProduct extends CUqBase {
                 product.description = description;
                 product.descriptionC = descriptoinCN;
                 product.createTime = Date.now();
+                product.isTrue = 1;
                 product.defaultContact = undefined;
                 let result = await this.uqs.rms.Product.save(undefined, product);
                 await this.uqs.rms.ProductChemical.add({ product: result.id, arr1: [{ chemical: id, CAS: CAS, molecularFomula: molecularFomula, molecularWeight: molecularWeight, purity: product.purity }] });
@@ -93,8 +95,9 @@ export class CProduct extends CUqBase {
     /**
     * 打开新建界面
     */
-    onNewProduct = async (model: any) => {
+    onNewProduct = async (model: any, supplier?: any) => {
         this.chemical = model;
+        this.supplier = supplier;
         this.openVPage(VAddProduct, { product: undefined });
     }
 
@@ -129,5 +132,23 @@ export class CProduct extends CUqBase {
 
     tab = () => {
         return <this.render />;
+    }
+
+    delProduct = async (product: any) => {
+        let { id } = product;
+        product.isTrue = 0;
+        await this.uqs.rms.Product.save(id, product);
+    }
+
+    delPakage = async (ppackage: any) => {
+        let { id, product } = ppackage;
+        let param = {
+            radiox: ppackage.radiox,
+            radioy: ppackage.radioy,
+            unit: ppackage.unit,
+            type: ppackage.type,
+            isValid: 0,
+        }
+        let result = await this.uqs.rms.Product.saveArr("Pack", product.id, id, param);
     }
 }
