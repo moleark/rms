@@ -15,20 +15,19 @@ export class VHome extends View<CHome> {
     private page = () => {
         let { onNewSupplier, searchSupplierByKey } = this.controller.cApp.cSupplier;
 
-        let right = <div className="w-19c d-flex">
-            <SearchBox className="w-80"
+        let right = <div className="d-flex align-items-center">
+            <SearchBox
                 size='sm'
                 onSearch={(key: string) => searchSupplierByKey(key)}
                 placeholder="请输入关键字" />
-            <span onClick={() => onNewSupplier()} className="fa-stack">
-                <i className="fa fa-square fa-stack-2x text-primary"></i>
-                <i className="fa fa-plus fa-stack-1x"></i>
-            </span>
+            <div><span onClick={() => onNewSupplier()} className="fa-stack">
+                <i className="fa fa-plus-square fa-stack-2x cursor-pointer my-1" style={{ fontSize: '1.5rem' }}></i>
+            </span></div>
         </div>;
-        let header = <header className="py-2 px-4 text-center text-white">
-            <span className="h5 align-middle" style={{ textAlign: 'center' }}>供应商</span>
+        let header = <header>
+            <div className="px-3" >供应商</div>
         </header>;
-        return <Page right={right} header={header} headerClassName="bg-primary">
+        return <Page right={right} header={header} headerClassName="py-1 bg-primary">
             <this.content />
         </Page>;
     };
