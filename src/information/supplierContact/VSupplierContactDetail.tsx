@@ -60,10 +60,7 @@ export class VSupplierContactDetail extends VPage<CSupplierContact> {
                 <div className="col-3 text-muted">传真:</div><div className="col-9">{fax}</div>
             </div>
             <div className="bg-white row no-gutters p-3 my-1">
-                <div className="col-3 text-muted">所在地区:</div><div className="col-9">{tv(address)}</div>
-            </div>
-            <div className="bg-white row no-gutters p-3 my-1">
-                <div className="col-3 text-muted">详细地址:</div><div className="col-9">{addressString}</div>
+                <div className="col-3 text-muted">所在地区:</div><div className="col-9">{tv(address)} {addressString}</div>
             </div>
             <div className="bg-white row no-gutters p-3 my-1">
                 <div className="col-3 text-muted">邮编:</div><div className="col-9">{zipCode}</div>
