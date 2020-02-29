@@ -98,8 +98,6 @@ export class CNewPendingInquiry extends CUqBase {
             pid: packid,
         };
         await this.uqs.rms.DeleteInquiryPackage.submit(param);
-        this.closePage();
-        await this.loadList();
     }
 
     updatePendingInquiryState = async (model: any, item: any) => {
