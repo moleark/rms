@@ -72,7 +72,7 @@ export class CSupplierContact extends CUqBase {
             if (sid === undefined) {
                 sid = result.id;
             }
-            await this.uqs.rms.Supplier.save(parent.id, { no: parent.no, name: parent.name, abbreviation: parent.abbreviation, createTime: parent.createTime, isValid: 1, defaultContact: sid });
+            await this.uqs.rms.Supplier.save(parent.id, { no: parent.no, name: parent.name, abbreviation: parent.abbreviation, webSite: parent.webSite,address: parent.address,addressString: parent.addressString,productionAddress: parent.productionAddress, profile: parent.profile,isValid: 1, defaultContact: sid });
         }
         this.cApp.cHome.start();
     }

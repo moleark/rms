@@ -18,11 +18,7 @@ export class VSupplierContactDetail extends VPage<CSupplierContact> {
 
         let contactAddress = address === undefined ? undefined : address.obj;
 
-        let header = <header className="py-2 text-center text-white">
-            <span className="h5 align-middle">供应商联系人详情</span>
-        </header>;
-
-        return <Page header={header} headerClassName="bg-primary">
+        return <Page header="供应商联系人详情" headerClassName="py-1 bg-primary">
             <div className="bg-white row no-gutters p-3 my-1">
                 <div className="col-3 text-muted">编号:</div><div className="col-9">{no}</div>
             </div>

@@ -4,7 +4,6 @@ import { CUqBase } from 'CBase';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { VAddProduct } from './VAddProduct';
-import { VEditProduct } from './VEditProduct';
 import { VProductDetail } from './VProductDetail';
 import { VProductList } from './VProductList';
 import { CPickSupplier } from 'information/supplier/CPickSupplier';
@@ -17,7 +16,7 @@ class PageProduct extends PageItems<any> {
     private searchProduct: Query;
     constructor(searchQuery: Query) {
         super();
-        this.firstSize = this.pageSize = 14;
+        this.firstSize = this.pageSize = 10;
         this.searchProduct = searchQuery;
     }
 
@@ -79,14 +78,13 @@ export class CProduct extends CUqBase {
         await this.loadList();
     }
 
-    updateProductData = async (productdata: any, model: any) => {
+    updateProductData = async (productdata: any, purity: any) => {
 
         if (productdata) {
-            productdata.origin = model.origin;
             productdata.isTrue = 1;
             let { chemical } = productdata;
-            await this.uqs.rms.Product.save(model.id, productdata);
-            await this.uqs.rms.ProductChemical.add({ product: model.id, arr1: [{ chemical: chemical.id, CAS: productdata.CAS, molecularFomula: productdata.molecularFomula, molecularWeight: productdata.molecularWeight, purity: model.purity }] });
+            await this.uqs.rms.Product.save(productdata.id, productdata);
+            await this.uqs.rms.ProductChemical.add({ product: productdata.id, arr1: [{ chemical: chemical.id, CAS: productdata.CAS, molecularFomula: productdata.molecularFomula, molecularWeight: productdata.molecularWeight, purity: purity }] });
         }
         this.closePage();
         await this.loadList();
@@ -99,13 +97,6 @@ export class CProduct extends CUqBase {
         this.chemical = model;
         this.supplier = supplier;
         this.openVPage(VAddProduct, { product: undefined });
-    }
-
-    /**
-    * 打开编辑界面
-    */
-    onEditProduct = async (product: any) => {
-        this.openVPage(VEditProduct, product);
     }
 
     /**
@@ -123,7 +114,7 @@ export class CProduct extends CUqBase {
     }
 
     loadList = async () => {
-        await this.searchProductByKey("李");
+        await this.searchProductByKey("");
     }
 
     render = observer(() => {

@@ -40,30 +40,31 @@ export class VNewPendingInquiry extends VPage<CNewPendingInquiry> {
     private showProductlData = () => {
 
         let { product } = this.controller;
-        let { supplier, brand, description, descriptionC, CAS, purity } = product;
+        let { no,supplier, origin,brand, description, descriptionC, CAS, purity } = product;
         let { name } = supplier.obj;
         let brandname = brand === undefined ? undefined : brand.obj.name;
 
-        return <div className="py-2 bg-white">
-            <div className="cursor-pointer">
-                &nbsp;<FA className="align-middle text-warning" name="credit-card" /><span className="h6 py-2 px-1 align-middle"><b>产品信息</b></span>
+        return <div className="bg-white py-2">
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">产品编号:</div><div className="col-9 text-muted text-right">{no}</div>
             </div>
-            <div className="py-2 cat-root-sub small">
-                <div className="bg-white row no-gutters px-4 my-1">
-                    <div className="col-3 text-muted">供应商:</div><div className="col-9">{name}</div>
-                </div>
-                <div className="bg-white row no-gutters px-4 my-1">
-                    <div className="col-3 text-muted">品牌:</div><div className="col-9">{brandname}</div>
-                </div>
-                <div className="bg-white row no-gutters px-4 my-1">
-                    <div className="col-3 text-muted">CAS:</div><div className="col-9">{CAS}</div>
-                </div>
-                <div className="bg-white row no-gutters px-4 my-1">
-                    <div className="col-3 text-muted">英文名称:</div><div className="col-9">{description}</div>
-                </div>
-                <div className="bg-white row no-gutters px-4 my-1">
-                    <div className="col-3 text-muted">中文名称:</div><div className="col-9">{descriptionC}</div>
-                </div>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">供应商:</div><div className="col-9 text-muted text-right">{name}</div>
+            </div>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">品牌:</div><div className="col-9 text-muted text-right">{brandname}</div>
+            </div>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">CAS:</div><div className="col-9 text-muted text-right">{CAS}</div>
+            </div>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">英文名称:</div><div className="col-9 text-muted text-right">{description}</div>
+            </div>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">中文名称:</div><div className="col-9 text-muted text-right">{descriptionC}</div>
+            </div>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">供应商自编号:</div><div className="col-9 text-muted text-right">{origin}</div>
             </div>
         </div>;
     }

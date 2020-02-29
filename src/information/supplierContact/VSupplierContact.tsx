@@ -96,7 +96,11 @@ export class VSupplierContact extends VPage<CSupplierContact> {
 
         let buttonDel: any;
         if (this.item !== undefined) {
-            buttonDel = <button className="btn btn-sm btn-danger" onClick={this.onDelSupplierContact}>删除</button>;
+            buttonDel= <div className="d-flex align-items-center">
+            <div><span onClick={() => this.onDelSupplierContact()} className="fa-stack">
+                <i className="fa fa-times-circle fa-stack-2x cursor-pointer my-1" style={{ fontSize: '1.6rem' }}></i>
+            </span></div>
+            </div>;
         }
         return <Page header="编辑联系人" right={buttonDel} headerClassName="bg-primary">
             <div className="App-container container text-left">

@@ -64,29 +64,21 @@ export class VAddProduct extends VPage<CProduct> {
         let { chemical } = this.controller;
         let { no, CAS, description, descriptoinCN, molecularFomula, molecularWeight, mdlNumber } = chemical;
 
-        return <div className="py-2 bg-white">
-            <div className="cursor-pointer">
-                &nbsp;<FA className="align-middle text-warning" name="credit-card" /><span className="h6 py-2 px-1 align-middle"><b>标准库信息</b></span>
+        return <div className="bg-white py-2">
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">CAS:</div><div className="col-9 text-muted text-right">{CAS}</div>
             </div>
-            <div className="py-2 cat-root-sub small">
-                <div className="bg-white row no-gutters px-4 my-1">
-                    <div className="col-3 text-muted">chemid:</div><div className="col-9">{no}</div>
-                </div>
-                <div className="bg-white row no-gutters px-4 my-1">
-                    <div className="col-3 text-muted">CAS:</div><div className="col-9">{CAS}</div>
-                </div>
-                <div className="bg-white row no-gutters px-4 my-1">
-                    <div className="col-3 text-muted">英文名称:</div><div className="col-9">{description}</div>
-                </div>
-                <div className="bg-white row no-gutters px-4 my-1">
-                    <div className="col-3 text-muted">中文名称:</div><div className="col-9">{descriptoinCN}</div>
-                </div>
-                <div className="bg-white row no-gutters px-4 my-1">
-                    <div className="col-3 text-muted">分子式:</div><div className="col-9">{molecularFomula}</div>
-                </div>
-                <div className="bg-white row no-gutters px-4 my-1">
-                    <div className="col-3 text-muted">分子量:</div><div className="col-9">{molecularWeight}</div>
-                </div>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">英文名称:</div><div className="col-9 text-muted text-right">{description}</div>
+            </div>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">中文名称:</div><div className="col-9 text-muted text-right">{descriptoinCN}</div>
+            </div>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">分子式:</div><div className="col-9 text-muted text-right">{molecularFomula}</div>
+            </div>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">分子量:</div><div className="col-9 text-muted text-right">{molecularWeight}</div>
             </div>
         </div>;
     }

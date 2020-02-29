@@ -89,7 +89,11 @@ export class VSupplier extends VPage<CSupplier> {
         let descriptionData = _.clone(this.supplierData);
         let buttonDel: any;
         if (descriptionData.id !== undefined) {
-            buttonDel = <button className="btn btn-sm btn-danger" onClick={this.onDelSupplier}>删除</button>;
+            buttonDel= <div className="d-flex align-items-center">
+            <div><span onClick={() => this.onDelSupplier()} className="fa-stack">
+                <i className="fa fa-times-circle fa-stack-2x cursor-pointer my-1" style={{ fontSize: '1.6rem' }}></i>
+            </span></div>
+        </div>;
         }
 
         return <Page header="编辑供应商" right={buttonDel} headerClassName="bg-primary">

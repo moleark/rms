@@ -25,17 +25,17 @@ export class VSupplierDetail extends VPage<CSupplier> {
 
         return <div>
             <div className=" d-flex px-3 py-2">
-                <button className="btn btn-sm btn-success" onClick={() => showCreateSupplierContact(this.supplier)}>
+                <button className="btn btn-sm btn-primary" onClick={() => showCreateSupplierContact(this.supplier)}>
                     <span className="px-2"><FA className="text-warning px-1" name="user" /><b>联系人</b></span>
                     <span className="px-2"><FA name="plus fa-1x" /></span>
                 </button>
                 <div className="flex-grow-1"></div>
-                <button className="btn btn-sm btn-success" onClick={() => this.controller.pickChemical(this.supplier)} >
-                    <span className="px-2"><FA className="text-warning px-1" name="filter" /><b>产&nbsp;&nbsp;品&nbsp;</b></span>
+                <button className="btn btn-sm btn-primary" onClick={() => this.controller.pickChemical(this.supplier)} >
+                    <span className="px-2"><FA className="text-warning px-1" name="filter" /><b>产&nbsp;品</b></span>
                     <span className="px-2"><FA name="plus fa-1x" /></span>
                 </ button>
             </div>
-            <div className="py-2">
+            <div>
                 {this.firstSupplierContact && <List items={this.supplierContacts} item={{ render: this.renderContact }} />}
             </div>
         </div >
@@ -43,13 +43,21 @@ export class VSupplierDetail extends VPage<CSupplier> {
 
     private renderContact = (item: any, index: number) => {
         let { showEditSupplierContact, showSupplierContactDetail } = this.controller.cApp.cSupplierContact;
-        let { no, name, id, gender, mobile } = item;
+        let { no, name, id, gender, mobile ,telephone,email} = item;
         let { defaultContact } = this.supplier;
         let fa_text = defaultContact === undefined ? "px-2" : (defaultContact.id === id ? "px-2 text-info " : "px-2 ");
         let fa_gender = gender === "0" ? <FA name="female" className="px-2 text-danger"></FA> : <FA name="male" className="px-2 text-primary"></FA>;
+        let tele=(mobile === undefined && telephone === undefined)?<span></span>:
+        <div className="small px-4 text-muted">{mobile === undefined ? "无" : mobile} | {telephone === undefined ? "无" : telephone}</div>;
+        
+        let ema=(email === undefined)?<span></span>:
+        <div className="small px-4 text-muted">{email === undefined ? "无" : email}</div>;
+        
         let left = <div className={fa_text} onClick={() => showSupplierContactDetail(item)}>
-            {fa_gender}
-            {name}&nbsp;&nbsp;{mobile === undefined ? "无" : mobile}</div>
+            {fa_gender}{name}
+            {tele}
+            {ema}
+            </div>
         let right =
             <div className="px-2 text-right">
                 <span onClick={() => showEditSupplierContact(this.supplier, item)}><FA className="align-middle p-2 cursor-pointer text-info" name="edit" /></span>
@@ -64,25 +72,25 @@ export class VSupplierDetail extends VPage<CSupplier> {
 
         return <div className="bg-white py-2">
             <div className="row no-gutters px-3 my-1">
-                <div className="col-3">编号:</div><div className="col-9 text-right">{no}</div>
+                <div className="col-3">编号:</div><div className="col-9 text-muted text-right">{no}</div>
             </div>
             <div className="row no-gutters px-3 my-1">
-                <div className="col-3">名称:</div><div className="col-9 text-right">{name}</div>
+                <div className="col-3">名称:</div><div className="col-9 text-muted text-right">{name}</div>
             </div>
             <div className="row no-gutters px-3 my-1">
-                <div className="col-3">简称:</div><div className="col-9 text-right">{abbreviation}</div>
+                <div className="col-3">简称:</div><div className="col-9 text-muted text-right">{abbreviation}</div>
             </div>
             <div className="row no-gutters px-3 my-1">
-                <div className="col-3">网址:</div><div className="col-9 text-right">{webSite}</div>
+                <div className="col-3">网址:</div><div className="col-9 text-muted text-right">{webSite}</div>
             </div>
             <div className="row no-gutters px-3 my-1">
-                <div className="col-3">地址:</div><div className="col-9 text-right">{tv(address)}</div>
+                <div className="col-3">地址:</div><div className="col-9 text-muted text-right">{tv(address)}</div>
             </div>
             <div className="row no-gutters px-3 my-1">
-                <div className="col-3">生产厂址:</div><div className="col-9 text-right">{productionAddress}</div>
+                <div className="col-3">生产厂址:</div><div className="col-9 text-muted text-right">{productionAddress}</div>
             </div>
             <div className="row no-gutters px-3 my-1">
-                <div className="col-3">企业简介:</div><div className="col-9 text-right">{profile}</div>
+                <div className="col-3">企业简介:</div><div className="col-9 text-muted text-right">{profile}</div>
             </div>
         </div>;
     }
@@ -92,10 +100,8 @@ export class VSupplierDetail extends VPage<CSupplier> {
         let supplierData = _.clone(this.supplier);
 
         return <Page header="供应商详情" headerClassName="py-1 bg-primary">
-            <div>
-                {this.rowTop(supplierData)}
-                {this.getSupplierContact()}
-            </div>
+            {this.rowTop(supplierData)}
+            {this.getSupplierContact()}
         </Page>
     }
 }

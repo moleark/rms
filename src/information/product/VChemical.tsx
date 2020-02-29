@@ -11,11 +11,14 @@ export class VChemical extends VPage<CChemical> {
     private page = observer(() => {
         let { chemicals, searchChemicalByKey } = this.controller;
 
-        return <Page header="选择chemid" onScrollBottom={this.onScrollBottom} headerClassName="bg-primary">
+        let right = <div className="d-flex align-items-center">
             <SearchBox
                 size='sm'
                 onSearch={(key: string) => searchChemicalByKey(key)}
                 placeholder="请输入CAS、名称关键字" />
+        </div>;
+
+        return <Page header="选择标准库" right={right} onScrollBottom={this.onScrollBottom} headerClassName="bg-primary">
             <List items={chemicals} item={{ render: this.renderItem }} />
         </Page>;
     });

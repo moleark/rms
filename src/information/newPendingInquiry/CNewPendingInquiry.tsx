@@ -4,6 +4,7 @@ import { CUqBase } from 'CBase';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { VNewPendingInquiry } from './VNewPendingInquiry';
+import { VPendingInquiry } from './VPendingInquiry';
 import { VNewPendingInquiryList } from './VNewPendingInquiryList';
 import { VNewPendingInquiryDetail } from './VNewPendingInquiryDetail';
 import { SupplierItem } from "model/supplierItem";
@@ -50,6 +51,10 @@ export class CNewPendingInquiry extends CUqBase {
         this.openVPage(VNewPendingInquiry, { pendingInquiry: undefined });
     }
 
+    onPendingInquiry = async (model: any) => {
+        this.openVPage(VPendingInquiry, model);
+    }
+
     pickProduct = async (): Promise<any> => {
         let mode: any = await this.cApp.cPickProduct.call();
     }
@@ -84,8 +89,6 @@ export class CNewPendingInquiry extends CUqBase {
             id: id,
         };
         await this.uqs.rms.DeleteInquiryPending.submit(param);
-        this.closePage();
-        await this.loadList();
     }
 
     deletePendingInquiryPackage = async (pendingid: number, packid: number) => {
