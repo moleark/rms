@@ -13,13 +13,11 @@ export class VPackageDetail extends VPage<CInquiry> {
 
     private page = (item: any) => {
 
-        let { inquiryQuantity, inquiryRadiox, inquiryRadioy, inquiryUnit, itemuser, itemcreateDate, quantity, radiox, radioy, unit, listPrice, price
+        let { inquiryQuantity, pack, itemuser, itemcreateDate, quantity, radio, listPrice, price
             , currency, isTaxIn, isTransFeeIn, transFee, transFeecurrency, packingFee, packingcurrency, otherFee, customized, customizeUpto, validUpto
             , minArriveDate, maxArriveDate, invoiceType, vatRate, tariffRate, packType, inquiryRemarks, coaFilePath, msdsFilePath, quotationFilePath } = item;
-        let inquiryRadio = (inquiryRadiox !== 1) ? <>{inquiryRadiox} * {inquiryRadioy}{inquiryUnit}</> : <>{inquiryRadioy}{inquiryUnit}</>;
-        let radio = (radiox !== 1) ? <>{radiox} * {radioy}{unit}</> : <>{radioy}{unit}</>;
 
-        let header = <>询价包装详情: {inquiryQuantity} * {inquiryRadio}</>
+        let header = <>询价包装详情: {inquiryQuantity} * {pack}</>
         return <Page header={header} headerClassName="py-1 bg-primary">
             <div className="bg-white row no-gutters p-3 my-1">
                 <div className="col-3 text-muted">报价包装:</div>

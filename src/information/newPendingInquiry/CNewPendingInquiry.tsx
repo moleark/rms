@@ -65,8 +65,7 @@ export class CNewPendingInquiry extends CUqBase {
             if (this.product) {
                 let { id, supplier } = this.product;
                 let { id: supplierid } = supplier;
-                let note;
-                let { quantity, radiox, radioy, unit } = model;
+                let { quantity, radiox, radioy, unit,remarks } = model;
                 let param = {
                     supplier: supplierid,
                     product: id,
@@ -74,7 +73,7 @@ export class CNewPendingInquiry extends CUqBase {
                     radiox: radiox,
                     radioy: radioy,
                     unit: unit,
-                    remarks: note
+                    remarks: remarks
                 };
                 await this.uqs.rms.AddInquiryPending.submit(param);
             }
@@ -106,7 +105,6 @@ export class CNewPendingInquiry extends CUqBase {
             id: id,
             supplier: supplier,
             way: model.way,
-            remarks: model.remarks,
         };
         await this.uqs.rms.UpdateInquiryPending.submit(param);
         this.closePage();

@@ -5,6 +5,7 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { VPendingInquiryList } from './VPendingInquiryList';
 import { VPendingInquiryDetail } from './VPendingInquiryDetail';
+import { VPendingInquiry } from './VPendingInquiry';
 import { SupplierItem } from "model/supplierItem";
 import { CCurrency } from '../PendingInquiry/CCurrency';
 import { VPendingInquiryResult } from '../PendingInquiry/VPendingInquiryResult';
@@ -67,7 +68,7 @@ export class CPendingInquiry extends CUqBase {
 
     getDataForSave = (model: any, pending: any, items: any[]) => {
 
-        let { contact, contactName, contactSalutation, contactDepartmentName, contactTelephone, contactMobile, contactEmail, contactfax, user, date, inquiryDate, inquiryUser, supplier, way, remarks } = pending;
+        let { contact, contactName, contactSalutation, contactDepartmentName, contactTelephone, contactMobile, contactEmail, contactfax, user, date, inquiryDate, inquiryUser, supplier, way } = pending;
         let inquiryItems: any[] = [];
         items.forEach(pk => {
             let pack = JSON.parse(pk.jsonStr);
@@ -77,7 +78,7 @@ export class CPendingInquiry extends CUqBase {
                 , isTaxIn: pack.isTaxIn, isTransFeeIn: pack.isTransFeeIn, transFee: pack.transFee, transFeecurrency: pack.transFeecurrency, packingFee: pack.packingFee
                 , packingcurrency: pack.packingcurrency, otherFee: pack.otherFee, customized: pack.customized, customizeUpto: pack.customizeUpto, validUpto: pack.validUpto
                 , minArriveDate: pack.minArriveDate, maxArriveDate: pack.maxArriveDate, invoiceType: pack.invoiceType, vatRate: pack.vatRate, tariffRate: pack.tariffRate
-                , packType: pack.packType, coaFilePath: pack.coaFilePath, msdsFilePath: pack.msdsFilePath, quotationFilePath: pack.quotationFilePath, inquiryRemarks: pack.remarks
+                , packType: pack.packType, coaFilePath: pack.coaFilePath, msdsFilePath: pack.msdsFilePath, quotationFilePath: pack.quotationFilePath, inquiryRemarks: pack.remarks,remarks: pk.inquiryRemarks
             })
         });
         return {
@@ -96,7 +97,6 @@ export class CPendingInquiry extends CUqBase {
             createDate: date,
             inquiryUser: inquiryUser,
             inquiryDate: inquiryDate,
-            remarks: remarks,
             inquiryitems: inquiryItems,
         }
     }
@@ -123,12 +123,12 @@ export class CPendingInquiry extends CUqBase {
 
         if (inquiry) {
             //更新包装结果
-            let { id, inquiryPackage, user, createDate, jsonStr } = inquiry;
+            let { id, inquiryPackage, user, createDate,inquiryRemarks,jsonStr } = inquiry;
             let { product } = inquiryPackage.obj;
-            await this.uqs.rms.InquiryPendingItem.add({ inquiryPending: id, arr1: [{ inquiryPackage: inquiryPackage.id, user: user.id, createDate: createDate, jsonStr: JSON.stringify(model) }] });
+            await this.uqs.rms.InquiryPendingItem.add({ inquiryPending: id, arr1: [{ inquiryPackage: inquiryPackage.id, user: user.id, createDate: createDate, remarks:inquiryRemarks,jsonStr: JSON.stringify(model) }] });
 
             //更新包装价格
-            let { quantity, radiox, radioy, unit, listPrice, price, currency, isTaxIn, isTransFeeIn, transFee, transFeecurrency, packingFee, packingcurrency, otherFee, customized, customizeUpto, validUpto, minArriveDate, maxArriveDate, invoiceType, vatRate, tariffRate, packType, remarks, coaFilePath, msdsFilePath, quotationFilePath } = model;
+            let { quantity, radiox, radioy, unit, listPrice, price, currency, isTaxIn, isTransFeeIn, transFee, transFeecurrency, packingFee, packingcurrency, otherFee, customized, customizeUpto, validUpto, minArriveDate, maxArriveDate, invoiceType, vatRate, tariffRate, packType, remarks:rremarks, coaFilePath, msdsFilePath, quotationFilePath } = model;
             let param = {
                 product: product,
                 quantity: quantity,
@@ -154,7 +154,7 @@ export class CPendingInquiry extends CUqBase {
                 vatRate: vatRate,
                 tariffRate: tariffRate,
                 packType: packType,
-                remarks: remarks,
+                remarks: rremarks,
                 coaFilePath: coaFilePath,
                 msdsFilePath: msdsFilePath,
                 quotationFilePath: quotationFilePath,
@@ -199,6 +199,10 @@ export class CPendingInquiry extends CUqBase {
             model.createDate = createDate;
         }
         this.openVPage(VPendingInquiryResult, model);
+    }
+
+    onPendingInquiry = async (param:any) => {
+        this.openVPage(VPendingInquiry, param);
     }
 
     loadList = async () => {

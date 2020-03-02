@@ -4,25 +4,14 @@ import { observer } from 'mobx-react';
 import _ from 'lodash';
 import { CPendingInquiry } from './CPendingInquiry';
 
-const schema: Schema = [
-    { name: 'result', type: 'number', required: true },
-    { name: 'submit', type: 'submit' }
-];
-
 export class VPendingInquiryDetail extends VPage<CPendingInquiry> {
-    private form: Form;
     private pending: any;
     private firstPackage: any;
     private packages: any[] = [];
-
-    private uiSchema: UiSchema = {
-        items: {
-            result: { widget: 'radio', label: '询价结果', list: [{ value: 1, title: '有价格' }, { value: 2, title: '无价格' }] } as UiRadio,
-            submit: { widget: 'button', label: '提交', className: "btn btn-primary mr-3 px-6" }
-        }
-    }
+    private model:any;
 
     async open(param: any) {
+        this.model=param;
         let { parent, item, child } = param;
         this.pending = parent;
         this.firstPackage = item;
@@ -30,19 +19,15 @@ export class VPendingInquiryDetail extends VPage<CPendingInquiry> {
         this.openPage(this.page);
     }
 
-    private onFormButtonClick = async (name: string, context: Context) => {
-        await this.controller.saveInquiryData(context.form.data, this.pending, this.packages);
-    }
-
     private getPackage = () => {
-        return <div className="bg-white px-2 ">
+        return <div>
             {this.firstPackage && <List items={this.packages} item={{ render: this.renderPackage }} />}
         </div>
     }
 
     private renderPackage = (item: any, index: number) => {
 
-        let { id, inquiryPackage, user, createDate, product, quantity, radiox, radioy, unit, CAS, purity } = item;
+        let { id, inquiryPackage, user, createDate, product, quantity, radiox, radioy, unit, CAS, purity ,inquiryRemarks} = item;
         let { brand, description, descriptionC } = product.obj;
         let radio = (radiox !== 1) ? <>{radiox} * {radioy}{unit}</> : <>{radioy}{unit}</>;
         let brandname = brand === undefined ? undefined : brand.obj.name;
@@ -51,11 +36,25 @@ export class VPendingInquiryDetail extends VPage<CPendingInquiry> {
             <div className="px-2 text-muted text-right">
                 <span onClick={() => this.controller.openPendingInquiryResult(item)}><FA className="align-middle p-2 cursor-pointer text-info" name="edit" /></span>
             </div>;
-        return <LMR right={right} className="py-2 small">
-            <div><FA name="circle" className="px-2 text-primary"></FA>CAS：{CAS}</div>
-            <div className="px-4 text-muted small">名称：{description}</div>
-            <div className="px-4 text-muted small">包装：{quantity} * {radio}</div>
-        </LMR>;
+        return <LMR right={right} className="p-1 d-flex cursor-pointer">
+        <div><FA name="circle" className="px-2 text-primary"></FA>CAS：{CAS}</div>
+        <div className="px-4 text-muted">名称：{description}</div>
+        <div className="px-4 text-muted">包装：{quantity} * {radio}</div>
+        <div className="px-4 text-muted">备注：<span className="text-muted small">{inquiryRemarks}</span></div>
+    </LMR>;
+    }
+
+    private rowEnd = () => {
+        let { onPendingInquiry } = this.controller;
+
+        return this.firstPackage && <div>
+        <div className="text-center py-2">
+            <button className="btn btn-sm btn-primary" onClick={() => onPendingInquiry(this.model)}>
+                <span className="px-2"><FA className="text-warning px-1" name="user" /><b>完结询价</b></span>
+                <span className="px-2"><FA name="chevron-right fa-1x" /></span>
+            </button>
+        </div>
+    </div >; 
     }
 
     private rowTop = (suppplierData: any) => {
@@ -64,21 +63,37 @@ export class VPendingInquiryDetail extends VPage<CPendingInquiry> {
         let { id } = user;
         let { id: inid } = inquiryUser;
 
-        return <div className="py-2 bg-white">
-            <div className="cursor-pointer">
-                &nbsp;<FA className="align-middle text-warning" name="credit-card" /><span className="h6 py-2 px-2 align-middle">供应商：<b>{tv(supplier, v => <>{v.name}</>)}</b></span>
+
+        return <div className="bg-white py-2">
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">供应商:</div><div className="col-9 text-muted text-right">{tv(supplier, v => <>{v.name}</>)}</div>
             </div>
-            <div className="py-2 cursor-pointer">
-                &nbsp;<FA className="align-middle text-warning" name="user-circle-o" /><span className="h6 py-2 px-2 align-middle">联系人：<b>{contactName}</b>&nbsp;&nbsp;联系电话：<b>{contactMobile}</b></span>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">联系人:</div><div className="col-9 text-muted text-right">{contactName}</div>
             </div>
-            <div className="py-2 cursor-pointer">
-                &nbsp;<span className="h6 py-2 px-4 align-middle">创建人：<b>{id}</b>&nbsp;&nbsp;创建时间：<b><EasyDate date={date} /></b></span>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">联系电话:</div><div className="col-9 text-muted text-right">{contactTelephone}</div>
             </div>
-            <div className="py-2 cursor-pointer">
-                &nbsp;<FA className="align-middle text-warning" name="user-circle-o" /><span className="h6 py-2 px-2 align-middle">询价人：<b>{inid}</b>&nbsp;&nbsp;询价时间：<b><EasyDate date={inquiryDate} /></b></span>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">联系手机:</div><div className="col-9 text-muted text-right">{contactMobile}</div>
             </div>
-            <div className="py-2 cursor-pointer">
-                &nbsp;<span className="h6 py-2 px-4 align-middle">询价方式：<b>{way === 1 ? "Email询价" : (way === 2 ? "电话询价" : "传真询价")}</b></span>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">联系邮箱:</div><div className="col-9 text-muted text-right">{contactEmail}</div>
+            </div>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">创建人:</div><div className="col-9 text-muted text-right">{id}</div>
+            </div>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">创建时间:</div><div className="col-9 text-muted text-right"><EasyDate date={date} /></div>
+            </div>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">询价人:</div><div className="col-9 text-muted text-right">{inid}</div>
+            </div>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">询价时间:</div><div className="col-9 text-muted text-right"><EasyDate date={inquiryDate} /></div>
+            </div>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">询价方式:</div><div className="col-9 text-muted text-right">{way === 1 ? "Email询价" : (way === 2 ? "电话询价" : "传真询价")}</div>
             </div>
         </div>;
     }
@@ -88,16 +103,8 @@ export class VPendingInquiryDetail extends VPage<CPendingInquiry> {
 
         return <Page header="询价详情" headerClassName="py-1 bg-primary">
             {this.rowTop(suppplierData)}
+            {this.rowEnd()}
             {this.getPackage()}
-            <div className="App-container container text-left">
-                <Form ref={v => this.form = v} className="my-3"
-                    schema={schema}
-                    uiSchema={this.uiSchema}
-                    formData={suppplierData}
-                    onButtonClick={this.onFormButtonClick}
-                    fieldLabelSize={3}
-                />
-            </div>
         </Page >
     }
 }

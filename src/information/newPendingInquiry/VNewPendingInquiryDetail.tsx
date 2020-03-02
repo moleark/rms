@@ -26,7 +26,7 @@ export class VNewPendingInquiryDetail extends VPage<CNewPendingInquiry> {
 
     private renderPackage = (item: any, index: number) => {
 
-        let { id, inquiryPackage, user, createDate, product, quantity, radiox, radioy, unit, CAS, purity } = item;
+        let { id, inquiryPackage, user, createDate, product, quantity, radiox, radioy, unit, CAS, purity,inquiryRemarks } = item;
         let { brand, description, descriptionC } = product.obj;
         let radio = (radiox !== 1) ? <>{radiox} * {radioy}{unit}</> : <>{radioy}{unit}</>;
         let brandname = brand === undefined ? undefined : brand.obj.name;
@@ -39,25 +39,26 @@ export class VNewPendingInquiryDetail extends VPage<CNewPendingInquiry> {
             <div><FA name="circle" className="px-2 text-primary"></FA>CAS：{CAS}</div>
             <div className="px-4 text-muted">名称：{description}</div>
             <div className="px-4 text-muted">包装：{quantity} * {radio}</div>
+            <div className="px-4 text-muted">备注：<span className="text-muted small">{inquiryRemarks}</span></div>
         </LMR>;
     }
 
     private rowTop = (suppplierData: any) => {
 
-        let { supplier, user, date, remarks } = suppplierData;
+        let { supplier, user, date } = suppplierData;
         let { id } = user;
 
         return <div className="bg-white py-2">
-        <div className="row no-gutters px-3 my-1">
-            <div className="col-3">供应商:</div><div className="col-9 text-muted text-right">{tv(supplier, v => <>{v.name}</>)}</div>
-        </div>
-        <div className="row no-gutters px-3 my-1">
-            <div className="col-3">创建人:</div><div className="col-9 text-muted text-right">{id}</div>
-        </div>
-        <div className="row no-gutters px-3 my-1">
-            <div className="col-3">创建时间:</div><div className="col-9 text-muted text-right"><EasyDate date={date} /></div>
-        </div>
-    </div>;
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">供应商:</div><div className="col-9 text-muted text-right">{tv(supplier, v => <>{v.name}</>)}</div>
+            </div>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">创建人:</div><div className="col-9 text-muted text-right">{id}</div>
+            </div>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">创建时间:</div><div className="col-9 text-muted text-right"><EasyDate date={date} /></div>
+            </div>
+        </div>;
     }
 
     private rowEnd = () => {

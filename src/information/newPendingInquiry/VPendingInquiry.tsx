@@ -7,7 +7,6 @@ import { CNewPendingInquiry } from './CNewPendingInquiry';
 const schema: Schema = [
     { name: 'id', type: 'id', required: false },
     { name: 'way', type: 'number', required: true },
-    { name: 'remarks', type: 'number', required: false },
     { name: 'submit', type: 'submit' }
 ];
 
@@ -18,7 +17,6 @@ export class VPendingInquiry extends VPage<CNewPendingInquiry> {
         items: {
             id: { visible: false },
             way: { widget: 'radio', label: '询价方式', list: [{ value: 1, title: 'Email询价' }, { value: 2, title: '电话询价' }, { value: 3, title: '传真询价' }] } as UiRadio,
-            remarks: { widget: 'text', label: '备注', placeholder: '备注', rows: 5 } as UiInputItem,
             submit: { widget: 'button', label: '提交', className: "btn btn-primary mr-3 px-6" }
         }
     }
@@ -37,14 +35,14 @@ export class VPendingInquiry extends VPage<CNewPendingInquiry> {
 
         return <Page header="询价详情" headerClassName="bg-primary">
             <div className="App-container container text-left">
-            <Form ref={v => this.form = v} className="m-3"
+            <Form ref={v => this.form = v} className="my-3"
                 schema={schema}
                 uiSchema={this.uiSchema}
                 formData={suppplierData}
                 onButtonClick={this.onFormButtonClick}
                 fieldLabelSize={3}
             />
-            </div>;
+            </div>
         </Page >
     }
 }

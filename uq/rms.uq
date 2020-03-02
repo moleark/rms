@@ -114,7 +114,7 @@ TUID InquiryPackage(
 );
 
 --询价任务PENDING
-PENDING InquiryPending ver 0.2 (
+PENDING InquiryPending ver 0.3 (
     id,
     user,
     date,
@@ -130,8 +130,7 @@ PENDING InquiryPending ver 0.2 (
     contactfax char(20),
     way smallint null,                      --询价方式：2：电话询价；3：传真询价；1：Email询价
     inquiryUser ID [$user],                 --询价人
-    inquiryDate datetime,                   --询出时间
-    remarks char(1000)                      --备注：资源部新建的询价单需要国际部完成询价时，填写的询价要求
+    inquiryDate datetime                    --询出时间
 );
 
 
@@ -141,11 +140,12 @@ Map InquiryPendingItem (
     key inquiryPackage ID InquiryPackage,
     user ID [$user],                        --创建人
     createDate datetime,
+    remarks char(1000),                     --备注：资源部新建的询价单需要国际部完成询价时，填写的询价要求
     jsonStr char(1000)                      --询价结果json串
 );
 
 --询价单（询价需求+询价结果）
-SHEET InquirySheet ver 0.2 (
+SHEET InquirySheet ver 0.3 (
     supplier ID Supplier,                   --供应商编号
     contact ID SupplierContact,             --供应商默认联系人
     contactName char(50) null,              --供应商联系人姓名
@@ -189,6 +189,7 @@ SHEET InquirySheet ver 0.2 (
         coaFilePath char(1000),             --供应商所提供的COA文件路径
         msdsFilePath char(1000),            --供应商所提供的MSDS文件的上传路径
         quotationFilePath char(1000),       --供应商提供的报价单的上传路径
+        remarks char(1000),                 --备注：资源部新建的询价单需要国际部完成询价时，填写的询价要求
         inquiryRemarks char(1000),          --报价备注
     ),
     way smallint not null,                  --询价方式：2：电话询价；3：传真询价；1：Email询价
@@ -196,8 +197,7 @@ SHEET InquirySheet ver 0.2 (
     user ID [$user],                        --创建人
     createDate datetime,                    --创建时间
     inquiryUser ID [$user],                 --询价人
-    inquiryDate datetime,                   --询出时间
-    remarks char(1000)                      --备注：资源部新建的询价单需要国际部完成询价时，填写的询价要求
+    inquiryDate datetime                    --询出时间
 )
 Action submit {
         history InquiryHistory

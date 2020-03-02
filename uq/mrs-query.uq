@@ -195,13 +195,12 @@ PAGE (
     id bigint start 0,
     supplier ID Supplier not null,        --供应商编号
     user ID [$user], 
-    date datetime,
-    remarks char(1000)
+    date datetime
 ) {
     var key2 char(102);
     set key2 = concat('%', key, '%');
 
-    PAGE select p.id,p.supplier,p.user,p.date,p.remarks
+    PAGE select p.id,p.supplier,p.user,p.date
     from    InquiryPending as p
             join Supplier as s on p.supplier=s.id
     where   (key is null or ( s.name like key2 or s.no like key2))
@@ -245,7 +244,7 @@ PAGE (
 };
 
 --查询待询价包装   
-QUERY SearchInquiryPendingBySupplier(_id ID)
+QUERY SearchInquiryPendingBySupplier ver 2.0(_id ID)
 returns ret (
     id bigint,
     inquiryPackage ID InquiryPackage,
@@ -261,10 +260,10 @@ returns ret (
     CAS char(20),
     purity char(80),
     jsonStr char(1000),
-    remarks char(1000)
+    inquiryRemarks char(1000)
 ) {
 
-    into ret select p.id,i.inquiryPackage, i.user,i.createDate,p.supplier,k.product,k.quantity,k.radiox,k.radioy,k.unit, p.date,c.CAS,c.purity,i.jsonStr,p.remarks
+    into ret select p.id,i.inquiryPackage, i.user,i.createDate,p.supplier,k.product,k.quantity,k.radiox,k.radioy,k.unit, p.date,c.CAS,c.purity,i.jsonStr,i.remarks as inquiryRemarks
     from    InquiryPending as p
             join Supplier as s on p.supplier=s.id
             join InquiryPendingItem as i on p.id=i.inquiryPending
@@ -298,11 +297,11 @@ ACTION AddInquiryPending(
         supplier=supplier,product=product,quantity=quantity,radiox=radiox,radioy=radioy,unit=unit;  
 
     if(pid is null){
-        PENDING InquiryPending +(supplier:supplier,status:0,contact:null,contactName:null,contactSalutation:null,contactDepartmentName:null,contactTelephone:null,contactMobile:null,contactEmail:null,contactfax:null,way:null,inquiryUser:null,inquiryDate:null,remarks:remarks) to pid;
+        PENDING InquiryPending +(supplier:supplier,status:0,contact:null,contactName:null,contactSalutation:null,contactDepartmentName:null,contactTelephone:null,contactMobile:null,contactEmail:null,contactfax:null,way:null,inquiryUser:null,inquiryDate:null) to pid;
     }
 
     --更新pending的map
-    BOOK InquiryPendingItem at (pid, packid) set user = $user,createDate=now();
+    BOOK InquiryPendingItem at (pid, packid) set user = $user,createDate=now(),remarks=remarks;
 };
 
 --删除待询出Pending
@@ -335,8 +334,7 @@ ACTION DeleteInquiryPackage(
 ACTION UpdateInquiryPending(
     id bigint,
     supplier bigint,
-    way smallint, 
-    remarks char(1000)                      --备注
+    way smallint
 ) {
 
     var contact ID;        --供应商默认联系人
@@ -361,7 +359,7 @@ ACTION UpdateInquiryPending(
     limit 1;
 
     if(contact>0){
-        PENDING InquiryPending =(remarks:remarks,way:way,status:1,contact:contact,contactName:contactName,contactSalutation:contactSalutation,contactDepartmentName:contactDepartmentName,
+        PENDING InquiryPending =(way:way,status:1,contact:contact,contactName:contactName,contactSalutation:contactSalutation,contactDepartmentName:contactDepartmentName,
         contactTelephone:contactTelephone,contactMobile:contactMobile,contactEmail:contactEmail,contactfax:contactfax,inquiryUser:$user,inquiryDate:now()) at id;
     }
 };

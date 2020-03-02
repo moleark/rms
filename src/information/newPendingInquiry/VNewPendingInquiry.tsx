@@ -10,6 +10,7 @@ const schema: Schema = [
     { name: 'radiox', type: 'number', required: true },
     { name: 'radioy', type: 'number', required: true },
     { name: 'unit', type: 'string', required: true },
+    { name: 'remarks', type: 'number', required: false },
     { name: 'submit', type: 'submit' }
 ];
 
@@ -25,6 +26,7 @@ export class VNewPendingInquiry extends VPage<CNewPendingInquiry> {
             radiox: { widget: 'text', label: '套', placeholder: '必填', defaultValue: 1 } as UiInputItem,
             radioy: { widget: 'text', label: '包装规格', placeholder: '必填' } as UiInputItem,
             unit: { widget: 'text', label: '单位', placeholder: '必填' } as UiTextItem,
+            remarks: { widget: 'textarea', label: '备注', placeholder: '备注', rows: 5 } as UiInputItem,
             submit: { widget: 'button', label: '提交', className: "btn btn-primary mr-3 px-6" }
         }
     }
@@ -62,9 +64,6 @@ export class VNewPendingInquiry extends VPage<CNewPendingInquiry> {
             </div>
             <div className="row no-gutters px-3 my-1">
                 <div className="col-3">中文名称:</div><div className="col-9 text-muted text-right">{descriptionC}</div>
-            </div>
-            <div className="row no-gutters px-3 my-1">
-                <div className="col-3">供应商自编号:</div><div className="col-9 text-muted text-right">{origin}</div>
             </div>
         </div>;
     }
