@@ -145,7 +145,7 @@ Map InquiryPendingItem (
 );
 
 --询价单（询价需求+询价结果）
-SHEET InquirySheet ver 0.3 (
+SHEET InquirySheet ver 0.4 (
     supplier ID Supplier,                   --供应商编号
     contact ID SupplierContact,             --供应商默认联系人
     contactName char(50) null,              --供应商联系人姓名

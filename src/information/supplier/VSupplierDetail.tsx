@@ -105,34 +105,3 @@ export class VSupplierDetail extends VPage<CSupplier> {
         </Page>
     }
 }
-
-class VConfirmDeleteContact extends VPage<CSupplier> {
-    async open(contact: any) {
-        this.openPage(this.page, contact);
-    }
-
-    private onConfirm = async () => {
-        await this.returnCall(true);
-        this.closePage();
-    }
-
-    private onCancel = async () => {
-        await this.returnCall(false);
-        this.closePage();
-    }
-
-    private page = (contact: any) => {
-        return <Page header="删除联系人" back="close">
-            <div className="w-75 mx-auto border border-primary rounded my-3 p-3 bg-white">
-                <div className="p-4 position-relative">
-                    <i className="fa fa-question-circle position-absolute fa-2x text-warning" style={{ left: 0, top: 0 }} />
-                    <b className="">是否删除该联系人？</b>
-                </div>
-                <div className="d-flex mt-3 justify-content-end">
-                    <button className="btn btn-danger mr-3" onClick={this.onConfirm}>删除供联系人</button>
-                    <button className="btn btn-outline-info mr-3" onClick={this.onCancel}>取消</button>
-                </div>
-            </div>
-        </Page>;
-    }
-}

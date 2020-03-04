@@ -14,8 +14,8 @@ export class VInquiryDetail extends VPage<CInquiry> {
     private renderPackageItem = (item: any, index: number) => {
         let { pack, inquiryQuantity } = item;
 
-        return <LMR key={index} className="d-flex cursor-pointer" onClick={() => this.controller.openPackageDetail(item)}>
-            <div><FA name="chevron-right" className="px-2 text-primary"></FA>包装：{inquiryQuantity} * {pack}</div>
+        return <LMR key={index} className="d-flex cursor-pointer py-1" onClick={() => this.controller.openPackageDetail(item)}>
+            <div><FA name="chevron-right" className="px-2 text-primary"></FA>{inquiryQuantity} * {pack}</div>
         </LMR>;
     }
 
@@ -24,8 +24,10 @@ export class VInquiryDetail extends VPage<CInquiry> {
         let { id } = product;
 
         return <LMR key={index} className="d-flex px-3 cursor-pointer">
-            <div>产品：{this.controller.renderProduct(id)}</div>
-            <List items={packs} item={{ render: this.renderPackageItem }} />
+            <div>{this.controller.renderProduct(id)}</div>
+            <div className="py-1">
+                <List items={packs} item={{ render: this.renderPackageItem }} />
+            </div>
         </LMR>;
     }
 
@@ -43,35 +45,42 @@ export class VInquiryDetail extends VPage<CInquiry> {
                         <div className="col-4">供应商:</div><div className="col-8 text-muted text-right">{tv(supplier, v => <>{v.name}</>)}</div>
                     </div>
                     <div className="row no-gutters px-3 my-1">
-                        <div className="col-4">联系人姓名:</div><div className="col-8 text-muted text-right">{contactName}</div>
+                        <div className="col-4">姓名:</div><div className="col-8 text-muted text-right">{contactName}</div>
                     </div>
+                    {contactSalutation===undefined?"":<>
                     <div className="row no-gutters px-3 my-1">
-                        <div className="col-4">联系人称谓:</div><div className="col-8 text-muted text-right">{contactSalutation}</div>
-                    </div>
+                        <div className="col-4">称谓:</div><div className="col-8 text-muted text-right">{contactSalutation}</div>
+                    </div></>}
+                    {contactDepartmentName===undefined?"":<>
                     <div className="row no-gutters px-3 my-1">
-                        <div className="col-4">联系人部门:</div><div className="col-8 text-muted text-right">{contactDepartmentName}</div>
-                    </div>
+                        <div className="col-4">部门:</div><div className="col-8 text-muted text-right">{contactDepartmentName}</div>
+                    </div></>}
+                    {contactTelephone===undefined?"":<>
                     <div className="row no-gutters px-3 my-1">
-                        <div className="col-4">联系人电话:</div><div className="col-8 text-muted text-right">{contactTelephone}</div>
-                    </div>
+                        <div className="col-4">电话:</div><div className="col-8 text-muted text-right">{contactTelephone}</div>
+                    </div></>}
+                    {contactMobile===undefined?"":<>
                     <div className="row no-gutters px-3 my-1">
-                        <div className="col-4">联系人手机:</div><div className="col-8 text-muted text-right">{contactMobile}</div>
-                    </div>
+                        <div className="col-4">手机:</div><div className="col-8 text-muted text-right">{contactMobile}</div>
+                    </div></>}
+                    {contactEmail===undefined?"":<>
                     <div className="row no-gutters px-3 my-1">
-                        <div className="col-4">联系人邮箱:</div><div className="col-8 text-muted text-right">{contactEmail}</div>
-                    </div>
+                        <div className="col-4">邮箱:</div><div className="col-8 text-muted text-right">{contactEmail}</div>
+                    </div></>}
+                    {contactfax===undefined?"":<>
                     <div className="row no-gutters px-3 my-1">
-                        <div className="col-4">联系人传真:</div><div className="col-8 text-muted text-right">{contactfax}</div>
-                    </div>
+                        <div className="col-4">传真:</div><div className="col-8 text-muted text-right">{contactfax}</div>
+                    </div></>}
                     <div className="row no-gutters px-3 my-1">
                         <div className="col-4">询价方式:</div><div className="col-8 text-muted text-right">{way === 1 ? "Email询价" : (way === 2 ? "电话询价" : "传真询价")}</div>
                     </div>
                     <div className="row no-gutters px-3 my-1">
-                        <div className="col-4">询价结果:</div><div className="col-8 text-muted text-right">{result === 1 ? "有价格" : (way === 2 ? "有价格" : "无")}</div>
+                        <div className="col-4">询价结果:</div><div className="col-8 text-muted text-right">{result === 1 ? "正常询价有结果" : (way === 2 ? "供应商无回复" : "供应商有回复,但无价格")}</div>
                     </div>
+                    {remarks===undefined?"":<>
                     <div className="row no-gutters px-3 my-1">
                         <div className="col-4">备注:</div><div className="col-8 text-muted text-right">{remarks}</div>
-                    </div>
+                    </div></>}
                     <div className="row no-gutters px-3 my-1">
                         <div className="col-4 ">询出时间:</div><div className="col-8 text-muted text-right"><EasyDate date={date} /></div>
                     </div>

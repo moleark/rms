@@ -88,8 +88,8 @@ export class VProductView extends View<CInquiry> {
         let LocationUI;
         let pro = this.controller.productdata;
         if (pro !== undefined) {
-            let { description, CAS } = pro;
-            LocationUI = <span className="text-muted small">{description}y&nbsp;&nbsp;{CAS}</span>;
+            let { description, CAS,purity } = pro;
+        LocationUI = <span className="text-muted small">{description}&nbsp;{CAS}&nbsp;{purity}</span>;
         }
         return LocationUI;
     });

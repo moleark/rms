@@ -62,8 +62,34 @@ export class CPackage extends CUqBase {
     }
 
     savePackage = async (id: number, param: any, parent: any) => {
-        param.isValid = 1;
-        await this.uqs.rms.Product.saveArr("Pack", parent.id, id, param);
+        // await this.uqs.rms.Product.saveArr("Pack", parent.id, id, param);
+        let { quantity, radiox, radioy, unit, price, currency, isTaxIn, isTransFeeIn, transFee, transFeecurrency, packingFee, packingcurrency, otherFee, customized, customizeUpto, validUpto, minArriveDate, maxArriveDate, invoiceType, vatRate, tariffRate, type } = param;
+        let paramn = {
+            product: parent,
+            quantity: quantity,
+            radiox: radiox,
+            radioy: radioy,
+            unit: unit,
+            price: price,
+            currency: currency,
+            isTaxIn: isTaxIn,
+            isTransFeeIn: isTransFeeIn,
+            transFee: transFee,
+            transFeecurrency: transFeecurrency,
+            packingFee: packingFee,
+            packingcurrency: packingcurrency,
+            otherFee: otherFee,
+            customized: customized,
+            customizeUpto: customizeUpto,
+            validUpto: validUpto,
+            minArriveDate: minArriveDate,
+            maxArriveDate: maxArriveDate,
+            invoiceType: invoiceType,
+            vatRate: vatRate,
+            tariffRate: tariffRate,
+            type: type,
+        };
+        await this.uqs.rms.AddPackage.submit(paramn);
         this.closePage();
     }
 

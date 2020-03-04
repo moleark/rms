@@ -9,6 +9,7 @@ export interface UqRMS {
     ProductChemical: Map;
     SupplierBankAccount: Map;
     InquiryPendingItem: Map;
+    PackPrice: Map;
     SearchSupplierContact: Query;
     SearchSupplier: Query;
     SearchProduct: Query;
@@ -27,6 +28,7 @@ export interface UqRMS {
     SearchProductById: Query;
     AddPackagePrice: Action;
     UpdateInquiryPending: Action;
+    AddPackage: Action;
 }
 
 export interface UqCommon {

@@ -33,7 +33,7 @@ export class VNewPendingInquiryDetail extends VPage<CNewPendingInquiry> {
 
         let right =
             <div className="px-2 text-muted text-right">
-                <span onClick={() => this.onDelInquiryPackage(id, inquiryPackage)}><FA className="align-middle p-2 cursor-pointer text-danger" name="remove" /></span>
+                <span onClick={() => this.onDelInquiryPackage(id, inquiryPackage)}><FA className="align-middle p-2 cursor-pointer text-danger" name="trash" /></span>
             </div>;
         return <LMR right={right} className="p-1 d-flex cursor-pointer">
             <div><FA name="circle" className="px-2 text-primary"></FA>CAS：{CAS}</div>
@@ -97,7 +97,7 @@ export class VNewPendingInquiryDetail extends VPage<CNewPendingInquiry> {
         let right =
         <div className="d-flex align-items-center">
             <div><span onClick={() => this.onDelInquiry()}  className="fa-stack">
-                <i className="fa fa-times-circle fa-stack-2x cursor-pointer my-1" style={{ fontSize: '1.6rem' }}></i>
+                <i className="fa fa-trash fa-stack-2x cursor-pointer my-1" style={{ fontSize: '1.5rem' }}></i>
             </span></div>
         </div>;
         return <Page right={right} header="询价详情" headerClassName="py-1 bg-primary">
@@ -124,7 +124,7 @@ class VConfirmDeleteInquiry extends VPage<CNewPendingInquiry> {
     }
 
     private page = (inquiryPending: any) => {
-        return <Page header="删除询价任务" back="close">
+        return <Page header="删除询价任务" back="close" headerClassName="bg-primary">
             <div className="w-75 mx-auto border border-primary rounded my-3 p-3 bg-white">
                 <div className="p-4 position-relative">
                     <i className="fa fa-question-circle position-absolute fa-2x text-warning" style={{ left: 0, top: 0 }} />
@@ -155,7 +155,7 @@ class VConfirmDeleteInquiryPackage extends VPage<CNewPendingInquiry> {
     }
 
     private page = (inquiryPackage: any) => {
-        return <Page header="删除询价包装" back="close">
+        return <Page header="删除询价包装" back="close" headerClassName="bg-primary">
             <div className="w-75 mx-auto border border-primary rounded my-3 p-3 bg-white">
                 <div className="p-4 position-relative">
                     <i className="fa fa-question-circle position-absolute fa-2x text-warning" style={{ left: 0, top: 0 }} />

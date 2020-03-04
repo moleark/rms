@@ -98,7 +98,7 @@ export class VSupplierContact extends VPage<CSupplierContact> {
         if (this.item !== undefined) {
             buttonDel= <div className="d-flex align-items-center">
             <div><span onClick={() => this.onDelSupplierContact()} className="fa-stack">
-                <i className="fa fa-times-circle fa-stack-2x cursor-pointer my-1" style={{ fontSize: '1.6rem' }}></i>
+                <i className="fa fa-trash fa-stack-2x cursor-pointer my-1" style={{ fontSize: '1.5rem' }}></i>
             </span></div>
             </div>;
         }
@@ -132,7 +132,7 @@ class VConfirmDeleteContact extends VPage<CSupplierContact> {
     }
 
     private page = (contact: any) => {
-        return <Page header="删除联系人" back="close">
+        return <Page header="删除联系人" back="close" headerClassName="bg-primary">
             <div className="w-75 mx-auto border border-primary rounded my-3 p-3 bg-white">
                 <div className="p-4 position-relative">
                     <i className="fa fa-question-circle position-absolute fa-2x text-warning" style={{ left: 0, top: 0 }} />
