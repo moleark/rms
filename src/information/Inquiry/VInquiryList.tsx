@@ -26,7 +26,7 @@ export class VInquiryList extends VPage<CInquiry> {
             <div className="text-muted small">方式：{way === 1 ? "Email询价" : (way === 2 ? "电话询价" : "传真询价")}</div>
             <div className="text-muted small">结果：{result === 1 ? "有价格" : (way === 2 ? "有价格" : "无")}</div>
         </div>
-        return <LMR left={left} right={right} className="px-2 d-flex p-1 cursor-pointer" onClick={() => openInquiryDetail(sheet)}>
+        return <LMR left={left} right={right} className="px-3 d-flex p-1 cursor-pointer" onClick={() => openInquiryDetail(sheet)}>
         </LMR >
     }
 
@@ -43,7 +43,7 @@ export class VInquiryList extends VPage<CInquiry> {
             <div className="px-3" >询价单</div>
         </header>;
         return <Page header={header} right={right} onScrollBottom={this.onScrollBottom} headerClassName="py-1 bg-primary">
-            <List items={inquirys} item={{ render: this.renderRootCategory }} none="目前还没询价单哦！" />
+            <List items={inquirys} item={{ render: this.renderRootCategory }} />
         </Page>;
     })
 

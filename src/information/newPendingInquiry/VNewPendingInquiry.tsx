@@ -42,29 +42,32 @@ export class VNewPendingInquiry extends VPage<CNewPendingInquiry> {
     private showProductlData = () => {
 
         let { product } = this.controller;
-        let { no,supplier, origin,brand, description, descriptionC, CAS, purity } = product;
+        let { no, supplier, origin, brand, description, descriptionC, CAS, purity } = product;
         let { name } = supplier.obj;
         let brandname = brand === undefined ? undefined : brand.obj.name;
 
         return <div className="bg-white py-2">
-            <div className="row no-gutters px-3 my-1">
-                <div className="col-3">产品编号:</div><div className="col-9 text-muted text-right">{no}</div>
-            </div>
+            {no === undefined ? "" :
+                <><div className="row no-gutters px-3 my-1">
+                    <div className="col-3">产品编号:</div><div className="col-9 text-muted text-right">{no}</div>
+                </div></>}
             <div className="row no-gutters px-3 my-1">
                 <div className="col-3">供应商:</div><div className="col-9 text-muted text-right">{name}</div>
             </div>
+            {brandname === undefined ? "" :
+                <><div className="row no-gutters px-3 my-1">
+                    <div className="col-3">品牌:</div><div className="col-9 text-muted text-right">{brandname}</div>
+                </div></>}
             <div className="row no-gutters px-3 my-1">
-                <div className="col-3">品牌:</div><div className="col-9 text-muted text-right">{brandname}</div>
-            </div>
-            <div className="row no-gutters px-3 my-1">
-                <div className="col-3">CAS:</div><div className="col-9 text-muted text-right">{CAS}</div>
+                <div className="col-3">CAS:</div><div className="col-9 text-muted text-right">{CAS === undefined ? "(无)" : CAS}</div>
             </div>
             <div className="row no-gutters px-3 my-1">
                 <div className="col-3">英文名称:</div><div className="col-9 text-muted text-right">{description}</div>
             </div>
-            <div className="row no-gutters px-3 my-1">
+            {descriptionC === undefined ? "" : <><div className="row no-gutters px-3 my-1">
                 <div className="col-3">中文名称:</div><div className="col-9 text-muted text-right">{descriptionC}</div>
-            </div>
+            </div></>
+            }
         </div>;
     }
 

@@ -11,6 +11,7 @@ export interface UqRMS {
     InquiryPendingItem: Map;
     PackPrice: Map;
     SearchSupplierContact: Query;
+    SearchSupplierBankAccount: Query;
     SearchSupplier: Query;
     SearchProduct: Query;
     SearchBrand: Query;

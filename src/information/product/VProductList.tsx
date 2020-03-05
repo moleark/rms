@@ -13,13 +13,13 @@ export class VProductList extends VPage<CProduct> {
     }
 
     private renderRootCategory = (item: any, parent: any) => {
-        let { no, description, createTime, supplier, CAS,purity } = item;
+        let { no, description, createTime, supplier, CAS, purity } = item;
         let { showProductDetail } = this.controller;
 
         let right = <div className="cursor-pointer text-muted">
             {purity}
         </div>
-        return <LMR right={right} className="px-2 d-flex p-1 cursor-pointer">
+        return <LMR right={right} className="px-3 d-flex p-1 cursor-pointer">
             <div onClick={() => showProductDetail(item)}>
                 <b>{CAS}</b>
                 <div><b>{description}</b></div>

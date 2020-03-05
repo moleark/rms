@@ -33,6 +33,7 @@ const schema: Schema = [
     { name: 'coaFilePath', type: 'string', required: false },
     { name: 'msdsFilePath', type: 'string', required: false },
     { name: 'quotationFilePath', type: 'string', required: false },
+    { name: 'result', type: 'number', required: true },
     { name: 'submit', type: 'submit' }
 ];
 
@@ -98,6 +99,7 @@ export class VPendingInquiryResult extends VPage<CPendingInquiry> {
             coaFilePath: { widget: 'text', label: 'COA文件路径', placeholder: 'COA文件路径' } as UiInputItem,
             msdsFilePath: { widget: 'text', label: 'MSOS文件路径', placeholder: 'MSOS文件路径' } as UiInputItem,
             quotationFilePath: { widget: 'text', label: '报价单文件路径', placeholder: '报价单文件路径' } as UiInputItem,
+            result: { widget: 'radio', label: '询价结果', list: [{ value: "1", title: '正常询价有结果' }, { value: "2", title: '供应商无回复' }, { value: "3", title: '供应商有回复,但无价格' }] } as UiRadio,
             submit: { widget: 'button', label: '提交', className: "btn btn-primary mr-3 px-6" }
         }
     }

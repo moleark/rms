@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { observable } from 'mobx';
-import { VPage, Page, FA, EasyDate, tv, LMR, List ,Edit,ItemSchema,UiSchema,StringSchema,UiInputItem} from 'tonva';
+import { VPage, Page, FA, EasyDate, tv, LMR, List, Edit, ItemSchema, UiSchema, StringSchema, UiInputItem } from 'tonva';
 import { observer } from 'mobx-react';
 import _ from 'lodash';
 import { CProduct } from './CProduct';
 import { SupplierItem } from "model/supplierItem";
 
-const schema:ItemSchema[] = [
+const schema: ItemSchema[] = [
     { name: 'purity', type: 'string', required: false },
 ];
 
@@ -26,32 +26,32 @@ export class VProductDetail extends VPage<CProduct> {
 
     private uiSchema: UiSchema = {
         items: {
-            purity: { widget: 'text', label: '纯度', placeholder: '纯度'} as UiInputItem,
+            purity: { widget: 'text', label: '纯度', placeholder: '纯度' } as UiInputItem,
         }
     }
 
     private getPackage = () => {
         let { showCreatePackage } = this.controller.cApp.cPackage;
         let { onNewPendingInquiry } = this.controller.cApp.cNewPendingInquiry;
-        let { supplier }=this.product;
+        let { supplier } = this.product;
         let { defaultContact } = supplier.obj;
-        let showd=defaultContact.obj===undefined?
-        "":<div className=" d-flex px-3 py-2">
-            <button className="btn btn-sm btn-primary" onClick={() => showCreatePackage(this.product)}>
-                <span className="px-2"><FA className="text-warning px-1" name="cube" /><b>包&nbsp;装</b></span>
-                <span className="px-2"><FA name="plus fa-1x" /></span>
-            </button>
-            <div className="flex-grow-1"></div>
-            <button className="btn btn-sm btn-primary" onClick={() => onNewPendingInquiry(this.product)} >
-                <span className="px-2"><FA className="text-warning px-1" name="filter" /><b>询&nbsp;价</b></span>
-                <span className="px-2"><FA name="plus fa-1x" /></span>
-            </ button>
-        </div>;
+        let showd = defaultContact === undefined ?
+            "" : <div className=" d-flex px-3 py-2">
+                <button className="btn btn-sm btn-primary" onClick={() => showCreatePackage(this.product)}>
+                    <span className="px-2"><FA className="text-warning px-1" name="cube" /><b>包&nbsp;装</b></span>
+                    <span className="px-2"><FA name="plus fa-1x" /></span>
+                </button>
+                <div className="flex-grow-1"></div>
+                <button className="btn btn-sm btn-primary" onClick={() => onNewPendingInquiry(this.product)} >
+                    <span className="px-2"><FA className="text-warning px-1" name="filter" /><b>询&nbsp;价</b></span>
+                    <span className="px-2"><FA name="plus fa-1x" /></span>
+                </ button>
+            </div>;
         return <div>
             {showd}
-        <div>
-            {this.firstPackage && <List items={this.packages} item={{ render: this.renderPackage }} />}
-        </div>
+            <div>
+                {this.firstPackage && <List items={this.packages} item={{ render: this.renderPackage }} />}
+            </div>
         </div >
     }
 
@@ -65,26 +65,26 @@ export class VProductDetail extends VPage<CProduct> {
 
     private renderPackage = (item: any, index: number) => {
         let { showEditPackage, showPackageDetail } = this.controller.cApp.cPackage;
-        let { id, radiox, radioy, unit, type, price, currency, validUpto, minArriveDate,maxArriveDate} = item;
+        let { id, radiox, radioy, unit, type, price, currency, validUpto, minArriveDate, maxArriveDate } = item;
         let { defaultContact } = this.product;
         let radio = (radiox !== 1) ? <>{radiox} * {radioy}{unit}</> : <>{radioy}{unit}</>;
-        let valid=(validUpto< Date.now()) ? <span className="text-danger"><EasyDate date={validUpto}/></span>:<span><EasyDate date={validUpto}/></span>;
-        
+        let valid = (validUpto < Date.now()) ? <span className="text-danger"><EasyDate date={validUpto} /></span> : <span><EasyDate date={validUpto} /></span>;
+
         let down =
             price === undefined ?
                 <div></div> : <div className="px-4 text-muted small">
                     <span>&nbsp;{price}{tv(currency, v => <>{v.name}</>)}&nbsp;</span>
                     {valid}
                 </div>;
-        let mi=minArriveDate!==undefined?<span><EasyDate date={minArriveDate}/></span>:"";
-        let arriveDate=maxArriveDate!==undefined?<span>~<EasyDate date={maxArriveDate}/></span>:"";
+        let mi = minArriveDate !== undefined ? <span><EasyDate date={minArriveDate} /></span> : "";
+        let arriveDate = maxArriveDate !== undefined ? <span>~<EasyDate date={maxArriveDate} /></span> : "";
         let right =
-        <div>
-            <div className="px-2 cursor-pointer text-danger text-right" onClick={() => this.onDelPackage(item)}>
-                <FA name="trash" />
-    <div className="text-muted small">{mi}{arriveDate}</div>
-            </div>  
-            </div>;  
+            <div>
+                <div className="px-2 cursor-pointer text-danger text-right" onClick={() => this.onDelPackage(item)}>
+                    <FA name="trash" />
+                    <div className="text-muted small">{mi}{arriveDate}</div>
+                </div>
+            </div>;
         let left = <div className="px-2" onClick={() => showPackageDetail(item)}>
             <FA name="cube" className="px-2 text-primary"></FA>
             {radio} <span className="small">{type === 1 ? "目录" : "非目录"}</span>
@@ -94,44 +94,50 @@ export class VProductDetail extends VPage<CProduct> {
         </LMR>;
     }
 
-    private rowTop = (productData:any) => {
+    private rowTop = (productData: any) => {
 
         let { no, supplier, brand, origin, description, descriptionC, createTime, chemical, CAS, purity, molecularFomula, molecularWeight } = this.product;
-        let { name: suppliername,defaultContact } = supplier.obj;
+        let { name: suppliername, defaultContact } = supplier.obj;
         let brandno = brand === undefined ? undefined : brand.obj.name;
-        let contact = defaultContact.obj === undefined ? undefined : defaultContact.obj.name;
+        let contact = defaultContact === undefined ? undefined : defaultContact.obj.name;
 
         return <div className="bg-white py-2">
+            {no === undefined ? "" :
+                <><div className="row no-gutters px-3 my-1">
+                    <div className="col-4">产品编号:</div><div className="col-8 text-muted text-right">{no}</div>
+                </div></>}
             <div className="row no-gutters px-3 my-1">
-                <div className="col-4">产品编号:</div><div className="col-8 text-muted text-right">{no}</div>
+                <div className="col-4">供应商:</div><div className="col-8 text-muted text-right"><b>{suppliername}</b></div>
             </div>
             <div className="row no-gutters px-3 my-1">
-                <div className="col-4">供应商:</div><div className="col-8 text-muted text-right">{suppliername}</div>
+                <div className="col-4">默认联系人:</div><div className="col-8 text-muted text-right">{contact === undefined ? "[无]" : contact}</div>
             </div>
-            <div className="row no-gutters px-3 my-1">
-                <div className="col-4">默认联系人:</div><div className="col-8 text-muted text-right">{contact}</div>
-            </div>
-            <div className="row no-gutters px-3 my-1">
-                <div className="col-4">品牌:</div><div className="col-8 text-muted text-right">{brandno}</div>
-            </div>
+            {brandno === undefined ? "" :
+                <><div className="row no-gutters px-3 my-1">
+                    <div className="col-4">品牌:</div><div className="col-8 text-muted text-right">{brandno}</div>
+                </div></>}
             <div className="row no-gutters px-3 my-1">
                 <div className="col-4">CAS:</div><div className="col-8 text-muted text-right">{CAS}</div>
             </div>
             <div className="row no-gutters px-3 my-1">
                 <div className="col-4">英文名称:</div><div className="col-8 text-muted text-right">{description}</div>
             </div>
-            <div className="row no-gutters px-3 my-1">
-                <div className="col-4">中文名称:</div><div className="col-8 text-muted text-right">{descriptionC}</div>
-            </div>
-            <div className="row no-gutters px-3 my-1">
-                <div className="col-4">供应商自编号:</div><div className="col-8 text-muted text-right">{origin}</div>
-            </div>
-            <div className="row no-gutters px-3 my-1">
-                <div className="col-4">分子式:</div><div className="col-8 text-muted text-right">{molecularFomula}</div>
-            </div>
-            <div className="row no-gutters px-3 my-1">
-                <div className="col-4">分子量:</div><div className="col-8 text-muted text-right">{molecularWeight}</div>
-            </div>
+            {descriptionC === undefined ? "" :
+                <><div className="row no-gutters px-3 my-1">
+                    <div className="col-4">中文名称:</div><div className="col-8 text-muted text-right">{descriptionC}</div>
+                </div></>}
+            {origin === undefined ? "" :
+                <><div className="row no-gutters px-3 my-1">
+                    <div className="col-4">自编号:</div><div className="col-8 text-muted text-right">{origin}</div>
+                </div></>}
+            {molecularFomula === undefined ? "" :
+                <><div className="row no-gutters px-3 my-1">
+                    <div className="col-4">分子式:</div><div className="col-8 text-muted text-right">{molecularFomula}</div>
+                </div></>}
+            {molecularWeight === undefined ? "" :
+                <><div className="row no-gutters px-3 my-1">
+                    <div className="col-4">分子量:</div><div className="col-8 text-muted text-right">{molecularWeight}</div>
+                </div></>}
         </div>;
     }
 
@@ -149,18 +155,18 @@ export class VProductDetail extends VPage<CProduct> {
 
     private page = () => {
         let productData = _.clone(this.product);
-        let{ purity }=productData;
-        let purityData={
-            purity:purity
+        let { purity } = productData;
+        let purityData = {
+            purity: purity
         };
 
         let buttonDel: any;
         if (productData.id !== undefined) {
-            buttonDel= <div className="d-flex align-items-center">
-            <div><span onClick={() => this.onDelProduct()} className="fa-stack">
-                <i className="fa fa-trash fa-stack-2x cursor-pointer my-1" style={{ fontSize: '1.5rem' }}></i>
-            </span></div>
-        </div>;
+            buttonDel = <div className="d-flex align-items-center">
+                <div><span onClick={() => this.onDelProduct()} className="fa-stack">
+                    <i className="fa fa-trash fa-stack-2x cursor-pointer my-1" style={{ fontSize: '1.5rem' }}></i>
+                </span></div>
+            </div>;
         }
         return <Page header="产品详情" right={buttonDel} headerClassName="py-1 bg-primary">
             {this.rowTop(productData)}

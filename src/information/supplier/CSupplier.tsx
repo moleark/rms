@@ -6,10 +6,12 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import iconj from '../images/icon.jpg';
 import { VSupplier } from './VSupplier';
+import { VSupplierBankAccount } from './VSupplierBankAccount';
+import { VSupplierBankAccountDetail } from './VSupplierBankAccountDetail';
 import { VSupplierList } from './VSupplierList';
 import { VHome } from '../VHome';
 import { VSupplierDetail } from './VSupplierDetail';
-import { SupplierItem } from "model/supplierItem";
+import { ParamItem, SupplierItem } from "model/supplierItem";
 import { CAddress } from "../supplierContact/CAddress";
 
 class PageSupplier extends PageItems<any> {
@@ -63,18 +65,21 @@ export class CSupplier extends CUqBase {
         if (supplier.id === undefined) {
             supplier.defaultContact = undefined;
             supplier.isValid = 1;
-            let newSupplier = await this.uqs.rms.Supplier.save(undefined, supplier);
-            let newBank = await this.uqs.rms.BankAccount.save(undefined, supplier);
-            await this.uqs.rms.SupplierBankAccount.add({ supplier: newSupplier.id, arr1: [{ bankAccount: newBank.id }] });
+            await this.uqs.rms.Supplier.save(undefined, supplier);
         } else {
             let { id } = supplier;
             let bankmap: any[] = [];
             supplier.isValid = 1;
-            bankmap = await this.uqs.rms.SupplierBankAccount.table({ supplier: id });
-            for (let bank of bankmap) {
-                await this.uqs.rms.BankAccount.save(bank.bankAccount.id, supplier);
-            }
             await this.uqs.rms.Supplier.save(id, supplier);
+        }
+        await this.cApp.cHome.start();
+    }
+
+    saveSupplierBankData = async (param: any, supplier: any) => {
+
+        if (supplier.id !== undefined) {
+            let newBank = await this.uqs.rms.BankAccount.save(undefined, param);
+            await this.uqs.rms.SupplierBankAccount.add({ supplier: supplier.id, arr1: [{ bankAccount: newBank.id }] });
         }
         await this.cApp.cHome.start();
     }
@@ -90,8 +95,31 @@ export class CSupplier extends CUqBase {
     /**
     * 打开编辑界面
     */
-    onEditSupplier = async (supplier: any) => {
-        this.openVPage(VSupplier, supplier);
+    updateSupplierData = async (supplier: any) => {
+        supplier.isValid = 1;
+        await this.uqs.rms.Supplier.save(supplier.id, supplier);
+        this.closePage();
+        await this.loadList();
+    }
+
+    /**
+    * 打开新建界面
+    */
+    onNewSupplierBankAccount = async (supplier: any) => {
+        this.openVPage(VSupplierBankAccount, supplier);
+    }
+
+    /**
+    * 打开编辑界面
+    */
+    onShowSupplierBankAccount = async (supplier: any, supplierBankAccount: any) => {
+
+        let param: SupplierItem = {
+            parent: supplier,
+            item: supplierBankAccount,
+            child: undefined,
+        }
+        this.openVPage(VSupplierBankAccountDetail, param);
     }
 
     /**
@@ -100,10 +128,13 @@ export class CSupplier extends CUqBase {
     onSupplierSelected = async (supplier: any) => {
         let { id } = supplier;
         let contact = await this.uqs.rms.SearchSupplierContact.query({ _id: id });
-        let param: SupplierItem = {
+        let bankAccount = await this.uqs.rms.SearchSupplierBankAccount.query({ _id: id });
+        let param: ParamItem = {
             parent: supplier,
             item: contact.ret[0],
             child: contact.ret,
+            item2: bankAccount.ret[0],
+            child2: bankAccount.ret,
         }
         this.openVPage(VSupplierDetail, param);
     }
@@ -112,6 +143,17 @@ export class CSupplier extends CUqBase {
         let { id } = supplier;
         supplier.isValid = 0;
         await this.uqs.rms.Supplier.save(id, supplier);
+    }
+
+    delSupplierBankAccount = async (bankAccount: any, supplier: any) => {
+        let { id } = supplier;
+        await this.uqs.rms.SupplierBankAccount.del({ supplier: id, arr1: [{ bankAccount: bankAccount.id }] });
+    }
+
+    updateBankAccountData = async (bankdata: any) => {
+        await this.uqs.rms.BankAccount.save(bankdata.id, bankdata);
+        this.closePage();
+        await this.loadList();
     }
 
     loadList = async () => {

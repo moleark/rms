@@ -85,24 +85,9 @@ export class VSupplierContact extends VPage<CSupplierContact> {
         this.closePage();
     }
 
-    private onDelSupplierContact = async () => {
-        if (await this.vCall(VConfirmDeleteContact, this.item) === true) {
-            await this.controller.delSupplierContact(this.item, this.parent);
-            this.closePage();
-        };
-    }
-
     private page = observer(() => {
 
-        let buttonDel: any;
-        if (this.item !== undefined) {
-            buttonDel= <div className="d-flex align-items-center">
-            <div><span onClick={() => this.onDelSupplierContact()} className="fa-stack">
-                <i className="fa fa-trash fa-stack-2x cursor-pointer my-1" style={{ fontSize: '1.5rem' }}></i>
-            </span></div>
-            </div>;
-        }
-        return <Page header="编辑联系人" right={buttonDel} headerClassName="bg-primary">
+        return <Page header="编辑联系人" headerClassName="bg-primary">
             <div className="App-container container text-left">
                 <Form ref={v => this.form = v} className="my-3"
                     formData={this.item}
@@ -114,35 +99,4 @@ export class VSupplierContact extends VPage<CSupplierContact> {
             </div>
         </Page>;
     })
-}
-
-class VConfirmDeleteContact extends VPage<CSupplierContact> {
-    async open(contact: any) {
-        this.openPage(this.page, contact);
-    }
-
-    private onConfirm = async () => {
-        await this.returnCall(true);
-        this.closePage();
-    }
-
-    private onCancel = async () => {
-        await this.returnCall(false);
-        this.closePage();
-    }
-
-    private page = (contact: any) => {
-        return <Page header="删除联系人" back="close" headerClassName="bg-primary">
-            <div className="w-75 mx-auto border border-primary rounded my-3 p-3 bg-white">
-                <div className="p-4 position-relative">
-                    <i className="fa fa-question-circle position-absolute fa-2x text-warning" style={{ left: 0, top: 0 }} />
-                    <b className="">是否删除该联系人？</b>
-                </div>
-                <div className="d-flex mt-3 justify-content-end">
-                    <button className="btn btn-danger mr-3" onClick={this.onConfirm}>删除供联系人</button>
-                    <button className="btn btn-outline-info mr-3" onClick={this.onCancel}>取消</button>
-                </div>
-            </div>
-        </Page>;
-    }
 }

@@ -50,17 +50,13 @@ export class CSupplierContact extends CUqBase {
         this.openVPage(VSupplierContact, param);
     }
 
-    showEditSupplierContact = async (parent: any, model: any) => {
+    showSupplierContactDetail = async (model: any, supplier: any) => {
         let param: SupplierItem = {
-            parent: parent,
+            parent: supplier,
             item: model,
             child: model,
         }
-        this.openVPage(VSupplierContact, param);
-    }
-
-    showSupplierContactDetail = async (model: any) => {
-        this.openVPage(VSupplierContactDetail, model);
+        this.openVPage(VSupplierContactDetail, param);
     }
 
     saveSupplierContact = async (id: number, param: any, parent: any) => {
@@ -72,9 +68,18 @@ export class CSupplierContact extends CUqBase {
             if (sid === undefined) {
                 sid = result.id;
             }
-            await this.uqs.rms.Supplier.save(parent.id, { no: parent.no, name: parent.name, abbreviation: parent.abbreviation, webSite: parent.webSite,address: parent.address,addressString: parent.addressString,productionAddress: parent.productionAddress, profile: parent.profile,isValid: 1, defaultContact: sid });
+            await this.uqs.rms.Supplier.save(parent.id, { no: parent.no, name: parent.name, abbreviation: parent.abbreviation, webSite: parent.webSite, address: parent.address, addressString: parent.addressString, productionAddress: parent.productionAddress, profile: parent.profile, isValid: 1, defaultContact: sid });
         }
         this.cApp.cHome.start();
+    }
+
+    updateContactData = async (param: any, parent: any) => {
+        let { isDefault } = param;
+        await this.uqs.rms.SupplierContact.save(param.id, param);
+        if (isDefault === 1) {
+            await this.uqs.rms.Supplier.save(parent.id, { no: parent.no, name: parent.name, abbreviation: parent.abbreviation, webSite: parent.webSite, address: parent.address, addressString: parent.addressString, productionAddress: parent.productionAddress, profile: parent.profile, isValid: 1, defaultContact: param.id });
+        }
+        this.closePage();
     }
 
     loadList = async (parent: any) => {

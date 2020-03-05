@@ -26,7 +26,7 @@ export class VNewPendingInquiryDetail extends VPage<CNewPendingInquiry> {
 
     private renderPackage = (item: any, index: number) => {
 
-        let { id, inquiryPackage, user, createDate, product, quantity, radiox, radioy, unit, CAS, purity,inquiryRemarks } = item;
+        let { id, inquiryPackage, user, createDate, product, quantity, radiox, radioy, unit, CAS, purity, inquiryRemarks } = item;
         let { brand, description, descriptionC } = product.obj;
         let radio = (radiox !== 1) ? <>{radiox} * {radioy}{unit}</> : <>{radioy}{unit}</>;
         let brandname = brand === undefined ? undefined : brand.obj.name;
@@ -36,10 +36,9 @@ export class VNewPendingInquiryDetail extends VPage<CNewPendingInquiry> {
                 <span onClick={() => this.onDelInquiryPackage(id, inquiryPackage)}><FA className="align-middle p-2 cursor-pointer text-danger" name="trash" /></span>
             </div>;
         return <LMR right={right} className="p-1 d-flex cursor-pointer">
-            <div><FA name="circle" className="px-2 text-primary"></FA>CAS：{CAS}</div>
-            <div className="px-4 text-muted">名称：{description}</div>
-            <div className="px-4 text-muted">包装：{quantity} * {radio}</div>
-            <div className="px-4 text-muted">备注：<span className="text-muted small">{inquiryRemarks}</span></div>
+            <div><FA name="caret-right" className="px-2 text-primary"></FA>{CAS}&nbsp;&nbsp;{quantity} * {radio}</div>
+            <div className="px-4 text-muted">{description}</div>
+            <div className="px-4 text-muted"><span className="text-muted small">{inquiryRemarks}</span></div>
         </LMR>;
     }
 
@@ -50,13 +49,10 @@ export class VNewPendingInquiryDetail extends VPage<CNewPendingInquiry> {
 
         return <div className="bg-white py-2">
             <div className="row no-gutters px-3 my-1">
-                <div className="col-3">供应商:</div><div className="col-9 text-muted text-right">{tv(supplier, v => <>{v.name}</>)}</div>
+                <div className="col-3">供应商:</div><div className="col-9"><b>{tv(supplier, v => <>{v.name}</>)}</b></div>
             </div>
             <div className="row no-gutters px-3 my-1">
-                <div className="col-3">创建人:</div><div className="col-9 text-muted text-right">{id}</div>
-            </div>
-            <div className="row no-gutters px-3 my-1">
-                <div className="col-3">创建时间:</div><div className="col-9 text-muted text-right"><EasyDate date={date} /></div>
+                <div className="col-3">创建人:</div><div className="col-9 text-muted">{id}&nbsp;<EasyDate date={date} /></div>
             </div>
         </div>;
     }
@@ -65,13 +61,13 @@ export class VNewPendingInquiryDetail extends VPage<CNewPendingInquiry> {
         let { onPendingInquiry } = this.controller;
 
         return this.firstPackage && <div>
-        <div className="text-center py-2">
-            <button className="btn btn-sm btn-primary" onClick={() => onPendingInquiry(this.suppplier)}>
-                <span className="px-2"><FA className="text-warning px-1" name="user" /><b>询&nbsp;出</b></span>
-                <span className="px-2"><FA name="chevron-right fa-1x" /></span>
-            </button>
-        </div>
-    </div >; 
+            <div className="text-center py-2">
+                <button className="btn btn-sm btn-primary" onClick={() => onPendingInquiry(this.suppplier)}>
+                    <span className="px-2"><FA className="text-warning px-1" name="user" /><b>询&nbsp;出</b></span>
+                    <span className="px-2"><FA name="chevron-right fa-1x" /></span>
+                </button>
+            </div>
+        </div >;
     }
 
     private onDelInquiry = async () => {
@@ -82,10 +78,10 @@ export class VNewPendingInquiryDetail extends VPage<CNewPendingInquiry> {
         };
     }
 
-    private onDelInquiryPackage= async (id:number,pack:any) => {
+    private onDelInquiryPackage = async (id: number, pack: any) => {
         if (await this.vCall(VConfirmDeleteInquiryPackage, pack) === true) {
             let { id: packid } = pack;
-            await this.controller.deletePendingInquiryPackage(id,packid);
+            await this.controller.deletePendingInquiryPackage(id, packid);
             await this.controller.loadList();
             this.closePage();
         };
@@ -95,11 +91,11 @@ export class VNewPendingInquiryDetail extends VPage<CNewPendingInquiry> {
         let suppplierData = _.clone(this.suppplier);
 
         let right =
-        <div className="d-flex align-items-center">
-            <div><span onClick={() => this.onDelInquiry()}  className="fa-stack">
-                <i className="fa fa-trash fa-stack-2x cursor-pointer my-1" style={{ fontSize: '1.5rem' }}></i>
-            </span></div>
-        </div>;
+            <div className="d-flex align-items-center">
+                <div><span onClick={() => this.onDelInquiry()} className="fa-stack">
+                    <i className="fa fa-trash fa-stack-2x cursor-pointer my-1" style={{ fontSize: '1.5rem' }}></i>
+                </span></div>
+            </div>;
         return <Page right={right} header="询价详情" headerClassName="py-1 bg-primary">
             {this.rowTop(suppplierData)}
             {this.rowEnd()}

@@ -11,6 +11,7 @@ TUID Supplier ver 2.0(
     main profile char(1000),                 --企业简介(供应商信息概况) 
     main isValid smallint default 1,         --是否有效（0 无效、1 有效）
     main defaultContact ID SupplierContact,  --默认联系人
+    main taxNo char(50),                     --税号  
     search(name),
     unique(no),
 );
@@ -24,7 +25,8 @@ TUID BankAccount (
     main bankRTN char(20),                   --供应商开户行的RTN   
     main bank char(100),                     --供应商开户银行
     main accountNo char(60),                 --供应商在开户银行的帐号 
-    main taxNo char(50),                     --税号  
+    main accountName char(100),              --受益人
+    main usageType smallint,                 --用途（0 开户行 1 中转行）
 );
 
 MAP SupplierBankAccount (
@@ -191,19 +193,19 @@ SHEET InquirySheet ver 0.4 (
         quotationFilePath char(1000),       --供应商提供的报价单的上传路径
         remarks char(1000),                 --备注：资源部新建的询价单需要国际部完成询价时，填写的询价要求
         inquiryRemarks char(1000),          --报价备注
+        result smallint,                    --询价结果（1: 正常询价有结果; 2: 供应商无回复; 3: 供应商有回复,但无价格; 4: 未在询价单中的结果）
     ),
     way smallint not null,                  --询价方式：2：电话询价；3：传真询价；1：Email询价
-    result smallint,                        --询价结果（1: 正常询价有结果; 2: 供应商无回复; 3: 供应商有回复,但无价格; 4: 未在询价单中的结果）
     user ID [$user],                        --创建人
     createDate datetime,                    --创建时间
     inquiryUser ID [$user],                 --询价人
     inquiryDate datetime                    --询出时间
 )
-Action submit {
+Action {
         history InquiryHistory
             set supplier = supplier, contact = contact, contactName = contactName, contactSalutation = contactSalutation, contactDepartmentName = contactDepartmentName
             , contactTelephone = contactTelephone, contactMobile = contactMobile,contactEmail = contactEmail, contactfax = contactfax
-            , inquiryUser = inquiryUser, startDate = createDate,inquiryDate=inquiryDate,way=way,result=result;
+            , inquiryUser = inquiryUser, startDate = createDate,inquiryDate=inquiryDate,way=way;
         STATE TO END;
 };
 
@@ -222,8 +224,7 @@ History InquiryHistory(
     inquiryUser ID [$user],                 --询价人
     startDate datetime,                     --开始时间   
     inquiryDate datetime,                   --询出时间 
-    way smallint not null,                  --询价方式：2：电话询价；3：传真询价；1：Email询价  
-    result smallint,                        --询价结果（1: 正常询价有结果; 2: 供应商无回复; 3: 供应商有回复,但无价格; 4: 未在询价单中的结果）    
+    way smallint not null,                  --询价方式：2：电话询价；3：传真询价；1：Email询价   
     sheet,
     type,
     row,

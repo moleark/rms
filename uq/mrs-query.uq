@@ -51,26 +51,38 @@ PAGE (
     address ID Address,
     productionAddress char(500),        --生产厂址
     profile char(1000),                 --企业简介(供应商信息概况)
+    taxNo char(50)
+) {
+    var key2 char(102);
+    set key2 = concat('%', key, '%');
+
+    PAGE select w.id, w.no, w.name,w.abbreviation,w.defaultContact,w.webSite,w.addressString,w.address,w.productionAddress,w.profile,w.taxNo
+    from    Supplier as w
+    where   ( w.name like key2 or w.no like key2 )
+            and w.id > $pageStart and w.isValid = 1 
+    order by w.id
+    limit $pageSize;
+};
+
+/** 根据供应商搜索银行信息*/
+QUERY SearchSupplierBankAccount(_id ID Supplier)
+returns ret (
+    id bigint,
+    supplier ID Supplier,
     bankAddress char(500),              --供应商银行地址
     bankSWIFT char(100),                --供应商开户行SWIFT/BIC
     bankIBAN char(100),                 --供应商开户行IBAN
     bankRTN char(20),                   --供应商开户行的RTN   
     bank char(100),                     --供应商开户银行
     accountNo char(60),                 --供应商在开户银行的帐号 
-    taxNo char(50)
-) {
-    var key2 char(102);
-    set key2 = concat('%', key, '%');
-
-    PAGE select w.id, w.no, w.name,w.abbreviation,w.defaultContact,w.webSite,w.addressString,w.address,w.productionAddress,w.profile
-            ,b.bankAddress,b.bankSWIFT,b.bankIBAN,b.bankRTN,b.bank,b.accountNo,b.taxNo
-    from    Supplier as w
-            left join SupplierBankAccount as m on w.id=m.supplier
-            left join BankAccount as b on m.bankAccount=b.id
-    where   ( w.name like key2 or w.no like key2 )
-            and w.id > $pageStart and w.isValid = 1 
-    order by w.id
-    limit $pageSize;
+    accountName char(100),              --受益人
+    usageType smallint                  --用途（0 开户行 1 中转行）
+) { 
+    into ret select b.id,sb.supplier,b.bankAddress,b.bankSWIFT,b.bankIBAN,b.bankRTN,b.bank,b.accountNo,b.accountName,b.usageType
+    from    SupplierBankAccount as sb 
+            join BankAccount as b on sb.bankAccount=b.id
+    where   sb.supplier = _id
+    order by b.id;
 };
 
 /** 搜索品牌*/
@@ -374,14 +386,13 @@ PAGE (
     startDate datetime,                     --开始时间   
     inquiryDate datetime,                   --询出时间 
     date  datetime,                         --结束时间 
-    way smallint not null,                  --询价方式：2：电话询价；3：传真询价；1：Email询价  
-    result smallint                         --询价结果（1: 正常询价有结果; 2: 供应商无回复; 3: 供应商有回复,但无价格; 4: 未在询价单中的结果）   
+    way smallint not null                   --询价方式：2：电话询价；3：传真询价；1：Email询价   
 ) {
 
     var key2 char(102);
     set key2 = concat('%', key, '%');
 
-    PAGE select st.sheet,st.supplier, st.contactName, st.inquiryUser,st.startDate,st.inquiryDate,st.date, st.way,st.result
+    PAGE select st.sheet,st.supplier, st.contactName, st.inquiryUser,st.startDate,st.inquiryDate,st.date, st.way
     from   InquiryHistory as st 
             join Supplier as s on st.supplier=s.id
     where   (key is null or ( s.name like key2 or s.no like key2))
@@ -513,7 +524,7 @@ ACTION AddPackage ver 3.0(
     var sheetId id;
     sheet InquirySheet into sheetId set supplier = supplierid, contact = contact, contactName = contactName, contactSalutation = contactSalutation, contactDepartmentName = contactDepartmentName
             , contactTelephone = contactTelephone, contactMobile = contactMobile,contactEmail = contactEmail, contactfax = contactfax
-            , inquiryUser = $user, user=$user,createDate = now(),inquiryDate=now(),way=1,result=1;
+            , inquiryUser = $user, user=$user,createDate = now(),inquiryDate=now(),way=1;
     sheet InquirySheet of sheetId arr inquiryitems
         add product=product, inquiryQuantity=quantity, inquiryRadiox=radiox, inquiryRadioy=radioy, inquiryUnit=unit
             , itemuser=$user, itemcreateDate=now(), quantity=quantity, radiox=radiox, radioy=radioy, unit=unit
@@ -521,5 +532,5 @@ ACTION AddPackage ver 3.0(
             , transFee=transFee, transFeecurrency=transFeecurrency, packingFee=packingFee, packingcurrency=packingcurrency
             , otherFee=otherFee, customized=customized, customizeUpto=customizeUpto, validUpto=validUpto
             , minArriveDate=minArriveDate, maxArriveDate=maxArriveDate, invoiceType=invoiceType, vatRate=vatRate, tariffRate=tariffRate
-            , packType=type, coaFilePath=null, msdsFilePath=null, quotationFilePath=null, inquiryRemarks='手动添加',remarks=null;
+            , packType=type, coaFilePath=null, msdsFilePath=null, quotationFilePath=null, inquiryRemarks='手动添加',remarks=null,result=1;
 };
