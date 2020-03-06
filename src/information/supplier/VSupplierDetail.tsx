@@ -7,17 +7,6 @@ import { ParamItem } from "model/supplierItem";
 import { TuidBoxDiv } from 'tonva/dist/uq/tuid/tuid';
 import { addressDetailValidation } from 'tools/inputValidations';
 
-const schema: ItemSchema[] = [
-    { name: 'name', type: 'string', required: true },
-    { name: 'abbreviation', type: 'string', required: false },
-    { name: 'webSite', type: 'string', required: false },
-    { name: 'address', type: 'id', required: true },
-    { name: 'addressString', type: 'string', required: true },
-    { name: 'productionAddress', type: 'string', required: false },
-    { name: 'taxNo', type: 'string', required: false },
-    { name: 'profile', type: 'string', required: false },
-];
-
 export class VSupplierDetail extends VPage<CSupplier> {
 
     private supplier: any;
@@ -34,36 +23,6 @@ export class VSupplierDetail extends VPage<CSupplier> {
         this.firstSupplierrBankAccount = item2;
         this.supplierBankAccounts = child2;
         this.openPage(this.page);
-    }
-
-    private uiSchema: UiSchema = {
-        items: {
-            name: { widget: 'text', label: '供应商名称', placeholder: '必填' } as UiInputItem,
-            abbreviation: { widget: 'text', label: '供应商简称', placeholder: '供应商简称' } as UiInputItem,
-            webSite: { widget: 'text', label: '网址', placeholder: '网址' } as UiInputItem,
-            address: {
-                widget: 'id', label: '所在地区',
-                pickId: async (context: Context, name: string, value: number) => await this.controller.pickAddress(context, name, value),
-                Templet: (address: BoxId) => {
-                    if (!address) return <small className="text-muted">(无)</small>;
-                    return tv(address, (addressValue) => {
-                        let { country, province, city, county } = addressValue;
-                        return <>
-                            {country !== undefined && country.id !== undefined && tv(country, v => <>{v.chineseName}</>)}
-                            {province !== undefined && province.id !== undefined && tv(province, (v) => <>{v.chineseName}</>)}
-                            {city !== undefined && city.id !== undefined && tv(city, (v) => <>{v.chineseName}</>)}
-                            {county !== undefined && county.id !== undefined && tv(county, (v) => <>{v.chineseName}</>)}
-                        </>;
-                    }, () => {
-                        return <small className="text-muted">请选择地区</small>;
-                    })
-                }
-            } as UiIdItem,
-            addressString: { widget: 'text', label: '详细地址', placeholder: '详细地址', rules: addressDetailValidation } as UiTextItem,
-            productionAddress: { widget: 'text', label: '生产厂址', placeholder: '生产厂址', rules: addressDetailValidation } as UiTextItem,
-            taxNo: { widget: 'text', label: '税号', placeholder: '税号' } as UiInputItem,
-            profile: { widget: 'textarea', label: '企业简介', placeholder: '企业简介', rows: 10 } as UiInputItem,
-        }
     }
 
     private getSupplierBankAccount = () => {
@@ -152,79 +111,43 @@ export class VSupplierDetail extends VPage<CSupplier> {
         await this.controller.updateSupplierData(this.supplier);
     }
 
-    private onDelSupplier = async () => {
-        if (await this.vCall(VConfirmDeleteSupplier, this.supplier) === true) {
-            await this.controller.delSupplier(this.supplier);
-            await this.controller.loadList();
-            this.closePage();
-        };
+    private rowTop = (supplierData: any) => {
+        let { name, no, abbreviation, webSite, address, addressString, productionAddress, profile, taxNo } = supplierData;
+
+
+        return <div className="bg-white py-2">
+            {no === undefined ? "" :
+                <><div className="row no-gutters px-3 my-1">
+                    <div className="col-3">编号:</div><div className="col-9 text-muted">{no}</div>
+                </div></>}
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">名称:</div><div className="col-9"><b>{name}</b></div>
+            </div>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">网址:</div><div className="col-9 text-muted">{webSite === undefined ? "(无)" : webSite}</div>
+            </div>
+            {taxNo === undefined ? "" :
+                <><div className="row no-gutters px-3 my-1">
+                    <div className="col-3">税号:</div><div className="col-9 text-muted">{taxNo}</div>
+                </div></>}
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">地址:</div><div className="col-9 text-muted">{tv(address)} {addressString}</div>
+            </div>
+            {productionAddress === undefined ? "" :
+                <><div className="row no-gutters px-3 my-1">
+                    <div className="col-3">厂址:</div><div className="col-9 text-muted">{productionAddress}</div>
+                </div></>}
+        </div>;
     }
 
     private page = () => {
 
         let supplierData = _.clone(this.supplier);
-        let { name, no, abbreviation, webSite, address, addressString, productionAddress, profile, taxNo } = supplierData;
-        let supData = {
-            name: name,
-            abbreviation: abbreviation,
-            webSite: webSite,
-            address: address,
-            addressString: addressString,
-            productionAddress: productionAddress,
-            profile: profile,
-            taxNo: taxNo
-        };
-
-        let buttonDel: any;
-        if (supplierData.id !== undefined) {
-            buttonDel = <div className="d-flex align-items-center">
-                <div><span onClick={() => this.onDelSupplier()} className="fa-stack">
-                    <i className="fa fa-trash fa-stack-2x cursor-pointer my-1" style={{ fontSize: '1.5rem' }}></i>
-                </span></div>
-            </div>;
-        }
-        return <Page header="供应商详情" right={buttonDel} headerClassName="py-1 bg-primary">
-            {no === undefined ? "" :
-                <><div className="row no-gutters px-3 my-1">
-                    <div className="col-3">编号:</div><div className="col-9 text-muted text-right">{no}</div>
-                </div></>}
-            <Edit schema={schema} uiSchema={this.uiSchema}
-                data={supData}
-                onItemChanged={this.onSupplierDataChanged} />
+        return <Page header="供应商详情" headerClassName="py-1 bg-primary">
+            {this.rowTop(supplierData)}
             {this.getSupplierBankAccount()}
             {this.getSupplierContact()}
         </Page>
     }
 }
 
-
-class VConfirmDeleteSupplier extends VPage<CSupplier> {
-    async open(supplier: any) {
-        this.openPage(this.page, supplier);
-    }
-
-    private onConfirm = async () => {
-        await this.returnCall(true);
-        this.closePage();
-    }
-
-    private onCancel = async () => {
-        await this.returnCall(false);
-        this.closePage();
-    }
-
-    private page = (supplier: any) => {
-        return <Page header="删除供应商" back="close" headerClassName="bg-primary">
-            <div className="w-75 mx-auto border border-primary rounded my-3 p-3 bg-white">
-                <div className="p-4 position-relative">
-                    <i className="fa fa-question-circle position-absolute fa-2x text-warning" style={{ left: 0, top: 0 }} />
-                    <b className="">是否删除该供应商？</b>
-                </div>
-                <div className="d-flex mt-3 justify-content-end">
-                    <button className="btn btn-danger mr-3" onClick={this.onConfirm}>删除供应商</button>
-                    <button className="btn btn-outline-info mr-3" onClick={this.onCancel}>取消</button>
-                </div>
-            </div>
-        </Page>;
-    }
-}

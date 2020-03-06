@@ -11,7 +11,7 @@ class PageChemical extends PageItems<any> {
     private searchChemical: Query;
     constructor(searchQuery: Query) {
         super();
-        this.firstSize = this.pageSize = 8;
+        this.firstSize = this.pageSize = 14;
         this.searchChemical = searchQuery;
     }
 

@@ -27,7 +27,7 @@ export class VHome extends View<CHome> {
         let header = <header>
             <div className="px-3" >供应商</div>
         </header>;
-        return <Page right={right} header={header} headerClassName="py-1 bg-primary">
+        return <Page right={right} header={header} onScrollBottom={this.onScrollBottom} headerClassName="py-1 bg-primary">
             <this.content />
         </Page>;
     };
@@ -39,4 +39,8 @@ export class VHome extends View<CHome> {
             {toSupplierList()}
         </>
     };
+
+    private onScrollBottom = async () => {
+        await this.controller.cApp.cSupplier.suppliers.more();
+    }
 }

@@ -8,7 +8,7 @@ TUID Supplier ver 2.0(
     main addressString char(400),
     main address ID Address,
     main productionAddress char(500),        --生产厂址
-    main profile char(1000),                 --企业简介(供应商信息概况) 
+    main profile text,                 --企业简介(供应商信息概况) 
     main isValid smallint default 1,         --是否有效（0 无效、1 有效）
     main defaultContact ID SupplierContact,  --默认联系人
     main taxNo char(50),                     --税号  

@@ -66,21 +66,27 @@ export class VAddProduct extends VPage<CProduct> {
 
         return <div className="bg-white py-2">
             <div className="row no-gutters px-3 my-1">
-                <div className="col-3">CAS:</div><div className="col-9 text-muted text-right">{CAS}</div>
+                <div className="col-3">CAS:</div><div className="col-9 text-muted text-right">{CAS === undefined ? "(无)" : CAS}</div>
             </div>
             <div className="row no-gutters px-3 my-1">
                 <div className="col-3">英文名称:</div><div className="col-9 text-muted text-right">{description}</div>
             </div>
-            <div className="row no-gutters px-3 my-1">
-                <div className="col-3">中文名称:</div><div className="col-9 text-muted text-right">{descriptoinCN}</div>
-            </div>
-            <div className="row no-gutters px-3 my-1">
-                <div className="col-3">分子式:</div><div className="col-9 text-muted text-right">{molecularFomula}</div>
-            </div>
-            <div className="row no-gutters px-3 my-1">
-                <div className="col-3">分子量:</div><div className="col-9 text-muted text-right">{molecularWeight}</div>
-            </div>
-        </div>;
+            {descriptoinCN === undefined ? "" : <>
+                <div className="row no-gutters px-3 my-1">
+                    <div className="col-3">中文名称:</div><div className="col-9 text-muted text-right">{descriptoinCN}</div>
+                </div></>
+            }
+            {molecularFomula === undefined ? "" : <>
+                <div className="row no-gutters px-3 my-1">
+                    <div className="col-3">分子式:</div><div className="col-9 text-muted text-right">{molecularFomula}</div>
+                </div></>
+            }
+            {molecularWeight === undefined ? "" : <>
+                <div className="row no-gutters px-3 my-1">
+                    <div className="col-3">分子量:</div><div className="col-9 text-muted text-right">{molecularWeight}</div>
+                </div></>
+            }
+        </div >;
     }
 
     private page = () => {

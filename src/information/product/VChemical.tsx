@@ -32,8 +32,8 @@ export class VChemical extends VPage<CChemical> {
         let { supplier } = this.controller;
         let { onNewProduct } = this.controller.cApp.cProduct;
         return <LMR className="py-2 border" onClick={() => onNewProduct(item, supplier)}>
-            <div><FA name="circle" className="px-2 text-primary"></FA>CAS:{CAS}</div>
-            <div className="px-4 text-muted small">英文：{description}</div>
+            <div><FA name="circle" className="px-2 text-primary"></FA>CAS：{CAS}</div>
+            <div className="px-4 text-muted small">{description}</div>
         </LMR >;
     }
 

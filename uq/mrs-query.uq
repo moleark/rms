@@ -50,7 +50,7 @@ PAGE (
     addressString char(400),
     address ID Address,
     productionAddress char(500),        --生产厂址
-    profile char(1000),                 --企业简介(供应商信息概况)
+    profile  text,                      --企业简介(供应商信息概况)
     taxNo char(50)
 ) {
     var key2 char(102);

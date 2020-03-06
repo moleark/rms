@@ -88,8 +88,8 @@ export class VProductView extends View<CInquiry> {
         let LocationUI;
         let pro = this.controller.productdata;
         if (pro !== undefined) {
-            let { description, CAS,purity } = pro;
-        LocationUI = <span className="text-muted small">{description}&nbsp;{CAS}&nbsp;{purity}</span>;
+            let { description, CAS, purity } = pro;
+            LocationUI = <span className="text-muted small">{description}&nbsp;&nbsp;{CAS}&nbsp;&nbsp;{purity}</span>;
         }
         return LocationUI;
     });
@@ -98,39 +98,39 @@ export class VProductView extends View<CInquiry> {
 export function groupByPack(packItems: any[]) {
     let result: any[] = [];
     for (let packItem of packItems) {
-        let { product,inquiryQuantity, inquiryRadiox, inquiryRadioy, inquiryUnit, itemuser, itemcreateDate, quantity, radiox, radioy, unit, listPrice, price
+        let { product, inquiryQuantity, inquiryRadiox, inquiryRadioy, inquiryUnit, itemuser, itemcreateDate, quantity, radiox, radioy, unit, listPrice, price
             , currency, isTaxIn, isTransFeeIn, transFee, transFeecurrency, packingFee, packingcurrency, otherFee, customized, customizeUpto, validUpto
-            , minArriveDate, maxArriveDate, invoiceType, vatRate, tariffRate, packType, inquiryRemarks, coaFilePath, msdsFilePath, quotationFilePath} = packItem;
+            , minArriveDate, maxArriveDate, invoiceType, vatRate, tariffRate, packType, inquiryRemarks, coaFilePath, msdsFilePath, quotationFilePath } = packItem;
         let packRow: any = {
-            inquiryQuantity:inquiryQuantity,
+            inquiryQuantity: inquiryQuantity,
             pack: (inquiryRadiox !== 1) ? <>{inquiryRadiox} * {inquiryRadioy}{inquiryUnit}</> : <>{inquiryRadioy}{inquiryUnit}</>,
             quantity: quantity,
             radio: (radiox !== 1) ? <>{radiox} * {radioy}{unit}</> : <>{radioy}{unit}</>,
-            itemuser:itemuser,
-            itemcreateDate:itemcreateDate,
-            listPrice:listPrice,
-            price:price,
-            currency:currency,
-            isTaxIn:isTaxIn,
-            isTransFeeIn:isTransFeeIn,
-            transFee:transFee,
-            transFeecurrency:transFeecurrency,
-            packingFee:packingFee,
-            packingcurrency:packingcurrency,
-            otherFee:otherFee,
-            customized:customized,
-            customizeUpto:customizeUpto,
-            validUpto:validUpto,
-            minArriveDate:minArriveDate,
-            maxArriveDate:maxArriveDate,
-            invoiceType:invoiceType,
-            vatRate:vatRate,
-            tariffRate:tariffRate,
-            packType:packType,
-            inquiryRemarks:inquiryRemarks,
-            coaFilePath:coaFilePath,
-            msdsFilePath:msdsFilePath,
-            quotationFilePath:quotationFilePath
+            itemuser: itemuser,
+            itemcreateDate: itemcreateDate,
+            listPrice: listPrice,
+            price: price,
+            currency: currency,
+            isTaxIn: isTaxIn,
+            isTransFeeIn: isTransFeeIn,
+            transFee: transFee,
+            transFeecurrency: transFeecurrency,
+            packingFee: packingFee,
+            packingcurrency: packingcurrency,
+            otherFee: otherFee,
+            customized: customized,
+            customizeUpto: customizeUpto,
+            validUpto: validUpto,
+            minArriveDate: minArriveDate,
+            maxArriveDate: maxArriveDate,
+            invoiceType: invoiceType,
+            vatRate: vatRate,
+            tariffRate: tariffRate,
+            packType: packType,
+            inquiryRemarks: inquiryRemarks,
+            coaFilePath: coaFilePath,
+            msdsFilePath: msdsFilePath,
+            quotationFilePath: quotationFilePath
         }
         let cpi = result.find(e => e.product.id === product.id);
         if (cpi === undefined) {

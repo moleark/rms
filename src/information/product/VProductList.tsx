@@ -43,9 +43,12 @@ export class VProductList extends VPage<CProduct> {
         let header = <header>
             <div className="px-3" >产品</div>
         </header>;
-        return <Page header={header} right={right} headerClassName="py-1 bg-primary">
+        return <Page header={header} right={right} onScrollBottom={this.onScrollBottom} headerClassName="py-1 bg-primary">
             <List items={products} item={{ render: this.renderRootCategory }} />
         </Page >;
     })
 
+    private onScrollBottom = async () => {
+        await this.controller.products.more();
+    }
 }

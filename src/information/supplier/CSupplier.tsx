@@ -93,6 +93,13 @@ export class CSupplier extends CUqBase {
     }
 
     /**
+* 打开新建界面
+*/
+    onEditSupplier = async (supplier: any) => {
+        this.openVPage(VSupplier, supplier);
+    }
+
+    /**
     * 打开编辑界面
     */
     updateSupplierData = async (supplier: any) => {
