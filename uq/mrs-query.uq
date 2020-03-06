@@ -10,10 +10,10 @@ returns ret (
     gender char(5),
     salutation char(10),
     departmentName char(100),
-    telephone char(50),
+    telephone char(60),
     mobile char(50) null,
-    email char(50),
-    fax char(20),
+    email char(60),
+    fax char(60),
     zipCode char(20),
     wechatId char(50),
     addressString char(400),
@@ -353,10 +353,10 @@ ACTION UpdateInquiryPending(
     var contactName char(50);             --供应商联系人姓名
     var contactSalutation char(10);
     var contactDepartmentName char(100);
-    var contactTelephone char(50);
+    var contactTelephone char(60);
     var contactMobile char(50);
-    var contactEmail char(50);
-    var contactfax char(20);
+    var contactEmail char(60);
+    var contactfax char(60);
     set contact=s.defaultContact,
         contactName=c.name,
         contactSalutation=c.salutation,
@@ -503,10 +503,10 @@ ACTION AddPackage ver 3.0(
     var contactName char(50);             --供应商联系人姓名
     var contactSalutation char(10);
     var contactDepartmentName char(100);
-    var contactTelephone char(50);
+    var contactTelephone char(60);
     var contactMobile char(50);
-    var contactEmail char(50);
-    var contactfax char(20);
+    var contactEmail char(60);
+    var contactfax char(60);
     set contact=s.defaultContact,
         contactName=c.name,
         contactSalutation=c.salutation,
