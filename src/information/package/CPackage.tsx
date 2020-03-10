@@ -66,7 +66,7 @@ export class CPackage extends CUqBase {
         let { quantity, radiox, radioy, unit, price, currency, isTaxIn, isTransFeeIn, transFee, transFeecurrency, packingFee, packingcurrency, otherFee, customized, customizeUpto, validUpto, minArriveDate, maxArriveDate, invoiceType, vatRate, tariffRate, type } = param;
         let paramn = {
             product: parent,
-            quantity: quantity,
+            quantity: 1,
             radiox: radiox,
             radioy: radioy,
             unit: unit,

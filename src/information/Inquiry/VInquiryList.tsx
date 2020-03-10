@@ -13,18 +13,17 @@ export class VInquiryList extends VPage<CInquiry> {
     }
 
     private renderRootCategory = (item: any, parent: any) => {
-        let { supplier, contactName, inquiryUser, startDate, inquiryDate, date, sheet, way, result } = item;
+        let { supplier, contactName, inquiryUser, startDate, inquiryDate, date, sheet, way } = item;
         let { openInquiryDetail } = this.controller;
 
         let right = <div className="cursor-pointer text-muted small">
-            <div>开始：<EasyDate date={inquiryDate} /></div>
+            {/* <div>开始：<EasyDate date={inquiryDate} /></div> */}
             <div>询出：<EasyDate date={inquiryDate} /></div>
             <div>结束：<EasyDate date={date} /></div>
         </div>
         let left = <div>
             <div><b>{tv(supplier, v => <>{v.name}</>)}</b></div>
             <div className="text-muted small">方式：{way === 1 ? "Email询价" : (way === 2 ? "电话询价" : "传真询价")}</div>
-            <div className="text-muted small">结果：{result === 1 ? "有价格" : (way === 2 ? "有价格" : "无")}</div>
         </div>
         return <LMR left={left} right={right} className="px-3 d-flex p-1 cursor-pointer" onClick={() => openInquiryDetail(sheet)}>
         </LMR >

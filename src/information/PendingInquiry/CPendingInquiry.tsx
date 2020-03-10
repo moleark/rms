@@ -106,7 +106,7 @@ export class CPendingInquiry extends CUqBase {
         let { id } = pending;
         //保存sheet和保存history
         let result: any = await this.uqs.rms.InquirySheet.save("InquirySheet", this.getDataForSave(pending, packageList));
-        // await this.uqs.rms.InquirySheet.action(result.id, result.flow, result.state, "submit");
+        await this.uqs.rms.InquirySheet.action(result.id, result.flow, result.state, "submit");
         if (result) {
             //删除pending及其明细
             let param = {

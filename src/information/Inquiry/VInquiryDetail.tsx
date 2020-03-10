@@ -12,10 +12,10 @@ export class VInquiryDetail extends VPage<CInquiry> {
     }
 
     private renderPackageItem = (item: any, index: number) => {
-        let { pack, inquiryQuantity } = item;
+        let { pack, inquiryQuantity, no } = item;
 
         return <LMR key={index} className="d-flex cursor-pointer py-1" onClick={() => this.controller.openPackageDetail(item)}>
-            <div><FA name="chevron-right" className="px-2 text-primary"></FA>{inquiryQuantity} * {pack}</div>
+            <div><FA name="chevron-right" className="px-2 text-primary"></FA>{inquiryQuantity} * {pack} {no}</div>
         </LMR>;
     }
 
