@@ -73,7 +73,7 @@ export class CPendingInquiry extends CUqBase {
             if (pk.jsonStr === undefined) { return; };
             let pack = JSON.parse(pk.jsonStr);
             inquiryItems.push({
-                product: pk.product, inquiryQuantity: pk.quantity, inquiryRadiox: pk.radiox, inquiryRadioy: pk.radioy, inquiryUnit: pk.unit, itemuser: pk.user, itemcreateDate: pk.createDate
+                no: undefined, product: pk.product, inquiryQuantity: pk.quantity, inquiryRadiox: pk.radiox, inquiryRadioy: pk.radioy, inquiryUnit: pk.unit, itemuser: pk.user, itemcreateDate: pk.createDate
                 , quantity: pack.quantity, radiox: pack.radiox, radioy: pack.radioy, unit: pack.unit, listPrice: pack.listPrice, price: pack.price, currency: pack.currency
                 , isTaxIn: pack.isTaxIn, isTransFeeIn: pack.isTransFeeIn, transFee: pack.transFee, transFeecurrency: pack.transFeecurrency, packingFee: pack.packingFee
                 , packingcurrency: pack.packingcurrency, otherFee: pack.otherFee, customized: pack.customized, customizeUpto: pack.customizeUpto, validUpto: pack.validUpto

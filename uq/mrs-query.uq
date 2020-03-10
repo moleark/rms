@@ -526,7 +526,7 @@ ACTION AddPackage ver 3.0(
             , contactTelephone = contactTelephone, contactMobile = contactMobile,contactEmail = contactEmail, contactfax = contactfax
             , inquiryUser = $user, user=$user,createDate = now(),inquiryDate=now(),way=1;
     sheet InquirySheet of sheetId arr inquiryitems
-        add product=product, inquiryQuantity=quantity, inquiryRadiox=radiox, inquiryRadioy=radioy, inquiryUnit=unit
+        add no=null,product=product, inquiryQuantity=quantity, inquiryRadiox=radiox, inquiryRadioy=radioy, inquiryUnit=unit
             , itemuser=$user, itemcreateDate=now(), quantity=quantity, radiox=radiox, radioy=radioy, unit=unit
             , listPrice=0, price=price, currency=currency, isTaxIn=isTaxIn, isTransFeeIn=isTransFeeIn
             , transFee=transFee, transFeecurrency=transFeecurrency, packingFee=packingFee, packingcurrency=packingcurrency

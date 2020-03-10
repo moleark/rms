@@ -158,6 +158,7 @@ SHEET InquirySheet ver 0.4 (
     contactEmail char(50),
     contactfax char(20),
     Arr inquiryitems (
+        no char(50),                        --老询价结果编号
         product ID Product,                 --询价产品编号
         inquiryQuantity int,                --询价数量
         inquiryRadiox dec(12,2),            --询价套
