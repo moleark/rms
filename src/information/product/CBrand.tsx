@@ -43,9 +43,9 @@ export class CBrand extends CUqBase {
     saveBrandData = async (brand: any) => {
 
         if (brand.id === undefined) {
-            await this.uqs.rms.Brand.save(undefined, brand);
+            await this.uqs.rms.RsBrand.save(undefined, brand);
         } else {
-            await this.uqs.rms.Brand.save(brand.id, brand);
+            await this.uqs.rms.RsBrand.save(brand.id, brand);
         }
         this.closePage();
         await this.searchBrandByKey("");

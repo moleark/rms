@@ -4,9 +4,9 @@ export interface UqRMS {
     Supplier: Tuid;
     SupplierContact: Tuid;
     Product: Tuid;
-    Brand: Tuid;
+    RsBrand: Tuid;
     BankAccount: Tuid;
-    ProductChemical: Map;
+    RsProductChemical: Map;
     SupplierBankAccount: Map;
     InquiryPendingItem: Map;
     PackPrice: Map;

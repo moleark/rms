@@ -71,7 +71,7 @@ export class CProduct extends CUqBase {
                 product.isTrue = 1;
                 product.defaultContact = undefined;
                 let result = await this.uqs.rms.Product.save(undefined, product);
-                await this.uqs.rms.ProductChemical.add({ product: result.id, arr1: [{ chemical: id, CAS: CAS, molecularFomula: molecularFomula, molecularWeight: molecularWeight, purity: product.purity }] });
+                await this.uqs.rms.RsProductChemical.add({ product: result.id, arr1: [{ chemical: id, CAS: CAS, molecularFomula: molecularFomula, molecularWeight: molecularWeight, purity: product.purity }] });
             }
         }
         this.closePage();
@@ -84,7 +84,7 @@ export class CProduct extends CUqBase {
             productdata.isTrue = 1;
             let { chemical } = productdata;
             await this.uqs.rms.Product.save(productdata.id, productdata);
-            await this.uqs.rms.ProductChemical.add({ product: productdata.id, arr1: [{ chemical: chemical.id, CAS: productdata.CAS, molecularFomula: productdata.molecularFomula, molecularWeight: productdata.molecularWeight, purity: purity }] });
+            await this.uqs.rms.RsProductChemical.add({ product: productdata.id, arr1: [{ chemical: chemical.id, CAS: productdata.CAS, molecularFomula: productdata.molecularFomula, molecularWeight: productdata.molecularWeight, purity: purity }] });
         }
         this.closePage();
         await this.loadList();

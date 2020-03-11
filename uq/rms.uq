@@ -57,7 +57,7 @@ TUID SupplierContact(
 );
 
 --资源品牌
-TUID Brand(
+TUID RsBrand(
     id,
     main no char(10) ,--编号
     main name char(50), --名称
@@ -72,7 +72,7 @@ TUID Product(
     id,
     main no char(50) null,                       --编号
     main supplier ID Supplier not null,          --供应商编号
-    main brand ID Brand null,                    --品牌
+    main brand ID RsBrand null,                    --品牌
     main origin char(50),                        --供应商自编号
     main description char(1000) null,            --产品英文名称
     main descriptionC char(1000) null,           --产品中文名称
@@ -92,7 +92,7 @@ TUID Product(
 );
 
 --资源产品和标准库的关系
-Map ProductChemical (
+Map RsProductChemical (
     key product ID Product,
     key chemical ID Chemical,
     CAS char(20),

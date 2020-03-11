@@ -96,7 +96,7 @@ PAGE (
     set key2 = concat('%', key, '%');
 
     PAGE select w.id, w.no, w.name
-    from    Brand as w
+    from    RsBrand as w
     where   1=1 
             and (key is null or ( w.no like key2 or w.name like key2))
             and w.id > $pageStart and w.isValid=1
@@ -110,7 +110,7 @@ PAGE (
     id bigint start 0,
     no char(50) ,
     supplier ID Supplier,   --供应商编号
-    brand ID Brand,        --品牌
+    brand ID RsBrand,        --品牌
     origin char(50),                        --供应商自编号
     description char(1000),           --产品英文名称
     descriptionC char(1000),
@@ -126,7 +126,7 @@ PAGE (
 
     PAGE select w.id, w.no, w.supplier,w.brand,w.origin,w.description,w.descriptionC,w.createTime,p.chemical,p.CAS,p.purity,p.molecularFomula,p.molecularWeight
     from    Product as w
-            left join ProductChemical as p on w.id=p.product
+            left join RsProductChemical as p on w.id=p.product
     where   ( w.description like key2 or w.descriptionC like key2 or p.CAS like key2)
             and w.id > $pageStart 
             and w.isTrue = 1  
@@ -140,7 +140,7 @@ returns ret (
     id bigint,
     no char(50) ,
     supplier ID Supplier,   --供应商编号
-    brand ID Brand,        --品牌
+    brand ID RsBrand,        --品牌
     origin char(50),                        --供应商自编号
     description char(1000),           --产品英文名称
     descriptionC char(1000),
@@ -154,7 +154,7 @@ returns ret (
 
     into ret select  w.id, w.no, w.supplier,w.brand,w.origin,w.description,w.descriptionC,w.createTime,p.chemical,p.CAS,p.purity,p.molecularFomula,p.molecularWeight
     from    Product as w
-            left join ProductChemical as p on w.id=p.product
+            left join RsProductChemical as p on w.id=p.product
     where   w.id=_id
             and w.isTrue = 1  
     order by w.id;
@@ -281,7 +281,7 @@ returns ret (
             join InquiryPendingItem as i on p.id=i.inquiryPending
             join InquiryPackage as k on i.inquiryPackage=k.id
             join Product as t on k.product=t.id
-            join ProductChemical as c on t.id=c.product
+            join RsProductChemical as c on t.id=c.product
     where   p.id=_id
     order by p.id;
 };
