@@ -114,7 +114,7 @@ export class CProduct extends CUqBase {
     }
 
     loadList = async () => {
-        await this.searchProductByKey("");
+        await this.searchProductByKey("李");
     }
 
     render = observer(() => {

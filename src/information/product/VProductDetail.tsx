@@ -71,11 +71,10 @@ export class VProductDetail extends VPage<CProduct> {
         let valid = (validUpto < Date.now()) ? <span className="text-danger"><EasyDate date={validUpto} /></span> : <span><EasyDate date={validUpto} /></span>;
 
         let down =
-            price === undefined ?
-                <div></div> : <div className="px-4 text-muted small">
-                    <span>&nbsp;{price}{tv(currency, v => <>{v.name}</>)}&nbsp;</span>
-                    {valid}
-                </div>;
+            price === undefined ? <div></div> : <div className="px-4 text-muted small">
+                <span>&nbsp;{price}{tv(currency, v => <>{v.name}</>)}&nbsp;</span>
+                {valid}
+            </div>;
         let mi = minArriveDate !== undefined ? <span><EasyDate date={minArriveDate} /></span> : "";
         let arriveDate = maxArriveDate !== undefined ? <span>~<EasyDate date={maxArriveDate} /></span> : "";
         let right =
