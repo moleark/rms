@@ -66,14 +66,14 @@ export class VPackageDetail extends VPage<CPackage> {
                     <div>是否定制:</div>
                     <div className="flex-fill d-flex justify-content-end">{customized === 1 ? "是" : (customized === 0 ? "否" : "")}</div>
                 </div>
-                <>{customized === 0?"":
-                <div>
-                    <div className="border-top edit-sep-light-gray"></div>
-                    <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
-                        <div>定制时间至:</div>
-                        <div className="flex-fill d-flex justify-content-end"><EasyDate date={customizeUpto}/></div>
-                    </div>
-                </div>}</>
+                <>{customized === 0 ? "" :
+                    <div>
+                        <div className="border-top edit-sep-light-gray"></div>
+                        <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
+                            <div>定制时间至:</div>
+                            <div className="flex-fill d-flex justify-content-end"><EasyDate date={customizeUpto} /></div>
+                        </div>
+                    </div>}</>
                 <div className="border-top edit-sep-light-gray"></div>
                 <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
                     <div>有效期至:</div>
@@ -92,7 +92,7 @@ export class VPackageDetail extends VPage<CPackage> {
                 <div className="border-top edit-sep-light-gray"></div>
                 <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
                     <div>发票类型:</div>
-                    <div className="flex-fill d-flex justify-content-end">{invoiceType === undefined ? "" : (invoiceType === 1 ? "增值税专用发票" : (invoiceType === 2 ? "增值税普通发票" : "形式发票"))}</div>
+                    <div className="flex-fill d-flex justify-content-end">{invoiceType === undefined ? "" : (invoiceType.id === 1 ? "增值税专用发票" : (invoiceType.id === 2 ? "增值税普通发票" : "形式发票"))}</div>
                 </div>
                 <div className="border-top edit-sep-light-gray"></div>
                 <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
