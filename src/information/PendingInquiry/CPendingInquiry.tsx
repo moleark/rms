@@ -18,11 +18,12 @@ class PagePendingInquiry extends PageItems<any> {
         this.searchPendingInquiry = searchQuery;
     }
 
-    protected async load(param: any, pageStart: any, pageSize: number): Promise<any[]> {
+    protected async loadResults(param: any, pageStart: any, pageSize: number): Promise<{ [name: string]: any[]; }> {
         if (pageStart === undefined) pageStart = 0;
         let ret = await this.searchPendingInquiry.page(param, pageStart, pageSize);
         return ret;
     }
+
     protected setPageStart(item: any): any {
         this.pageStart = item === undefined ? 0 : item.id;
     }
@@ -76,7 +77,7 @@ export class CPendingInquiry extends CUqBase {
                 no: undefined, product: pk.product, inquiryQuantity: pk.quantity, inquiryRadiox: pk.radiox, inquiryRadioy: pk.radioy, inquiryUnit: pk.unit, itemuser: pk.user, itemcreateDate: pk.createDate
                 , quantity: pack.quantity, radiox: pack.radiox, radioy: pack.radioy, unit: pack.unit, listPrice: pack.listPrice, price: pack.price, currency: pack.currency
                 , isTaxIn: pack.isTaxIn, isTransFeeIn: pack.isTransFeeIn, transFee: pack.transFee, transFeecurrency: pack.transFeecurrency, packingFee: pack.packingFee
-                , packingcurrency: pack.packingcurrency, otherFee: pack.otherFee, customized: pack.customized, customizeUpto: pack.customizeUpto, validUpto: pack.validUpto
+                , packingcurrency: pack.packingcurrency, otherFee: pack.otherFee, otherFeecurrency: pack.otherFeecurrency, customizeUpto: pack.customizeUpto, validUpto: pack.validUpto
                 , minArriveDate: pack.minArriveDate, maxArriveDate: pack.maxArriveDate, invoiceType: pack.invoiceType, vatRate: pack.vatRate, tariffRate: pack.tariffRate
                 , packType: pack.packType, coaFilePath: pack.coaFilePath, msdsFilePath: pack.msdsFilePath, quotationFilePath: pack.quotationFilePath
                 , inquiryRemarks: pack.remarks, remarks: pk.inquiryRemarks, result: pack.result
@@ -128,7 +129,7 @@ export class CPendingInquiry extends CUqBase {
             await this.uqs.rms.InquiryPendingItem.add({ inquiryPending: id, arr1: [{ inquiryPackage: inquiryPackage.id, user: user.id, createDate: createDate, remarks: inquiryRemarks, jsonStr: JSON.stringify(model) }] });
 
             //更新包装价格
-            let { quantity, radiox, radioy, unit, listPrice, price, currency, isTaxIn, isTransFeeIn, transFee, transFeecurrency, packingFee, packingcurrency, otherFee, customized, customizeUpto, validUpto, minArriveDate, maxArriveDate, invoiceType, vatRate, tariffRate, packType, remarks: rremarks, coaFilePath, msdsFilePath, quotationFilePath, result } = model;
+            let { quantity, radiox, radioy, unit, listPrice, price, currency, isTaxIn, isTransFeeIn, transFee, transFeecurrency, packingFee, packingcurrency, otherFee, otherFeecurrency, customizeUpto, validUpto, minArriveDate, maxArriveDate, invoiceType, vatRate, tariffRate, packType, remarks: rremarks, coaFilePath, msdsFilePath, quotationFilePath, result } = model;
             let param = {
                 product: product,
                 quantity: quantity,
@@ -145,7 +146,7 @@ export class CPendingInquiry extends CUqBase {
                 packingFee: packingFee,
                 packingcurrency: packingcurrency,
                 otherFee: otherFee,
-                customized: customized,
+                otherFeecurrency: otherFeecurrency,
                 customizeUpto: customizeUpto,
                 validUpto: validUpto,
                 minArriveDate: minArriveDate,

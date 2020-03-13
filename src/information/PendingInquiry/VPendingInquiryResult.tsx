@@ -20,7 +20,7 @@ const schema: Schema = [
     { name: 'packingFee', type: 'number', required: false },
     { name: 'packingcurrency', type: 'id', required: false },
     { name: 'otherFee', type: 'number', required: false },
-    { name: 'customized', type: 'number', required: true },
+    { name: 'otherFeecurrency', type: 'id', required: false },
     { name: 'customizeUpto', type: 'date', required: false },
     { name: 'validUpto', type: 'date', required: true },
     { name: 'minArriveDate', type: 'date', required: true },
@@ -86,7 +86,16 @@ export class VPendingInquiryResult extends VPage<CPendingInquiry> {
                 }
             } as UiIdItem,
             otherFee: { widget: 'text', label: '其他费', placeholder: '其他费' } as UiInputItem,
-            customized: { widget: 'radio', label: '定制', list: [{ value: "0", title: '否' }, { value: "1", title: '是' }] } as UiRadio,
+            otherFeecurrency: {
+                widget: 'id', label: '其他费币种', placeholder: '其他费币种',
+                pickId: async (context: Context, name: string, value: number) => await this.controller.pickCurrency(context, name, value),
+                Templet: (item: any) => {
+                    if (!item) return <small className="text-muted">请选择其他费币种</small>;
+                    return <>
+                        {tv(item, v => <>{v.name}</>)}
+                    </>;
+                }
+            } as UiIdItem,
             customizeUpto: { widget: 'date', label: '定制截止日期' } as UiInputItem,
             validUpto: { widget: 'date', label: '报价有效期', placeholder: '必填' } as UiInputItem,
             minArriveDate: { widget: 'date', label: '最短到货期', placeholder: '必填' } as UiInputItem,

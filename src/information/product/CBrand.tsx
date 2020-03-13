@@ -16,7 +16,7 @@ class PageBrand extends PageItems<any> {
         this.searchBrand = searchQuery;
     }
 
-    protected async load(param: any, pageStart: any, pageSize: number): Promise<any[]> {
+    protected async loadResults(param: any, pageStart: any, pageSize: number): Promise<{ [name: string]: any[]; }> {
         if (pageStart === undefined) pageStart = 0;
         let ret = await this.searchBrand.page(param, pageStart, pageSize);
         return ret;

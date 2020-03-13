@@ -178,7 +178,7 @@ returns ret (
     packingFee dec(12,2),               --包装费
     packingcurrency ID Currency,        --包装费币种
     otherFee dec(12,2),                 --其他费用
-    customized smallint,                --产品是否需要定制；0：不需要；1：需要定制
+    otherFeecurrency ID Currency,       --其他费用币种
     customizeUpto datetime,             --用于计算定制周期。产品需要定制时，用于计算定制周期，CustomizeUpto减去CreateDate为定制周期
     validUpto datetime,                 --报价有效期
     minArriveDate datetime,             --最短到货期
@@ -190,7 +190,7 @@ returns ret (
     into ret select pp.id,p.id as product, pp.radiox, pp.radioy,pp.unit,pp.type
                     ,pr.price,pr.currency,pr.isTaxIn,pr.isTransFeeIn,pr.transFee
                     ,pr.transFeecurrency,pr.packingFee,pr.packingcurrency,pr.otherFee
-                    ,pr.customized,pr.customizeUpto,pr.validUpto,pr.minArriveDate
+                    ,pr.otherFeecurrency,pr.customizeUpto,pr.validUpto,pr.minArriveDate
                     ,pr.maxArriveDate,pr.invoiceType,pr.vatRate,pr.tariffRate
     from    Product as p 
             join Product.Pack as pp on p.id = pp.owner
@@ -418,7 +418,7 @@ ACTION AddPackagePrice ver 1.0(
     packingFee dec(12,2),               --包装费
     packingcurrency ID Currency,        --包装费币种
     otherFee dec(12,2),                 --其他费用
-    customized smallint,                --产品是否需要定制；0：不需要；1：需要定制
+    otherFeecurrency ID Currency,       --其他费用币种
     customizeUpto datetime,             --用于计算定制周期。产品需要定制时，用于计算定制周期，CustomizeUpto减去CreateDate为定制周期
     validUpto datetime,                 --报价有效期
     minArriveDate datetime,             --最短到货期
@@ -451,7 +451,7 @@ ACTION AddPackagePrice ver 1.0(
     --更新包装价格
     BOOK PackPrice at (Product, packid) set price = price,currency=currency,
         isTaxIn = isTaxIn, isTransFeeIn = isTransFeeIn, transFee = transFee, transFeecurrency = transFeecurrency,packingFee=packingFee,packingcurrency=packingcurrency,
-        otherFee = otherFee,customized=customized,customizeUpto=customizeUpto,validUpto=validUpto,minArriveDate=minArriveDate,maxArriveDate=maxArriveDate,
+        otherFee = otherFee,otherFeecurrency=otherFeecurrency,customizeUpto=customizeUpto,validUpto=validUpto,minArriveDate=minArriveDate,maxArriveDate=maxArriveDate,
         invoiceType=invoiceType,vatRate=vatRate,tariffRate=tariffRate;
 };
 
@@ -471,7 +471,7 @@ ACTION AddPackage ver 3.0(
     packingFee dec(12,2),               --包装费
     packingcurrency ID Currency,        --包装费币种
     otherFee dec(12,2),                 --其他费用
-    customized smallint,                --产品是否需要定制；0：不需要；1：需要定制
+    otherFeecurrency ID Currency,       --其他费用币种
     customizeUpto datetime,             --用于计算定制周期。产品需要定制时，用于计算定制周期，CustomizeUpto减去CreateDate为定制周期
     validUpto datetime,                 --报价有效期
     minArriveDate datetime,             --最短到货期
@@ -490,7 +490,7 @@ ACTION AddPackage ver 3.0(
     --更新包装价格
     BOOK PackPrice at (Product, packid) set price = price,currency=currency,
         isTaxIn = isTaxIn, isTransFeeIn = isTransFeeIn, transFee = transFee, transFeecurrency = transFeecurrency,packingFee=packingFee,packingcurrency=packingcurrency,
-        otherFee = otherFee,customized=customized,customizeUpto=customizeUpto,validUpto=validUpto,minArriveDate=minArriveDate,maxArriveDate=maxArriveDate,
+        otherFee = otherFee,otherFeecurrency=otherFeecurrency,customizeUpto=customizeUpto,validUpto=validUpto,minArriveDate=minArriveDate,maxArriveDate=maxArriveDate,
         invoiceType=invoiceType,vatRate=vatRate,tariffRate=tariffRate;
 
     VAR supplierid ID;
@@ -530,7 +530,7 @@ ACTION AddPackage ver 3.0(
             , itemuser=$user, itemcreateDate=now(), quantity=quantity, radiox=radiox, radioy=radioy, unit=unit
             , listPrice=0, price=price, currency=currency, isTaxIn=isTaxIn, isTransFeeIn=isTransFeeIn
             , transFee=transFee, transFeecurrency=transFeecurrency, packingFee=packingFee, packingcurrency=packingcurrency
-            , otherFee=otherFee, customized=customized, customizeUpto=customizeUpto, validUpto=validUpto
+            , otherFee=otherFee, otherFeecurrency=otherFeecurrency, customizeUpto=customizeUpto, validUpto=validUpto
             , minArriveDate=minArriveDate, maxArriveDate=maxArriveDate, invoiceType=invoiceType, vatRate=vatRate, tariffRate=tariffRate
             , packType=type, coaFilePath=null, msdsFilePath=null, quotationFilePath=null, inquiryRemarks='手动添加',remarks=null,result=1;
 };

@@ -21,8 +21,8 @@ const schema: ItemSchema[] = [
     { name: 'wechatId', type: 'string', required: false },
     { name: 'email', type: 'string' },
     { name: 'fax', type: 'string', required: false },
-    { name: 'address', type: 'id', required: true },
-    { name: 'addressString', type: 'string', required: true },
+    { name: 'address', type: 'id', required: false },
+    { name: 'addressString', type: 'string', required: false },
     { name: 'zipCode', type: 'string', required: false },
     { name: 'isDefault', type: 'number', required: false },
 ];

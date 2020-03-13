@@ -180,7 +180,7 @@ SHEET InquirySheet ver 0.4 (
         packingFee dec(12,2),               --包装费
         packingcurrency ID Currency,        --包装费币种
         otherFee dec(12,2),                 --其他费用
-        customized smallint,                --产品是否需要定制；0：不需要；1：需要定制
+        otherFeecurrency ID Currency,       --其他费用币种
         customizeUpto datetime,             --用于计算定制周期。产品需要定制时，用于计算定制周期，CustomizeUpto减去CreateDate为定制周期
         validUpto datetime,                 --报价有效期
         minArriveDate datetime,             --最短到货期
@@ -246,7 +246,7 @@ MAP PackPrice ver 1.0 (
     packingFee dec(12,2),               --包装费
     packingcurrency ID Currency,        --包装费币种
     otherFee dec(12,2),                 --其他费用
-    customized smallint,                --产品是否需要定制；0：不需要；1：需要定制
+    otherFeecurrency ID Currency,       --其他费用币种
     customizeUpto datetime,             --用于计算定制周期。产品需要定制时，用于计算定制周期，CustomizeUpto减去CreateDate为定制周期
     validUpto datetime,                 --报价有效期
     minArriveDate datetime,             --最短到货期

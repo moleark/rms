@@ -18,7 +18,7 @@ class NewPagePendingInquiry extends PageItems<any> {
         this.searchNewPendingInquiry = searchQuery;
     }
 
-    protected async load(param: any, pageStart: any, pageSize: number): Promise<any[]> {
+    protected async loadResults(param: any, pageStart: any, pageSize: number): Promise<{ [name: string]: any[]; }> {
         if (pageStart === undefined) pageStart = 0;
         let ret = await this.searchNewPendingInquiry.page(param, pageStart, pageSize);
         return ret;
@@ -65,7 +65,7 @@ export class CNewPendingInquiry extends CUqBase {
             if (this.product) {
                 let { id, supplier } = this.product;
                 let { id: supplierid } = supplier;
-                let { quantity, radiox, radioy, unit,remarks } = model;
+                let { quantity, radiox, radioy, unit, remarks } = model;
                 let param = {
                     supplier: supplierid,
                     product: id,

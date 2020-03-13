@@ -17,7 +17,7 @@ class PagePackage extends PageItems<any> {
         this.searchPackage = searchQuery;
     }
 
-    protected async load(param: any, pageStart: any, pageSize: number): Promise<any[]> {
+    protected async loadResults(param: any, pageStart: any, pageSize: number): Promise<{ [name: string]: any[]; }> {
         if (pageStart === undefined) pageStart = 0;
         let ret = await this.searchPackage.page(param, pageStart, pageSize);
         return ret;
@@ -63,10 +63,10 @@ export class CPackage extends CUqBase {
 
     savePackage = async (id: number, param: any, parent: any) => {
         // await this.uqs.rms.Product.saveArr("Pack", parent.id, id, param);
-        let { quantity, radiox, radioy, unit, price, currency, isTaxIn, isTransFeeIn, transFee, transFeecurrency, packingFee, packingcurrency, otherFee, customized, customizeUpto, validUpto, minArriveDate, maxArriveDate, invoiceType, vatRate, tariffRate, type } = param;
+        let { quantity, radiox, radioy, unit, price, currency, isTaxIn, isTransFeeIn, transFee, transFeecurrency, packingFee, packingcurrency, otherFee, otherFeecurrency, customizeUpto, validUpto, minArriveDate, maxArriveDate, invoiceType, vatRate, tariffRate, type } = param;
         let paramn = {
             product: parent,
-            quantity: 1,
+            quantity: quantity,
             radiox: radiox,
             radioy: radioy,
             unit: unit,
@@ -79,7 +79,7 @@ export class CPackage extends CUqBase {
             packingFee: packingFee,
             packingcurrency: packingcurrency,
             otherFee: otherFee,
-            customized: customized,
+            otherFeecurrency: otherFeecurrency,
             customizeUpto: customizeUpto,
             validUpto: validUpto,
             minArriveDate: minArriveDate,

@@ -16,7 +16,7 @@ class PageInquiry extends PageItems<any> {
         this.searchInquiry = searchQuery;
     }
 
-    protected async load(param: any, pageStart: any, pageSize: number): Promise<any[]> {
+    protected async loadResults(param: any, pageStart: any, pageSize: number): Promise<{ [name: string]: any[]; }> {
         if (pageStart === undefined) pageStart = 0;
         let ret = await this.searchInquiry.page(param, pageStart, pageSize);
         return ret;
@@ -99,7 +99,7 @@ export function groupByPack(packItems: any[]) {
     let result: any[] = [];
     for (let packItem of packItems) {
         let { product, inquiryQuantity, inquiryRadiox, inquiryRadioy, inquiryUnit, itemuser, itemcreateDate, quantity, radiox, radioy, unit, listPrice, price
-            , currency, isTaxIn, isTransFeeIn, transFee, transFeecurrency, packingFee, packingcurrency, otherFee, customized, customizeUpto, validUpto
+            , currency, isTaxIn, isTransFeeIn, transFee, transFeecurrency, packingFee, packingcurrency, otherFee, otherFeecurrency, customizeUpto, validUpto
             , minArriveDate, maxArriveDate, invoiceType, vatRate, tariffRate, packType, inquiryRemarks, coaFilePath, msdsFilePath, quotationFilePath } = packItem;
         let packRow: any = {
             inquiryQuantity: inquiryQuantity,
@@ -118,7 +118,7 @@ export function groupByPack(packItems: any[]) {
             packingFee: packingFee,
             packingcurrency: packingcurrency,
             otherFee: otherFee,
-            customized: customized,
+            otherFeecurrency: otherFeecurrency,
             customizeUpto: customizeUpto,
             validUpto: validUpto,
             minArriveDate: minArriveDate,

@@ -16,7 +16,7 @@ class PageProduct extends PageItems<any> {
         this.searchProduct = searchQuery;
     }
 
-    protected async load(param: any, pageStart: any, pageSize: number): Promise<any[]> {
+    protected async loadResults(param: any, pageStart: any, pageSize: number): Promise<{ [name: string]: any[]; }> {
         if (pageStart === undefined) pageStart = 0;
         let ret = await this.searchProduct.page(param, pageStart, pageSize);
         return ret;

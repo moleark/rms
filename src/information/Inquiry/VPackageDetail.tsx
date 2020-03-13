@@ -14,7 +14,7 @@ export class VPackageDetail extends VPage<CInquiry> {
     private page = (item: any) => {
 
         let { inquiryQuantity, pack, itemuser, itemcreateDate, quantity, radio, listPrice, price
-            , currency, isTaxIn, isTransFeeIn, transFee, transFeecurrency, packingFee, packingcurrency, otherFee, customized, customizeUpto, validUpto
+            , currency, isTaxIn, isTransFeeIn, transFee, transFeecurrency, packingFee, packingcurrency, otherFee, otherFeecurrency, customizeUpto, validUpto
             , minArriveDate, maxArriveDate, invoiceType, vatRate, tariffRate, packType, inquiryRemarks, coaFilePath, msdsFilePath, quotationFilePath } = item;
 
         let header = <>询价包装详情: {inquiryQuantity} * {pack}</>
@@ -73,21 +73,13 @@ export class VPackageDetail extends VPage<CInquiry> {
                 <div className="border-top edit-sep-light-gray"></div>
                 <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
                     <div>其他费用:</div>
-                    <div className="flex-fill d-flex justify-content-end">{otherFee}</div>
+                    <div className="flex-fill d-flex justify-content-end">{otherFee}{otherFeecurrency === undefined ? "" : tv(otherFeecurrency, v => <>{v.name}</>)}</div>
                 </div>
                 <div className="border-top edit-sep-light-gray"></div>
                 <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
-                    <div>是否定制:</div>
-                    <div className="flex-fill d-flex justify-content-end">{customized === 1 ? "是" : (customized === 0 ? "否" : "")}</div>
+                    <div>定制时间至:</div>
+                    <div className="flex-fill d-flex justify-content-end"><EasyDate date={customizeUpto} /></div>
                 </div>
-                <>{customized === 0?"":
-                <div>
-                    <div className="border-top edit-sep-light-gray"></div>
-                    <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
-                        <div>定制时间至:</div>
-                        <div className="flex-fill d-flex justify-content-end"><EasyDate date={customizeUpto}/></div>
-                    </div>
-                </div>}</>
                 <div className="border-top edit-sep-light-gray"></div>
                 <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
                     <div>有效期至:</div>
@@ -120,8 +112,8 @@ export class VPackageDetail extends VPage<CInquiry> {
                 </div>
                 <div className="border-top edit-sep-light-gray"></div>
                 <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
-                <div>备注:</div>
-                <div className="flex-fill d-flex justify-content-end">{inquiryRemarks}</div>
+                    <div>备注:</div>
+                    <div className="flex-fill d-flex justify-content-end">{inquiryRemarks}</div>
                 </div>
                 <div className="border-top edit-sep-light-gray"></div>
                 <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
