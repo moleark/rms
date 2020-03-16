@@ -31,7 +31,7 @@ export class VSupplierBankAccountDetail extends VPage<CSupplier> {
     }
 
     private loadBank = async (item: any) => {
-        this.bankAccount = item;
+        this.bankAccount = await this.controller.cApp.uqs.rms.BankAccount.load(item.id);
         let { bankAddress, bankSWIFT, bankIBAN, bankRTN, bank, accountNo, accountName, usageType } = this.bankAccount;
         this.bankData = {
             bankAddress: bankAddress,
