@@ -80,7 +80,7 @@ export class VSupplierBankAccountDetail extends VPage<CSupplier> {
         if (await this.vCall(VConfirmDeleteSupplierBankAccount, this.bankAccount) === true) {
             await this.controller.delSupplierBankAccount(this.bankAccount, this.supplier);
             this.closePage();
-            this.controller.cApp.cSupplier.onSupplierSelected(this.supplier);
+            this.controller.onSupplierSelected(this.supplier);
         };
     }
 

@@ -42,7 +42,7 @@ export class VSupplierContactDetail extends VPage<CSupplierContact> {
     }
 
     private loadContact = async (item: any) => {
-        this.item = item;
+        this.item = await this.controller.cApp.uqs.rms.SupplierContact.load(item.id);
         let { bankAddress, bankSWIFT, bankIBAN, bankRTN, bank, accountNo, accountName, usageType } = this.item;
         this.contactData = {
             bankAddress: bankAddress,
@@ -100,7 +100,7 @@ export class VSupplierContactDetail extends VPage<CSupplierContact> {
         this.item[name] = newValue;
         await this.controller.updateContactData(this.item, this.parent);
         this.closePage();
-        this.controller.cApp.cSupplierContact.showSupplierContactDetail(this.item, this.parent);
+        this.controller.showSupplierContactDetail(this.item, this.parent);
     }
 
     private onDelSupplierContact = async () => {

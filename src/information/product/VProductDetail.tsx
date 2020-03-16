@@ -157,7 +157,7 @@ export class VProductDetail extends VPage<CProduct> {
         this.product[name] = newValue;
         await this.controller.updateProductData(this.product);
         this.closePage();
-        this.controller.cApp.cProduct.showProductDetail(this.product);
+        this.controller.showProductDetail(this.product);
     }
 
     private onDelProduct = async () => {
