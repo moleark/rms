@@ -9,6 +9,8 @@ const schema: Schema = [
     { name: 'supplier', type: 'id', required: true },
     { name: 'brand', type: 'id', required: false },
     { name: 'origin', type: 'string', required: false },
+    { name: 'description', type: 'string', required: true },
+    { name: 'descriptionC', type: 'string', required: false },
     { name: 'purity', type: 'string', required: false },
     { name: 'submit', type: 'submit' }
 ];
@@ -44,6 +46,8 @@ export class VAddProduct extends VPage<CProduct> {
                 }
             } as UiIdItem,
             origin: { widget: 'text', label: '供应商自编号', placeholder: '供应商自编号' } as UiInputItem,
+            description: { widget: 'text', label: '英文名称', placeholder: '英文名称', defaultValue: this.controller.chemical.description } as UiInputItem,
+            descriptionC: { widget: 'text', label: '中文名称', placeholder: '中文名称', defaultValue: this.controller.chemical.descriptionC } as UiInputItem,
             purity: { widget: 'text', label: '纯度', placeholder: '纯度' } as UiInputItem,
             submit: { widget: 'button', label: '提交', className: "btn btn-primary mr-3 px-6" }
         }
@@ -60,7 +64,6 @@ export class VAddProduct extends VPage<CProduct> {
     }
 
     private showChemicalData = () => {
-
         let { chemical } = this.controller;
         let { no, CAS, description, descriptoinCN, molecularFomula, molecularWeight, mdlNumber } = chemical;
 
@@ -68,14 +71,6 @@ export class VAddProduct extends VPage<CProduct> {
             <div className="row no-gutters px-3 my-1">
                 <div className="col-3">CAS:</div><div className="col-9 text-muted text-right">{CAS === undefined ? "(无)" : CAS}</div>
             </div>
-            <div className="row no-gutters px-3 my-1">
-                <div className="col-3">英文名称:</div><div className="col-9 text-muted text-right">{description}</div>
-            </div>
-            {descriptoinCN === undefined ? "" : <>
-                <div className="row no-gutters px-3 my-1">
-                    <div className="col-3">中文名称:</div><div className="col-9 text-muted text-right">{descriptoinCN}</div>
-                </div></>
-            }
             {molecularFomula === undefined ? "" : <>
                 <div className="row no-gutters px-3 my-1">
                     <div className="col-3">分子式:</div><div className="col-9 text-muted text-right">{molecularFomula}</div>

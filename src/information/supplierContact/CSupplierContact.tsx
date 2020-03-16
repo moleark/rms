@@ -60,30 +60,29 @@ export class CSupplierContact extends CUqBase {
     }
 
     saveSupplierContact = async (id: number, param: any, parent: any) => {
-        let { name, firstName, lastName, gender, salutation, departmentName, telephone, mobile, email, fax, zipCode, wechatId, addressString, address, isDefault } = param;
-        let parrm = { name: name, firstName: firstName, lastName: lastName, gender: gender, salutation: salutation, departmentName: departmentName, telephone: telephone, mobile: mobile, email: email, fax: fax, zipCode: zipCode, wechatId: wechatId, addressString: addressString, address: address, supplier: parent.id, isValid: 1 };
+        let { name, firstName, lastName, gender, salutation, position, departmentName, telephone, mobile, email, fax, zipCode, wechatId, addressString, address, isDefault } = param;
+        let parrm = { name: name, firstName: firstName, lastName: lastName, gender: gender, salutation: salutation, departmentName: departmentName, telephone: telephone, mobile: mobile, email: email, fax: fax, zipCode: zipCode, wechatId: wechatId, addressString: addressString, address: address, supplier: parent.id, isValid: 1, position: position };
         let result = await this.uqs.rms.SupplierContact.save(id, parrm);
         if (isDefault === true) {
             let sid = id;
             if (sid === undefined) {
                 sid = result.id;
             }
-            await this.uqs.rms.Supplier.save(parent.id, { no: parent.no, name: parent.name, abbreviation: parent.abbreviation, webSite: parent.webSite, address: parent.address, addressString: parent.addressString, productionAddress: parent.productionAddress, profile: parent.profile, isValid: 1, defaultContact: sid });
+            await this.uqs.rms.Supplier.save(parent.id, { no: parent.no, name: parent.name, abbreviation: parent.abbreviation, webSite: parent.webSite, address: parent.address, addressString: parent.addressString, productionAddress: parent.productionAddress, profile: parent.profile, taxNo: parent.taxNo, isValid: 1, defaultContact: sid });
         }
-        this.cApp.cHome.start();
+        this.cApp.cSupplier.onSupplierSelected(parent);
+        this.closePage();
     }
 
     updateContactData = async (param: any, parent: any) => {
         let { isDefault } = param;
         await this.uqs.rms.SupplierContact.save(param.id, param);
         if (isDefault === 1) {
-            await this.uqs.rms.Supplier.save(parent.id, { no: parent.no, name: parent.name, abbreviation: parent.abbreviation, webSite: parent.webSite, address: parent.address, addressString: parent.addressString, productionAddress: parent.productionAddress, profile: parent.profile, isValid: 1, defaultContact: param.id });
+            parent.defaultContact = param;
+        } else {
+            parent.defaultContact = undefined;
         }
-        this.closePage();
-    }
-
-    loadList = async (parent: any) => {
-        await this.cApp.cSupplier.onSupplierSelected(parent);
+        await this.uqs.rms.Supplier.save(parent.id, { no: parent.no, name: parent.name, abbreviation: parent.abbreviation, webSite: parent.webSite, address: parent.address, addressString: parent.addressString, productionAddress: parent.productionAddress, profile: parent.profile, taxNo: parent.taxNo, isValid: 1, defaultContact: parent.defaultContact });
     }
 
     //联系人列表

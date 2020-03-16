@@ -9,6 +9,7 @@ returns ret (
     lastName char(50),
     gender char(5),
     salutation char(10),
+    position char(50),
     departmentName char(100),
     telephone char(60),
     mobile char(50) null,
@@ -21,12 +22,12 @@ returns ret (
     defaultContact ID SupplierContact,
     isValid smallint
 ) { 
-    into ret select tabl.id, tabl.no, tabl.supplier, tabl.name, tabl.firstName,tabl.lastName, tabl.gender, tabl.salutation,tabl.departmentName
+    into ret select tabl.id, tabl.no, tabl.supplier, tabl.name, tabl.firstName,tabl.lastName, tabl.gender, tabl.salutation, tabl.position, tabl.departmentName
     ,tabl.telephone,tabl.mobile, tabl.email ,tabl.fax,tabl.zipCode ,tabl.wechatId ,tabl.addressString ,tabl.address
     ,tabl.defaultContact, tabl.isValid
     from (
     select  (case when s.defaultContact is null then w.id else 0 end) as num
-            ,w.id, w.no, w.supplier, w.name, w.firstName,w.lastName, w.gender, w.salutation,w.departmentName
+            ,w.id, w.no, w.supplier, w.name, w.firstName,w.lastName, w.gender, w.salutation, w.position, w.departmentName
             ,w.telephone,w.mobile, w.email ,w.fax,w.zipCode ,w.wechatId ,w.addressString ,w.address
             ,s.defaultContact, w.isValid
     from    SupplierContact as w
@@ -119,14 +120,16 @@ PAGE (
     CAS char(20),
     purity char(80),
     molecularFomula char(200),
-    molecularWeight char(30)
+    molecularWeight char(30),
+    defaultContact ID SupplierContact --默认联系人
 ) {
     var key2 char(102);
     set key2 = concat('%', key, '%');
 
-    PAGE select w.id, w.no, w.supplier,w.brand,w.origin,w.description,w.descriptionC,w.createTime,p.chemical,p.CAS,p.purity,p.molecularFomula,p.molecularWeight
+    PAGE select w.id, w.no, w.supplier,w.brand,w.origin,w.description,w.descriptionC,w.createTime,p.chemical,p.CAS,p.purity,p.molecularFomula,p.molecularWeight,s.defaultContact
     from    Product as w
             left join RsProductChemical as p on w.id=p.product
+            left join Supplier as s on w.supplier=s.id
     where   ( w.description like key2 or w.descriptionC like key2 or p.CAS like key2)
             and w.id > $pageStart 
             and w.isTrue = 1  

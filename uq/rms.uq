@@ -44,6 +44,7 @@ TUID SupplierContact(
     main lastName char(50),
     main gender char(5),
     main salutation char(10),
+    main position char(50),
     main departmentName char(100),
     main telephone char(60),
     main mobile char(50) null,

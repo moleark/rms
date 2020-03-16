@@ -7,6 +7,8 @@ import { CProduct } from './CProduct';
 import { SupplierItem } from "model/supplierItem";
 
 const schema: ItemSchema[] = [
+    { name: 'description', type: 'string', required: true },
+    { name: 'descriptionC', type: 'string', required: false },
     { name: 'purity', type: 'string', required: false },
 ];
 
@@ -14,18 +16,30 @@ export class VProductDetail extends VPage<CProduct> {
     private product: any;
     private firstPackage: any;
     private packages: any[] = [];
-    @observable private purityData: any;
+    private purityData: any;
 
     async open(param: SupplierItem) {
         let { parent, item, child } = param;
-        this.product = parent;
+        await this.loadProduct(parent);
         this.firstPackage = item;
         this.packages = child;
         this.openPage(this.page);
     }
 
+    private loadProduct = async (product: any) => {
+        this.product = product;
+        let { description, descriptionC, purity } = this.product;
+        this.purityData = {
+            description: description,
+            descriptionC: descriptionC,
+            purity: purity
+        };
+    }
+
     private uiSchema: UiSchema = {
         items: {
+            description: { widget: 'text', label: '英文名称', placeholder: '英文名称' } as UiInputItem,
+            descriptionC: { widget: 'text', label: '中文名称', placeholder: '中文名称' } as UiInputItem,
             purity: { widget: 'text', label: '纯度', placeholder: '纯度' } as UiInputItem,
         }
     }
@@ -95,10 +109,9 @@ export class VProductDetail extends VPage<CProduct> {
 
     private rowTop = (productData: any) => {
 
-        let { no, supplier, brand, origin, description, descriptionC, createTime, chemical, CAS, purity, molecularFomula, molecularWeight } = this.product;
-        let { name: suppliername, defaultContact } = supplier.obj;
+        let { no, supplier, brand, origin, description, descriptionC, createTime, chemical, CAS, purity, molecularFomula, molecularWeight, defaultContact } = this.product;
+        let { name: suppliername, id } = supplier.obj;
         let brandno = brand === undefined ? undefined : brand.obj.name;
-        let contact = defaultContact === undefined ? undefined : defaultContact.obj.name;
 
         return <div className="bg-white py-2">
             {no === undefined ? "" :
@@ -109,7 +122,7 @@ export class VProductDetail extends VPage<CProduct> {
                 <div className="col-4">供应商:</div><div className="col-8 text-muted text-right"><b>{suppliername}</b></div>
             </div>
             <div className="row no-gutters px-3 my-1">
-                <div className="col-4">默认联系人:</div><div className="col-8 text-muted text-right">{contact === undefined ? "[无]" : contact}</div>
+                <div className="col-4">默认联系人:</div><div className="col-8 text-muted text-right">{defaultContact === undefined ? "[无]" : defaultContact.obj.name}</div>
             </div>
             {brandno === undefined ? "" :
                 <><div className="row no-gutters px-3 my-1">
@@ -121,10 +134,9 @@ export class VProductDetail extends VPage<CProduct> {
             <div className="row no-gutters px-3 my-1">
                 <div className="col-4">英文名称:</div><div className="col-8 text-muted text-right">{description}</div>
             </div>
-            {descriptionC === undefined ? "" :
-                <><div className="row no-gutters px-3 my-1">
-                    <div className="col-4">中文名称:</div><div className="col-8 text-muted text-right">{descriptionC}</div>
-                </div></>}
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-4">中文名称:</div><div className="col-8 text-muted text-right">{descriptionC}</div>
+            </div>
             {origin === undefined ? "" :
                 <><div className="row no-gutters px-3 my-1">
                     <div className="col-4">自编号:</div><div className="col-8 text-muted text-right">{origin}</div>
@@ -141,7 +153,11 @@ export class VProductDetail extends VPage<CProduct> {
     }
 
     private onPurityChanged = async (itemSchema: ItemSchema, newValue: any, preValue: any) => {
-        await this.controller.updateProductData(this.product, newValue);
+        let { name } = itemSchema;
+        this.product[name] = newValue;
+        await this.controller.updateProductData(this.product);
+        this.closePage();
+        this.controller.cApp.cProduct.showProductDetail(this.product);
     }
 
     private onDelProduct = async () => {
@@ -154,10 +170,6 @@ export class VProductDetail extends VPage<CProduct> {
 
     private page = () => {
         let productData = _.clone(this.product);
-        let { purity } = productData;
-        let purityData = {
-            purity: purity
-        };
 
         let buttonDel: any;
         if (productData.id !== undefined) {
@@ -170,7 +182,7 @@ export class VProductDetail extends VPage<CProduct> {
         return <Page header="产品详情" right={buttonDel} headerClassName="py-1 bg-primary">
             {this.rowTop(productData)}
             <Edit schema={schema} uiSchema={this.uiSchema}
-                data={purityData}
+                data={this.purityData}
                 onItemChanged={this.onPurityChanged} />
             {this.getPackage()}
         </Page >

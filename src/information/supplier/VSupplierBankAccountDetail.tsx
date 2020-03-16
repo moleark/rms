@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observable } from 'mobx';
-import { VPage, Page, FA, EasyDate, tv, LMR, List, Edit, ItemSchema, UiSchema, StringSchema, UiInputItem, UiRadio } from 'tonva';
+import { VPage, Page, FA, EasyDate, tv, LMR, List, Edit, ItemSchema, UiSchema, StringSchema, UiInputItem, UiRadio, BoxId } from 'tonva';
 import { observer } from 'mobx-react';
 import _ from 'lodash';
 import { SupplierItem } from "model/supplierItem";
@@ -17,16 +17,32 @@ const schema: ItemSchema[] = [
     { name: 'bankRTN', type: 'string', required: false },
 ];
 
+
 export class VSupplierBankAccountDetail extends VPage<CSupplier> {
     private supplier: any;
     private bankAccount: any;
-    @observable private bankData: any;
+    private bankData: any;
 
     async open(param: SupplierItem) {
         let { parent, item } = param;
         this.supplier = parent;
-        this.bankAccount = item;
+        await this.loadBank(item);
         this.openPage(this.page);
+    }
+
+    private loadBank = async (item: any) => {
+        this.bankAccount = item;
+        let { bankAddress, bankSWIFT, bankIBAN, bankRTN, bank, accountNo, accountName, usageType } = this.bankAccount;
+        this.bankData = {
+            bankAddress: bankAddress,
+            bankSWIFT: bankSWIFT,
+            bankIBAN: bankIBAN,
+            bankRTN: bankRTN,
+            bank: bank,
+            accountNo: accountNo,
+            accountName: accountName,
+            usageType: usageType
+        };
     }
 
     private uiSchema: UiSchema = {
@@ -56,30 +72,20 @@ export class VSupplierBankAccountDetail extends VPage<CSupplier> {
         let { name } = itemSchema;
         this.bankAccount[name] = newValue;
         await this.controller.updateBankAccountData(this.bankAccount);
+        this.closePage();
+        this.controller.cApp.cSupplier.onShowSupplierBankAccount(this.supplier, this.bankAccount);
     }
 
     private onDelSupplierBankAccount = async () => {
         if (await this.vCall(VConfirmDeleteSupplierBankAccount, this.bankAccount) === true) {
             await this.controller.delSupplierBankAccount(this.bankAccount, this.supplier);
-            await this.controller.loadList();
             this.closePage();
+            this.controller.cApp.cSupplier.onSupplierSelected(this.supplier);
         };
     }
 
     private page = () => {
         let bankAccountData = _.clone(this.bankAccount);
-        let { bankAddress, bankSWIFT, bankIBAN, bankRTN, bank, accountNo, accountName, usageType } = bankAccountData;
-        let bankData = {
-            bankAddress: bankAddress,
-            bankSWIFT: bankSWIFT,
-            bankIBAN: bankIBAN,
-            bankRTN: bankRTN,
-            bank: bank,
-            accountNo: accountNo,
-            accountName: accountName,
-            usageType: usageType
-        };
-
         let buttonDel: any;
         if (bankAccountData.id !== undefined) {
             buttonDel = <div className="d-flex align-items-center">
@@ -91,7 +97,7 @@ export class VSupplierBankAccountDetail extends VPage<CSupplier> {
         return <Page header="银行信息" right={buttonDel} headerClassName="py-1 bg-primary">
             {this.rowTop()}
             <Edit schema={schema} uiSchema={this.uiSchema}
-                data={bankData}
+                data={this.bankData}
                 onItemChanged={this.onBankDataChanged} />
         </Page >
     }

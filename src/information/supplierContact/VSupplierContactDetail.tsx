@@ -15,9 +15,10 @@ const schema: ItemSchema[] = [
     { name: 'firstName', type: 'string', required: false },
     { name: 'lastName', type: 'string', required: false },
     { name: 'salutation', type: 'string', required: false },
+    { name: 'position', type: 'string', required: false },
     { name: 'departmentName', type: 'string', required: false },
     { name: 'telephone', type: 'string', required: false },
-    { name: 'mobile', type: 'string', required: true },
+    { name: 'mobile', type: 'string', required: false },
     { name: 'wechatId', type: 'string', required: false },
     { name: 'email', type: 'string' },
     { name: 'fax', type: 'string', required: false },
@@ -32,13 +33,28 @@ export class VSupplierContactDetail extends VPage<CSupplierContact> {
     private form: Form;
     private item: any;
     private parent: any;
+    private contactData: any;
     async open(param?: SupplierItem) {
         let { item, parent } = param;
-        this.item = item;
+        await this.loadContact(item);
         this.parent = parent;
         this.openPage(this.page);
     }
 
+    private loadContact = async (item: any) => {
+        this.item = item;
+        let { bankAddress, bankSWIFT, bankIBAN, bankRTN, bank, accountNo, accountName, usageType } = this.item;
+        this.contactData = {
+            bankAddress: bankAddress,
+            bankSWIFT: bankSWIFT,
+            bankIBAN: bankIBAN,
+            bankRTN: bankRTN,
+            bank: bank,
+            accountNo: accountNo,
+            accountName: accountName,
+            usageType: usageType
+        };
+    }
 
     private uiSchema: UiSchema = {
         items: {
@@ -46,7 +62,8 @@ export class VSupplierContactDetail extends VPage<CSupplierContact> {
             gender: { widget: 'radio', label: '性别', list: [{ value: '1', title: '男' }, { value: '0', title: '女' }] } as UiRadio,
             firstName: { widget: 'text', label: '名', placeholder: '名', rules: nameValidation } as UiInputItem,
             lastName: { widget: 'text', label: '姓氏', placeholder: '姓氏' } as UiInputItem,
-            salutation: { widget: 'text', label: '称谓', placeholder: '称谓', rules: salutationValidation } as UiTextItem,
+            salutation: { widget: 'radio', label: '称谓', list: [{ value: 'Mr.', title: 'Mr.' }, { value: 'Ms.', title: 'Ms.' }] } as UiRadio,
+            position: { widget: 'text', label: '职位', placeholder: '职位' } as UiTextItem,
             departmentName: { widget: 'text', label: '部门名称', placeholder: '部门名称', rules: departmentNameValidation } as UiTextItem,
             telephone: { widget: 'text', label: '固定电话', placeholder: '固定电话', rules: telephoneValidation } as UiTextItem,
             mobile: { widget: 'text', label: '手机号', placeholder: '手机号', rules: mobileValidation } as UiTextItem,
@@ -82,25 +99,28 @@ export class VSupplierContactDetail extends VPage<CSupplierContact> {
         let { name } = itemSchema;
         this.item[name] = newValue;
         await this.controller.updateContactData(this.item, this.parent);
+        this.closePage();
+        this.controller.cApp.cSupplierContact.showSupplierContactDetail(this.item, this.parent);
     }
 
     private onDelSupplierContact = async () => {
         if (await this.vCall(VConfirmDeleteContact, this.item) === true) {
             await this.controller.delSupplierContact(this.item, this.parent);
             this.closePage();
+            this.controller.cApp.cSupplier.onSupplierSelected(this.parent);
         };
     }
 
     private page = () => {
-        let contactData = _.clone(this.item);
         let { defaultContact } = this.parent;
-        let { id, name, firstName, lastName, gender, salutation, departmentName, telephone, mobile, email, fax, zipCode, wechatId, addressString, address } = contactData;
-        let ctData = {
+        let { id, name, firstName, lastName, gender, salutation, position, departmentName, telephone, mobile, email, fax, zipCode, wechatId, addressString, address } = this.item;
+        this.contactData = {
             name: name,
             firstName: firstName,
             lastName: lastName,
             gender: gender,
             salutation: salutation,
+            position: position,
             departmentName: departmentName,
             telephone: telephone,
             mobile: mobile,
@@ -110,7 +130,7 @@ export class VSupplierContactDetail extends VPage<CSupplierContact> {
             wechatId: wechatId,
             addressString: addressString,
             address: address,
-            isDefault: defaultContact === undefined ? 0 : (defaultContact.obj.id === id ? 1 : 0)
+            isDefault: defaultContact === undefined ? 0 : (defaultContact.id === id ? 1 : 0)
         };
 
         let buttonDel: any;
@@ -123,7 +143,7 @@ export class VSupplierContactDetail extends VPage<CSupplierContact> {
         }
         return <Page header="供应商联系人详情" right={buttonDel} headerClassName="py-1 bg-primary">
             <Edit schema={schema} uiSchema={this.uiSchema}
-                data={ctData}
+                data={this.contactData}
                 onItemChanged={this.onContactDataChanged} />
         </Page >
     }

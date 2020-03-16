@@ -65,8 +65,6 @@ export class CProduct extends CUqBase {
         if (product.id === undefined) {
             if (this.chemical) {
                 let { id, CAS, description, descriptoinCN, molecularFomula, molecularWeight } = this.chemical;
-                product.description = description;
-                product.descriptionC = descriptoinCN;
                 product.createTime = Date.now();
                 product.isTrue = 1;
                 product.defaultContact = undefined;
@@ -78,16 +76,14 @@ export class CProduct extends CUqBase {
         await this.loadList();
     }
 
-    updateProductData = async (productdata: any, purity: any) => {
+    updateProductData = async (productdata: any) => {
 
         if (productdata) {
             productdata.isTrue = 1;
             let { chemical } = productdata;
             await this.uqs.rms.Product.save(productdata.id, productdata);
-            await this.uqs.rms.RsProductChemical.add({ product: productdata.id, arr1: [{ chemical: chemical.id, CAS: productdata.CAS, molecularFomula: productdata.molecularFomula, molecularWeight: productdata.molecularWeight, purity: purity }] });
+            await this.uqs.rms.RsProductChemical.add({ product: productdata.id, arr1: [{ chemical: chemical.id, CAS: productdata.CAS, molecularFomula: productdata.molecularFomula, molecularWeight: productdata.molecularWeight, purity: productdata.purity }] });
         }
-        this.closePage();
-        await this.loadList();
     }
 
     /**
