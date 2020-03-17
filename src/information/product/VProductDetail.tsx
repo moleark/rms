@@ -110,7 +110,7 @@ export class VProductDetail extends VPage<CProduct> {
     private rowTop = (productData: any) => {
 
         let { no, supplier, brand, origin, description, descriptionC, createTime, chemical, CAS, purity, molecularFomula, molecularWeight, defaultContact } = this.product;
-        let { name: suppliername, id } = supplier.obj;
+        let { name: suppliername, no: supplierno, id } = supplier.obj;
         let brandno = brand === undefined ? undefined : brand.obj.name;
 
         return <div className="bg-white py-2">
@@ -119,7 +119,7 @@ export class VProductDetail extends VPage<CProduct> {
                     <div className="col-4">产品编号:</div><div className="col-8 text-muted text-right">{no}</div>
                 </div></>}
             <div className="row no-gutters px-3 my-1">
-                <div className="col-4">供应商:</div><div className="col-8 text-muted text-right"><b>{suppliername}</b></div>
+                <div className="col-4">供应商:</div><div className="col-8 text-muted text-right"><b>{suppliername}{supplierno}</b></div>
             </div>
             <div className="row no-gutters px-3 my-1">
                 <div className="col-4">默认联系人:</div><div className="col-8 text-muted text-right">{defaultContact === undefined ? "[无]" : defaultContact.obj.name}</div>
@@ -130,12 +130,6 @@ export class VProductDetail extends VPage<CProduct> {
                 </div></>}
             <div className="row no-gutters px-3 my-1">
                 <div className="col-4">CAS:</div><div className="col-8 text-muted text-right">{CAS}</div>
-            </div>
-            <div className="row no-gutters px-3 my-1">
-                <div className="col-4">英文名称:</div><div className="col-8 text-muted text-right">{description}</div>
-            </div>
-            <div className="row no-gutters px-3 my-1">
-                <div className="col-4">中文名称:</div><div className="col-8 text-muted text-right">{descriptionC}</div>
             </div>
             {origin === undefined ? "" :
                 <><div className="row no-gutters px-3 my-1">

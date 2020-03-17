@@ -37,13 +37,13 @@ export class CProduct extends CUqBase {
     supplier: any;
 
     async internalStart(param: any) {
-        this.searchProductByKey(param);
+        this.searchProductByKey("", param);
         //this.openVPage(VProductList);
     }
 
-    searchProductByKey = async (key: string) => {
+    searchProductByKey = async (pickType: string, key: string) => {
         this.products = new PageProduct(this.uqs.rms.SearchProduct);
-        this.products.first({ key: key });
+        this.products.first({ key: key, pickType: pickType });
     }
 
     pickSupplier = async (context: Context, name: string, value: number): Promise<number> => {
@@ -110,7 +110,7 @@ export class CProduct extends CUqBase {
     }
 
     loadList = async () => {
-        await this.searchProductByKey("李");
+        await this.searchProductByKey("", "李");
     }
 
     render = observer(() => {

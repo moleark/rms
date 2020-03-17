@@ -106,7 +106,7 @@ PAGE (
 };
 
 /** 搜索产品*/
-QUERY SearchProduct(key char(100))
+QUERY SearchProduct(key char(100),pickType char(100))
 PAGE (
     id bigint start 0,
     no char(50) ,
@@ -130,7 +130,10 @@ PAGE (
     from    Product as w
             left join RsProductChemical as p on w.id=p.product
             left join Supplier as s on w.supplier=s.id
-    where   ( w.description like key2 or w.descriptionC like key2 or p.CAS like key2)
+    where   ((pickType='供应商' and s.name  like key2 ) 
+            or (pickType='CAS' and p.CAS  like key2 )
+            or (pickType='中英文名称' and (w.description like key2 or w.descriptionC like key2) )
+            or (pickType is null and ( w.description like key2 or w.descriptionC like key2 or p.CAS like key2)))
             and w.id > $pageStart 
             and w.isTrue = 1  
     order by w.id
