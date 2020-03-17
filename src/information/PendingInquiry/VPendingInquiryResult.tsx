@@ -26,7 +26,7 @@ const schema: Schema = [
     { name: 'minArriveDate', type: 'date', required: true },
     { name: 'maxArriveDate', type: 'date', required: true },
     { name: 'invoiceType', type: 'number', required: true },
-    { name: 'vatRate', type: 'number', required: false },
+    { name: 'vatRate', type: 'id', required: false },
     { name: 'tariffRate', type: 'number', required: false },
     { name: 'packType', type: 'number', required: true },
     { name: 'remarks', type: 'string', required: false },
@@ -101,7 +101,16 @@ export class VPendingInquiryResult extends VPage<CPendingInquiry> {
             minArriveDate: { widget: 'date', label: '最短到货期', placeholder: '必填' } as UiInputItem,
             maxArriveDate: { widget: 'date', label: '最长到货期', placeholder: '必填' } as UiInputItem,
             invoiceType: { widget: 'radio', label: '发票类型', list: [{ value: "1", title: '增值税专用发票' }, { value: "2", title: '增值税普通发票' }, { value: "3", title: '形式发票' }] } as UiRadio,
-            vatRate: { widget: 'text', label: '增值税率', placeholder: '增值税率' } as UiInputItem,
+            vatRate: {
+                widget: 'id', label: '增值税率', placeholder: '增值税率',
+                pickId: async (context: Context, name: string, value: number) => await this.controller.cApp.cPackage.pickVatRate(context, name, value),
+                Templet: (item: any) => {
+                    if (!item) return <small className="text-muted">请选择增值税率</small>;
+                    return <>
+                        {tv(item, v => <>{v.description}</>)}
+                    </>;
+                }
+            } as UiIdItem,
             tariffRate: { widget: 'text', label: '关税税率', placeholder: '关税税率' } as UiInputItem,
             packType: { widget: 'radio', label: '包装类型', list: [{ value: "1", title: '目录包装' }, { value: "2", title: '非目录包装' }] } as UiRadio,
             remarks: { widget: 'text', label: '备注', row: 10, placeholder: '备注' } as UiInputItem,

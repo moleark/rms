@@ -74,7 +74,7 @@ export class VPendingInquiryDetail extends VPage<CPendingInquiry> {
                 <div className="col-3">供应商:</div><div className="col-9"><b>{tv(supplier, v => <>{v.name}</>)}</b></div>
             </div>
             <div className="row no-gutters px-3 my-1">
-                <div className="col-3">联系人:</div><div className="col-9">{contactName}&nbsp;{contactTelephone}&nbsp;{contactMobile}&nbsp;{contactEmail}</div>
+                <div className="col-3">联系人:</div><div className="col-9"><span>{contactName}&nbsp;{contactTelephone} {contactMobile} {contactEmail}</span></div>
             </div>
             <div className="row no-gutters px-3 my-1">
                 <div className="col-3">创建人:</div><div className="col-9">{id}&nbsp;<EasyDate date={date} /></div>
@@ -82,7 +82,7 @@ export class VPendingInquiryDetail extends VPage<CPendingInquiry> {
             <div className="row no-gutters px-3 my-1">
                 <div className="col-3">询价人:</div><div className="col-9">{inid}&nbsp;{way === 1 ? "Email询价" : (way === 2 ? "电话询价" : "传真询价")} <EasyDate date={inquiryDate} /></div>
             </div>
-        </div>;
+        </div >;
     }
 
     private page = () => {

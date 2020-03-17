@@ -36,7 +36,7 @@ export class VPackage extends VPage<CPackage> {
         { name: 'minArriveDate', type: 'date', required: true },
         { name: 'maxArriveDate', type: 'date', required: true },
         { name: 'invoiceType', type: 'number', required: true },
-        { name: 'vatRate', type: 'number', required: false },
+        { name: 'vatRate', type: 'id', required: false },
         { name: 'tariffRate', type: 'number', required: false },
         { name: 'submit', type: 'submit' }
     ];
@@ -99,7 +99,16 @@ export class VPackage extends VPage<CPackage> {
             minArriveDate: { widget: 'date', label: '最短到货期', placeholder: '必填' } as UiInputItem,
             maxArriveDate: { widget: 'date', label: '最长到货期', placeholder: '必填' } as UiInputItem,
             invoiceType: { widget: 'radio', label: '发票类型', list: [{ value: "1", title: '增值税专用发票' }, { value: "2", title: '增值税普通发票' }, { value: "3", title: '形式发票' }] } as UiRadio,
-            vatRate: { widget: 'text', label: '增值税率', placeholder: '增值税率' } as UiInputItem,
+            vatRate: {
+                widget: 'id', label: '增值税率', placeholder: '增值税率',
+                pickId: async (context: Context, name: string, value: number) => await this.controller.pickVatRate(context, name, value),
+                Templet: (item: any) => {
+                    if (!item) return <small className="text-muted">请选择增值税率</small>;
+                    return <>
+                        {tv(item, v => <>{v.description}</>)}
+                    </>;
+                }
+            } as UiIdItem,
             tariffRate: { widget: 'text', label: '关税税率', placeholder: '关税税率' } as UiInputItem,
             submit: { widget: 'button', label: '提交', className: "btn btn-primary mr-3 px-6" }
         }

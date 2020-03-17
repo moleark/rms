@@ -6,6 +6,7 @@ export interface UqRMS {
     Product: Tuid;
     RsBrand: Tuid;
     BankAccount: Tuid;
+    VatRate: Tuid;
     RsProductChemical: Map;
     SupplierBankAccount: Map;
     InquiryPendingItem: Map;
@@ -30,6 +31,7 @@ export interface UqRMS {
     AddPackagePrice: Action;
     UpdateInquiryPending: Action;
     AddPackage: Action;
+    SearchVatRate: Query;
 }
 
 export interface UqCommon {

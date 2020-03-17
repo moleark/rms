@@ -21,7 +21,8 @@ export class VProductList extends VPage<CProduct> {
 
         return <LMR className="px-3 d-flex p-1 cursor-pointer">
             <div onClick={() => showProductDetail(item)}>
-                {showcas}&nbsp;&nbsp;{showpurity}
+                <b>{no}</b>
+                <div>{showcas}&nbsp;&nbsp;{showpurity}</div>
                 <div><b>{description}</b></div>
                 <div className="py-1 text-muted">{tv(supplier, v => <>{v.name}</>)}</div>
             </div>

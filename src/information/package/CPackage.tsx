@@ -8,6 +8,7 @@ import { VPackage } from "./VPackage";
 import { VPackageDetail } from "./VPackageDetail";
 import { VProductDetail } from "../product/VProductDetail";
 import { SupplierItem } from "model/supplierItem";
+import { CVatRate } from "./CVatRate";
 
 class PagePackage extends PageItems<any> {
     private searchPackage: Query;
@@ -36,6 +37,11 @@ export class CPackage extends CUqBase {
     searchPackageByKey = async (parent: any, key: string) => {
         this.pagePackage = new PagePackage(await this.uqs.rms.GetPack.query({ _id: parent.id }));
         this.pagePackage.first({ key: key });
+    }
+
+    pickVatRate = async (context: Context, name: string, value: number): Promise<number> => {
+        let cVatRate = this.newC(CVatRate);
+        return await cVatRate.call<number>();
     }
 
     //添加联系人

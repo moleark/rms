@@ -45,10 +45,10 @@ export class VInquiryDetail extends VPage<CInquiry> {
                         <div className="col-3">供应商:</div><div className="col-9"><b>{tv(supplier, v => <>{v.name}</>)}</b></div>
                     </div>
                     <div className="row no-gutters px-3 my-1">
-                        <div className="col-3">联系人:</div><div className="col-9 text-muted">{contactName}&nbsp;{contactSalutation}&nbsp;{contactDepartmentName}</div>
+                        <div className="col-3">联系人:</div><div className="col-9 text-muted">{contactName} {contactSalutation} {contactDepartmentName}</div>
                     </div>
                     <div className="row no-gutters px-3 my-1">
-                        <div className="col-3">联系方式:</div><div className="col-9 text-muted">{contactTelephone}&nbsp;{contactMobile}&nbsp;{contactEmail}&nbsp;{contactfax}</div>
+                        <div className="col-3">联系方式:</div><div className="col-9 text-muted">{contactTelephone} {contactMobile} {contactEmail} {contactfax}</div>
                     </div>
                     <div className="row no-gutters px-3 my-1">
                         <div className="col-3">询价人:</div><div className="col-9 text-muted">{way === 1 ? "Email询价" : (way === 2 ? "电话询价" : "传真询价")}&nbsp;{user}&nbsp;<EasyDate date={date} /></div>
