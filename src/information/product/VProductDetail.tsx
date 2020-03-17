@@ -47,8 +47,7 @@ export class VProductDetail extends VPage<CProduct> {
     private getPackage = () => {
         let { showCreatePackage } = this.controller.cApp.cPackage;
         let { onNewPendingInquiry } = this.controller.cApp.cNewPendingInquiry;
-        let { supplier } = this.product;
-        let { defaultContact } = supplier.obj;
+        let { supplier, defaultContact } = this.product;
         let showd = defaultContact === undefined ?
             "" : <div className=" d-flex px-3 py-2">
                 <button className="btn btn-sm btn-primary" onClick={() => showCreatePackage(this.product)}>
