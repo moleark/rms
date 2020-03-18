@@ -7,3 +7,4 @@ TUID City from JKCommon;
 TUID County from JKCommon;
 TUID Currency from JKCommon;
 TUID InvoiceType from JKCommon;
+TUID PackType from JKCommon;

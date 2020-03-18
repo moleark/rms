@@ -19,8 +19,9 @@ export class VPackage extends VPage<CPackage> {
         { name: 'quantity', type: 'number', required: true },
         { name: 'radiox', type: 'number', required: true },
         { name: 'radioy', type: 'number', required: true },
-        { name: 'unit', type: 'string', required: true },
+        { name: 'unit', type: 'id', required: true },
         { name: 'type', type: 'string', required: true },
+        { name: 'listPrice', type: 'number', required: false },
         { name: 'price', type: 'number', required: true },
         { name: 'currency', type: 'id', required: true },
         { name: 'isTaxIn', type: 'number', required: true },
@@ -46,8 +47,18 @@ export class VPackage extends VPage<CPackage> {
             quantity: { widget: 'text', label: '数量', placeholder: '必填', defaultValue: 1 } as UiInputItem,
             radiox: { widget: 'text', label: '套', placeholder: '必填', defaultValue: 1 } as UiInputItem,
             radioy: { widget: 'text', label: '包装规格', placeholder: '必填' } as UiInputItem,
-            unit: { widget: 'text', label: '单位', placeholder: '必填' } as UiInputItem,
+            unit: {
+                widget: 'id', label: '包装单位', placeholder: '包装单位',
+                pickId: async (context: Context, name: string, value: number) => await this.controller.pickPackUnit(context, name, value),
+                Templet: (item: any) => {
+                    if (!item) return <small className="text-muted">请选择包装单位</small>;
+                    return <>
+                        {tv(item, v => <>{v.name}</>)}
+                    </>;
+                }
+            } as UiIdItem,
             type: { widget: 'radio', label: '类型', list: [{ value: 1, title: '目录包装' }, { value: 2, title: '非目录包装' }] } as UiRadio,
+            listPrice: { widget: 'text', label: '目录价', placeholder: '目录价' } as UiInputItem,
             price: { widget: 'text', label: '结算价', placeholder: '必填' } as UiInputItem,
             currency: {
                 widget: 'id', label: '结算币种', placeholder: '结算币种',
@@ -118,7 +129,6 @@ export class VPackage extends VPage<CPackage> {
         let { savePackage } = this.controller;
         let id = this.item && this.item.id;
         await savePackage(id, context.form.data, this.parent);
-        this.closePage();
     }
 
     private page = observer(() => {

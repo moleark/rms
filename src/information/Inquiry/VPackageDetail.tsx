@@ -13,17 +13,19 @@ export class VPackageDetail extends VPage<CInquiry> {
 
     private page = (item: any) => {
 
-        let { inquiryQuantity, pack, itemuser, itemcreateDate, quantity, radio, listPrice, price
+        let { inquiryQuantity, pack, unit, itemuser, itemcreateDate, quantity, radio, inquiryUnit, listPrice, price
             , currency, isTaxIn, isTransFeeIn, transFee, transFeecurrency, packingFee, packingcurrency, otherFee, otherFeecurrency, customizeUpto, validUpto
             , minArriveDate, maxArriveDate, invoiceType, vatRate, tariffRate, packType, inquiryRemarks, coaFilePath, msdsFilePath, quotationFilePath } = item;
+        let { name } = unit.obj;
+        let { name: inquiryname } = inquiryUnit.obj;
 
-        let header = <>询价包装详情: {inquiryQuantity} * {pack}</>
+        let header = <>询价包装详情: {inquiryQuantity} * {pack}{inquiryname}</>
         return <Page header={header} headerClassName="py-1 bg-primary">
             <div>
                 <div className="border-top edit-sep-light-gray"></div>
                 <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
                     <div>报价包装:</div>
-                    <div className="flex-fill d-flex justify-content-end">{quantity} * {radio}</div>
+                    <div className="flex-fill d-flex justify-content-end">{quantity} * {radio}{name}</div>
                 </div>
                 <div className="border-top edit-sep-light-gray"></div>
                 <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
@@ -103,7 +105,7 @@ export class VPackageDetail extends VPage<CInquiry> {
                 <div className="border-top edit-sep-light-gray"></div>
                 <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
                     <div>增值税率:</div>
-                    <div className="flex-fill d-flex justify-content-end">{vatRate}</div>
+                    <div className="flex-fill d-flex justify-content-end">{vatRate === undefined ? "" : tv(vatRate, v => <>{v.name}</>)}</div>
                 </div>
                 <div className="border-top edit-sep-light-gray"></div>
                 <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">

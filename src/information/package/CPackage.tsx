@@ -9,6 +9,7 @@ import { VPackageDetail } from "./VPackageDetail";
 import { VProductDetail } from "../product/VProductDetail";
 import { SupplierItem } from "model/supplierItem";
 import { CVatRate } from "./CVatRate";
+import { CPackUnit } from './CPackUnit';
 
 class PagePackage extends PageItems<any> {
     private searchPackage: Query;
@@ -44,6 +45,11 @@ export class CPackage extends CUqBase {
         return await cVatRate.call<number>();
     }
 
+    pickPackUnit = async (context: Context, name: string, value: number): Promise<number> => {
+        let cPackUnit = this.newC(CPackUnit);
+        return await cPackUnit.call<number>();
+    }
+
     //添加联系人
     showCreatePackage = (model: any) => {
         let param: SupplierItem = {
@@ -69,13 +75,14 @@ export class CPackage extends CUqBase {
 
     savePackage = async (id: number, param: any, parent: any) => {
         // await this.uqs.rms.Product.saveArr("Pack", parent.id, id, param);
-        let { quantity, radiox, radioy, unit, price, currency, isTaxIn, isTransFeeIn, transFee, transFeecurrency, packingFee, packingcurrency, otherFee, otherFeecurrency, customizeUpto, validUpto, minArriveDate, maxArriveDate, invoiceType, vatRate, tariffRate, type } = param;
+        let { quantity, radiox, radioy, unit, listPrice, price, currency, isTaxIn, isTransFeeIn, transFee, transFeecurrency, packingFee, packingcurrency, otherFee, otherFeecurrency, customizeUpto, validUpto, minArriveDate, maxArriveDate, invoiceType, vatRate, tariffRate, type } = param;
         let paramn = {
             product: parent,
             quantity: quantity,
             radiox: radiox,
             radioy: radioy,
             unit: unit,
+            listPrice: listPrice,
             price: price,
             currency: currency,
             isTaxIn: isTaxIn,
@@ -96,6 +103,7 @@ export class CPackage extends CUqBase {
             type: type,
         };
         await this.uqs.rms.AddPackage.submit(paramn);
+        this.cApp.cProduct.showProductDetail(parent);
         this.closePage();
     }
 

@@ -173,8 +173,9 @@ returns ret (
     product ID Product,
     radiox dec(12,2),                   --套
     radioy dec(12,4),                   --包装规格
-    unit char(10),                      --单位
+    unit ID PackType,                   --单位
     type smallint,                      --包装类型
+    listPrice dec(12,2),                --目录单价
     price dec(12,2),                    --结算单价
     currency ID Currency,               --结算币种
     isTaxIn smallint,                   --结算单价中是否已经包含税费；0：不包含；1：包含
@@ -194,7 +195,7 @@ returns ret (
     tariffRate dec(12,4)                --关税税率
 ) {
     into ret select pp.id,p.id as product, pp.radiox, pp.radioy,pp.unit,pp.type
-                    ,pr.price,pr.currency,pr.isTaxIn,pr.isTransFeeIn,pr.transFee
+                    ,pr.listPrice,pr.price,pr.currency,pr.isTaxIn,pr.isTransFeeIn,pr.transFee
                     ,pr.transFeecurrency,pr.packingFee,pr.packingcurrency,pr.otherFee
                     ,pr.otherFeecurrency,pr.customizeUpto,pr.validUpto,pr.minArriveDate
                     ,pr.maxArriveDate,pr.invoiceType,v.description as vatRate,pr.tariffRate
@@ -274,7 +275,7 @@ returns ret (
     quantity int,                           --数量
     radiox dec(12,2),                       --套
     radioy dec(12,4),                       --包装规格
-    unit char(10),                          --单位
+    unit ID PackType,                          --单位
     date datetime,
     CAS char(20),
     purity char(80),
@@ -300,7 +301,7 @@ ACTION AddInquiryPending(
     quantity int,                           --数量
     radiox dec(12,2),                       --套
     radioy dec(12,4),                       --包装规格
-    unit char(10),                          --单位
+    unit ID PackType,                          --单位
     remarks char(1000)                      --备注
 ){
     var pid ID;
@@ -414,7 +415,7 @@ ACTION AddPackagePrice ver 1.0(
     quantity int,                       --数量
     radiox dec(12,2),                   --套
     radioy dec(12,4),                   --包装规格
-    unit char(10),                      --单位
+    unit ID PackType,                      --单位
     listPrice dec(12,2),                --目录单价
     price dec(12,2),                    --结算单价
     currency ID Currency,               --结算币种
@@ -456,7 +457,7 @@ ACTION AddPackagePrice ver 1.0(
             radiox=radiox,radioy=radioy,unit=unit,type=packType,isValid=1;  
     }
     --更新包装价格
-    BOOK PackPrice at (Product, packid) set price = price,currency=currency,
+    BOOK PackPrice at (Product, packid) set listPrice=listPrice, price = price,currency=currency,
         isTaxIn = isTaxIn, isTransFeeIn = isTransFeeIn, transFee = transFee, transFeecurrency = transFeecurrency,packingFee=packingFee,packingcurrency=packingcurrency,
         otherFee = otherFee,otherFeecurrency=otherFeecurrency,customizeUpto=customizeUpto,validUpto=validUpto,minArriveDate=minArriveDate,maxArriveDate=maxArriveDate,
         invoiceType=invoiceType,vatRate=vatRate,tariffRate=tariffRate;
@@ -468,7 +469,8 @@ ACTION AddPackage ver 3.0(
     quantity int,                       --数量
     radiox dec(12,2),                   --套
     radioy dec(12,4),                   --包装规格
-    unit char(10),                      --单位
+    unit ID PackType,                   --单位
+    listPrice dec(12,2),                --目录单价
     price dec(12,2),                    --结算单价
     currency ID Currency,               --结算币种
     isTaxIn smallint,                   --结算单价中是否已经包含税费；0：不包含；1：包含
@@ -495,7 +497,7 @@ ACTION AddPackage ver 3.0(
             radiox=radiox,radioy=radioy,unit=unit,type=type,isValid=1;  
     }
     --更新包装价格
-    BOOK PackPrice at (Product, packid) set price = price,currency=currency,
+    BOOK PackPrice at (Product, packid) set listPrice=listPrice, price = price,currency=currency,
         isTaxIn = isTaxIn, isTransFeeIn = isTransFeeIn, transFee = transFee, transFeecurrency = transFeecurrency,packingFee=packingFee,packingcurrency=packingcurrency,
         otherFee = otherFee,otherFeecurrency=otherFeecurrency,customizeUpto=customizeUpto,validUpto=validUpto,minArriveDate=minArriveDate,maxArriveDate=maxArriveDate,
         invoiceType=invoiceType,vatRate=vatRate,tariffRate=tariffRate;

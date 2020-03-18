@@ -38,6 +38,7 @@ export interface UqCommon {
     Country: Tuid;
     Address: Tuid;
     Currency: Tuid;
+    PackType: Tuid;
     GetCountryProvinces: Query;
     GetProvinceCities: Query;
     GetCityCounties: Query;

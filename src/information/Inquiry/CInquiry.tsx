@@ -103,9 +103,11 @@ export function groupByPack(packItems: any[]) {
             , minArriveDate, maxArriveDate, invoiceType, vatRate, tariffRate, packType, inquiryRemarks, coaFilePath, msdsFilePath, quotationFilePath } = packItem;
         let packRow: any = {
             inquiryQuantity: inquiryQuantity,
-            pack: (inquiryRadiox !== 1) ? <>{inquiryRadiox} * {inquiryRadioy}{inquiryUnit}</> : <>{inquiryRadioy}{inquiryUnit}</>,
+            pack: (inquiryRadiox !== 1) ? <>{inquiryRadiox} * {inquiryRadioy}</> : <>{inquiryRadioy}</>,
+            inquiryUnit: inquiryUnit,
             quantity: quantity,
-            radio: (radiox !== 1) ? <>{radiox} * {radioy}{unit}</> : <>{radioy}{unit}</>,
+            radio: (radiox !== 1) ? <>{radiox} * {radioy}</> : <>{radioy}</>,
+            unit: unit,
             itemuser: itemuser,
             itemcreateDate: itemcreateDate,
             listPrice: listPrice,

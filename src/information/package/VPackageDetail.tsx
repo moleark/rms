@@ -14,11 +14,12 @@ export class VPackageDetail extends VPage<CPackage> {
 
     private page = () => {
         let packageData = _.clone(this.package);
-        let { radiox, radioy, unit, type, price, currency, isTaxIn, isTransFeeIn, transFee
+        let { radiox, radioy, unit, type, listPrice, price, currency, isTaxIn, isTransFeeIn, transFee
             , transFeecurrency, packingFee, packingcurrency, otherFee
             , otherFeecurrency, customizeUpto, validUpto, minArriveDate
             , maxArriveDate, invoiceType, vatRate, tariffRate } = packageData;
-        let radio = (radiox !== 1) ? <>{radiox} * {radioy}{unit}</> : <>{radioy}{unit}</>;
+        let { name } = unit.obj;
+        let radio = (radiox !== 1) ? <>{radiox} * {radioy}{name}</> : <>{radioy}{name}</>;
 
         let header = <header>
             <span>包装详情: {radio}</span>
@@ -30,6 +31,11 @@ export class VPackageDetail extends VPage<CPackage> {
                 <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
                     <div>包装类型:</div>
                     <div className="flex-fill d-flex justify-content-end">{type === 1 ? "目录包装" : (type === 2 ? "非目录包装" : "")}</div>
+                </div>
+                <div className="border-top edit-sep-light-gray"></div>
+                <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
+                    <div>目录价:</div>
+                    <div className="flex-fill d-flex justify-content-end">{listPrice}{currency === undefined ? "" : tv(currency, v => <>{v.name}</>)}</div>
                 </div>
                 <div className="border-top edit-sep-light-gray"></div>
                 <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">

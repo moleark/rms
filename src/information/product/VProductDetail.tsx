@@ -79,8 +79,9 @@ export class VProductDetail extends VPage<CProduct> {
     private renderPackage = (item: any, index: number) => {
         let { showEditPackage, showPackageDetail } = this.controller.cApp.cPackage;
         let { id, radiox, radioy, unit, type, price, currency, validUpto, minArriveDate, maxArriveDate } = item;
+        let { name } = unit.obj;
         let { defaultContact } = this.product;
-        let radio = (radiox !== 1) ? <>{radiox} * {radioy}{unit}</> : <>{radioy}{unit}</>;
+        let radio = (radiox !== 1) ? <>{radiox} * {radioy}{name}</> : <>{radioy}{name}</>;
         let valid = (validUpto < Date.now()) ? <span className="text-danger"><EasyDate date={validUpto} /></span> : <span><EasyDate date={validUpto} /></span>;
 
         let down =
@@ -118,7 +119,7 @@ export class VProductDetail extends VPage<CProduct> {
                     <div className="col-4">产品编号:</div><div className="col-8 text-muted text-right">{no}</div>
                 </div></>}
             <div className="row no-gutters px-3 my-1">
-                <div className="col-4">供应商:</div><div className="col-8 text-muted text-right"><b>{suppliername}{supplierno}</b></div>
+                <div className="col-4">供应商:</div><div className="col-8 text-muted text-right"><b>{suppliername} {supplierno}</b></div>
             </div>
             <div className="row no-gutters px-3 my-1">
                 <div className="col-4">默认联系人:</div><div className="col-8 text-muted text-right">{defaultContact === undefined ? "[无]" : defaultContact.obj.name}</div>

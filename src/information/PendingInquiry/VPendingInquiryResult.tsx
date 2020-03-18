@@ -9,7 +9,7 @@ const schema: Schema = [
     { name: 'quantity', type: 'number', required: true },
     { name: 'radiox', type: 'number', required: true },
     { name: 'radioy', type: 'number', required: true },
-    { name: 'unit', type: 'string', required: true },
+    { name: 'unit', type: 'id', required: true },
     { name: 'listPrice', type: 'number', required: false },
     { name: 'price', type: 'number', required: true },
     { name: 'currency', type: 'id', required: true },
@@ -48,7 +48,16 @@ export class VPendingInquiryResult extends VPage<CPendingInquiry> {
             quantity: { widget: 'text', label: '数量', placeholder: '必填', defaultValue: 1 } as UiInputItem,
             radiox: { widget: 'text', label: '套', placeholder: '必填', defaultValue: 1 } as UiInputItem,
             radioy: { widget: 'text', label: '包装规格', placeholder: '必填' } as UiInputItem,
-            unit: { widget: 'text', label: '单位', placeholder: '必填' } as UiTextItem,
+            unit: {
+                widget: 'id', label: '包装单位', placeholder: '包装单位',
+                pickId: async (context: Context, name: string, value: number) => await this.controller.cApp.cPackage.pickPackUnit(context, name, value),
+                Templet: (item: any) => {
+                    if (!item) return <small className="text-muted">请选择包装单位</small>;
+                    return <>
+                        {tv(item, v => <>{v.name}</>)}
+                    </>;
+                }
+            } as UiIdItem,
             listPrice: { widget: 'text', label: '目录价', placeholder: '目录价' } as UiInputItem,
             price: { widget: 'text', label: '结算价', placeholder: '必填' } as UiInputItem,
             currency: {

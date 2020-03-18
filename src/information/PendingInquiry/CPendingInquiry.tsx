@@ -126,6 +126,7 @@ export class CPendingInquiry extends CUqBase {
             //更新包装结果
             let { id, inquiryPackage, user, createDate, inquiryRemarks, jsonStr } = inquiry;
             let { product } = inquiryPackage.obj;
+            let jsons = JSON.stringify(model);
             await this.uqs.rms.InquiryPendingItem.add({ inquiryPending: id, arr1: [{ inquiryPackage: inquiryPackage.id, user: user.id, createDate: createDate, remarks: inquiryRemarks, jsonStr: JSON.stringify(model) }] });
 
             //更新包装价格
@@ -187,11 +188,13 @@ export class CPendingInquiry extends CUqBase {
 
     openPendingInquiryResult = async (item: any) => {
         let { id, inquiryPackage } = item;
+        let { unit } = inquiryPackage.obj;
         let packages = await this.uqs.rms.InquiryPendingItem.table({ inquiryPending: id, inquiryPackage: inquiryPackage.id });
         let { inquiryPending: newinquiryPending, inquiryPackage: newinquiryPackage, user, createDate, jsonStr: newjsonStr } = packages[0];
         let model;
         if (newjsonStr === undefined) {
             model = item;
+            model.unit = unit.obj;
         } else {
             model = JSON.parse(newjsonStr);
             model.inquiryPending = newinquiryPending;
