@@ -47,8 +47,8 @@ export class VProductDetail extends VPage<CProduct> {
     private getPackage = () => {
         let { showCreatePackage } = this.controller.cApp.cPackage;
         let { onNewPendingInquiry } = this.controller.cApp.cNewPendingInquiry;
-        let { supplier, defaultContact } = this.product;
-        let showd = defaultContact === undefined ?
+        let { supplier, inquiryContact } = this.product;
+        let showd = inquiryContact === undefined ?
             "" : <div className=" d-flex px-3 py-2">
                 <button className="btn btn-sm btn-primary" onClick={() => showCreatePackage(this.product)}>
                     <span className="px-2"><FA className="text-warning px-1" name="cube" /><b>包&nbsp;装</b></span>
@@ -80,7 +80,7 @@ export class VProductDetail extends VPage<CProduct> {
         let { showEditPackage, showPackageDetail } = this.controller.cApp.cPackage;
         let { id, radiox, radioy, unit, type, price, currency, validUpto, minArriveDate, maxArriveDate } = item;
         let { name } = unit.obj;
-        let { defaultContact } = this.product;
+        let { inquiryContact } = this.product;
         let radio = (radiox !== 1) ? <>{radiox} * {radioy}{name}</> : <>{radioy}{name}</>;
         let valid = (validUpto < Date.now()) ? <span className="text-danger"><EasyDate date={validUpto} /></span> : <span><EasyDate date={validUpto} /></span>;
 
@@ -109,7 +109,7 @@ export class VProductDetail extends VPage<CProduct> {
 
     private rowTop = (productData: any) => {
 
-        let { no, supplier, brand, origin, description, descriptionC, createTime, chemical, CAS, purity, molecularFomula, molecularWeight, defaultContact } = this.product;
+        let { no, supplier, brand, origin, description, descriptionC, createTime, chemical, CAS, purity, molecularFomula, molecularWeight, inquiryContact } = this.product;
         let { name: suppliername, no: supplierno, id } = supplier.obj;
         let brandno = brand === undefined ? undefined : brand.obj.name;
 
@@ -122,7 +122,7 @@ export class VProductDetail extends VPage<CProduct> {
                 <div className="col-4">供应商:</div><div className="col-8 text-muted text-right"><b>{suppliername} {supplierno}</b></div>
             </div>
             <div className="row no-gutters px-3 my-1">
-                <div className="col-4">默认联系人:</div><div className="col-8 text-muted text-right">{defaultContact === undefined ? "[无]" : defaultContact.obj.name}</div>
+                <div className="col-4">询价联系人:</div><div className="col-8 text-muted text-right">{inquiryContact === undefined ? "[无]" : inquiryContact.obj.name}</div>
             </div>
             {brandno === undefined ? "" :
                 <><div className="row no-gutters px-3 my-1">

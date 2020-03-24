@@ -50,6 +50,18 @@ export class CSupplierContact extends CUqBase {
         this.openVPage(VSupplierContact, param);
     }
 
+    showEditSupplierContact = async (model: any, supplier: any) => {
+        model.isDefault = supplier.defaultContact === undefined ? false : supplier.defaultContact.id === model.id ? true : false;
+        model.isFinance = supplier.financeContact === undefined ? false : supplier.financeContact.id === model.id ? true : false;
+        model.isInquiry = supplier.inquiryContact === undefined ? false : supplier.inquiryContact.id === model.id ? true : false;
+        let param: SupplierItem = {
+            parent: supplier,
+            item: model,
+            child: model,
+        }
+        this.openVPage(VSupplierContact, param);
+    }
+
     showSupplierContactDetail = async (model: any, supplier: any) => {
         let param: SupplierItem = {
             parent: supplier,
@@ -60,29 +72,36 @@ export class CSupplierContact extends CUqBase {
     }
 
     saveSupplierContact = async (id: number, param: any, parent: any) => {
-        let { name, firstName, lastName, gender, salutation, position, departmentName, telephone, mobile, email, fax, zipCode, wechatId, addressString, address, isDefault } = param;
+        let { name, firstName, lastName, gender, salutation, position, departmentName, telephone, mobile, email, fax, zipCode, wechatId, addressString, address, isDefault, isFinance, isInquiry } = param;
         let parrm = { name: name, firstName: firstName, lastName: lastName, gender: gender, salutation: salutation, departmentName: departmentName, telephone: telephone, mobile: mobile, email: email, fax: fax, zipCode: zipCode, wechatId: wechatId, addressString: addressString, address: address, supplier: parent.id, isValid: 1, position: position };
         let result = await this.uqs.rms.SupplierContact.save(id, parrm);
-        if (isDefault === true) {
-            let sid = id;
-            if (sid === undefined) {
-                sid = result.id;
-            }
-            await this.uqs.rms.Supplier.save(parent.id, { no: parent.no, name: parent.name, abbreviation: parent.abbreviation, webSite: parent.webSite, address: parent.address, addressString: parent.addressString, productionAddress: parent.productionAddress, profile: parent.profile, taxNo: parent.taxNo, isValid: 1, defaultContact: sid });
+        if (id === undefined) {
+            id = result.id;
         }
+        let defaultid = undefined;
+        if (isDefault === true) {
+            parent.defaultContact = id;
+        }
+        let financeid = undefined;
+        if (isFinance === true) {
+            parent.financeContact = id;
+        }
+        let inquiryid = undefined;
+        if (isInquiry === true) {
+            parent.inquiryContact = id;
+        }
+        await this.uqs.rms.Supplier.save(parent.id, { no: parent.no, name: parent.name, abbreviation: parent.abbreviation, webSite: parent.webSite, address: parent.address, addressString: parent.addressString, productionAddress: parent.productionAddress, profile: parent.profile, taxNo: parent.taxNo, isValid: 1, defaultContact: parent.defaultContact, financeContact: parent.financeContact, inquiryContact: parent.inquiryContact });
         this.cApp.cSupplier.onSupplierSelected(parent);
         this.closePage();
     }
 
     updateContactData = async (param: any, parent: any) => {
-        let { isDefault } = param;
+        let { isDefault, isFinance, inquiryid } = param;
         await this.uqs.rms.SupplierContact.save(param.id, param);
-        if (isDefault === 1) {
-            parent.defaultContact = param;
-        } else {
-            parent.defaultContact = undefined;
-        }
-        await this.uqs.rms.Supplier.save(parent.id, { no: parent.no, name: parent.name, abbreviation: parent.abbreviation, webSite: parent.webSite, address: parent.address, addressString: parent.addressString, productionAddress: parent.productionAddress, profile: parent.profile, taxNo: parent.taxNo, isValid: 1, defaultContact: parent.defaultContact });
+        parent.defaultContact = (isDefault === 1 ? param : undefined);
+        parent.financeContact = (isFinance === 1 ? param : undefined);
+        parent.inquiryContact = (inquiryid === 1 ? param : undefined);
+        await this.uqs.rms.Supplier.save(parent.id, { no: parent.no, name: parent.name, abbreviation: parent.abbreviation, webSite: parent.webSite, address: parent.address, addressString: parent.addressString, productionAddress: parent.productionAddress, profile: parent.profile, taxNo: parent.taxNo, isValid: 1, defaultContact: parent.defaultContact, financeContact: parent.financeContact, inquiryContact: parent.inquiryContact });
     }
 
     //联系人列表

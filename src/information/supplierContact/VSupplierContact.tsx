@@ -37,6 +37,8 @@ export class VSupplierContact extends VPage<CSupplierContact> {
         { name: 'addressString', type: 'string', required: false },
         { name: 'zipCode', type: 'string', required: false },
         { name: 'isDefault', type: 'boolean', required: false },
+        { name: 'isFinance', type: 'boolean', required: false },
+        { name: 'isInquiry', type: 'boolean', required: false },
         { name: 'submit', type: 'submit' }
     ];
 
@@ -75,7 +77,9 @@ export class VSupplierContact extends VPage<CSupplierContact> {
             } as UiIdItem,
             addressString: { widget: 'text', label: '详细地址', placeholder: '详细地址', rules: addressDetailValidation } as UiTextItem,
             zipCode: { widget: 'text', label: '邮编', placeholder: '邮编', rules: zipCodeValidation } as UiTextItem,
-            isDefault: { widget: 'checkbox', label: '默认联系人', defaultValue: false },
+            isDefault: { widget: 'checkbox', label: '订单联系人', defaultValue: false },
+            isFinance: { widget: 'checkbox', label: '财务联系人', defaultValue: false },
+            isInquiry: { widget: 'checkbox', label: '询价联系人', defaultValue: false },
             submit: { widget: 'button', label: '提交', className: "btn btn-primary mr-3 px-6" }
         }
     };

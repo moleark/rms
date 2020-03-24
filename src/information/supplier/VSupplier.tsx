@@ -61,7 +61,7 @@ export class VSupplier extends VPage<CSupplier> {
     }
 
     private onFormButtonClick = async (name: string, context: Context) => {
-        await this.controller.saveSupplierData(context.form.data);
+        await this.controller.saveSupplierData(context.form.data, this.supplierData);
     }
 
     private onDelSupplier = async () => {

@@ -67,7 +67,7 @@ export class CProduct extends CUqBase {
                 let { id, CAS, description, descriptoinCN, molecularFomula, molecularWeight } = this.chemical;
                 product.createTime = Date.now();
                 product.isTrue = 1;
-                product.defaultContact = undefined;
+                product.inquiryContact = undefined;
                 let result = await this.uqs.rms.Product.save(undefined, product);
                 await this.uqs.rms.RsProductChemical.add({ product: result.id, arr1: [{ chemical: id, CAS: CAS, molecularFomula: molecularFomula, molecularWeight: molecularWeight, purity: product.purity }] });
             }

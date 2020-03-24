@@ -37,7 +37,7 @@ export class CPickProduct extends CUqBase {
 
     searchProductByKey = async (key: string) => {
         this.products = new PageProduct(this.uqs.rms.SearchProduct);
-        this.products.first({ key: key, pickType: "" });
+        this.products.first({ key: key, pickType: undefined });
     }
 
 }

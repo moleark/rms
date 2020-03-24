@@ -60,17 +60,21 @@ export class CSupplier extends CUqBase {
         return this.renderView(VSupplierList);
     }
 
-    saveSupplierData = async (supplier: any) => {
+    saveSupplierData = async (supplier: any, model: any) => {
 
         let name = supplier.name;
         if (supplier.id === undefined) {
             supplier.defaultContact = undefined;
+            supplier.financeContact = undefined;
+            supplier.inquiryContact = undefined;
             supplier.isValid = 1;
             await this.uqs.rms.Supplier.save(undefined, supplier);
         } else {
             let { id } = supplier;
-            let bankmap: any[] = [];
             supplier.isValid = 1;
+            supplier.defaultContact = model.defaultContact;
+            supplier.financeContact = model.financeContact;
+            supplier.inquiryContact = model.inquiryContact;
             await this.uqs.rms.Supplier.save(id, supplier);
         }
         this.closePage();
@@ -137,6 +141,7 @@ export class CSupplier extends CUqBase {
     */
     onSupplierSelected = async (supplier: any) => {
         let { id } = supplier;
+        supplier = await this.uqs.rms.Supplier.load(id);
         let contact = await this.uqs.rms.SearchSupplierContact.query({ _id: id });
         let bankAccount = await this.uqs.rms.SearchSupplierBankAccount.query({ _id: id });
         let param: ParamItem = {

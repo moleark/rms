@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, BoxId, Edit, Form, UiRadio, ItemSchema, UiSchema, UiTextItem, UiInputItem, UiIdItem, Schema, Context, tv } from 'tonva';
+import { VPage, Page, BoxId, Edit, Form, UiRadio, ItemSchema, UiSchema, UiTextItem, UiInputItem, UiIdItem, Schema, Context, tv, UiTagMulti } from 'tonva';
 import _ from 'lodash';
 import { CSupplierContact } from "./CSupplierContact";
 import {
@@ -8,6 +8,7 @@ import {
     salutationValidation, nameValidation
 } from 'tools/inputValidations';
 import { SupplierItem } from "model/supplierItem";
+import { Tag, TagValue } from "tonva";
 
 const schema: ItemSchema[] = [
     { name: 'name', type: 'string', required: true },
@@ -25,7 +26,9 @@ const schema: ItemSchema[] = [
     { name: 'address', type: 'id', required: false },
     { name: 'addressString', type: 'string', required: false },
     { name: 'zipCode', type: 'string', required: false },
-    { name: 'isDefault', type: 'number', required: false },
+    { name: 'isDefault', type: 'string', required: false },
+    { name: 'isFinance', type: 'number', required: false },
+    { name: 'isInquiry', type: 'number', required: false },
 ];
 
 export class VSupplierContactDetail extends VPage<CSupplierContact> {
@@ -34,25 +37,38 @@ export class VSupplierContactDetail extends VPage<CSupplierContact> {
     private item: any;
     private parent: any;
     private contactData: any;
+
     async open(param?: SupplierItem) {
         let { item, parent } = param;
-        await this.loadContact(item);
         this.parent = parent;
+        await this.loadContact(item);
         this.openPage(this.page);
     }
 
     private loadContact = async (item: any) => {
         this.item = await this.controller.cApp.uqs.rms.SupplierContact.load(item.id);
-        let { bankAddress, bankSWIFT, bankIBAN, bankRTN, bank, accountNo, accountName, usageType } = this.item;
+        this.parent = await this.controller.cApp.uqs.rms.Supplier.load(this.parent.id);
+        let { defaultContact, financeContact, inquiryContact } = this.parent;
+        let { id, name, firstName, lastName, gender, salutation, position, departmentName, telephone, mobile, email, fax, zipCode, wechatId, addressString, address } = this.item;
         this.contactData = {
-            bankAddress: bankAddress,
-            bankSWIFT: bankSWIFT,
-            bankIBAN: bankIBAN,
-            bankRTN: bankRTN,
-            bank: bank,
-            accountNo: accountNo,
-            accountName: accountName,
-            usageType: usageType
+            name: name,
+            firstName: firstName,
+            lastName: lastName,
+            gender: gender,
+            salutation: salutation,
+            position: position,
+            departmentName: departmentName,
+            telephone: telephone,
+            mobile: mobile,
+            email: email,
+            fax: fax,
+            zipCode: zipCode,
+            wechatId: wechatId,
+            addressString: addressString,
+            address: address,
+            isDefault: defaultContact === undefined ? 0 : (defaultContact.id === id ? 1 : 0),
+            isFinance: financeContact === undefined ? 0 : (financeContact.id === id ? 1 : 0),
+            isInquiry: inquiryContact === undefined ? 0 : (inquiryContact.id === id ? 1 : 0)
         };
     }
 
@@ -91,7 +107,9 @@ export class VSupplierContactDetail extends VPage<CSupplierContact> {
             } as UiIdItem,
             addressString: { widget: 'text', label: '详细地址', placeholder: '详细地址', rules: addressDetailValidation } as UiTextItem,
             zipCode: { widget: 'text', label: '邮编', placeholder: '邮编', rules: zipCodeValidation } as UiTextItem,
-            isDefault: { widget: 'radio', label: '默认联系人', list: [{ value: 1, title: '是' }, { value: 0, title: '否' }] } as UiRadio,
+            isDefault: { widget: 'radio', label: '订单联系人', list: [{ value: 1, title: '是' }, { value: 0, title: '否' }] } as UiRadio,
+            isFinance: { widget: 'radio', label: '财务联系人', list: [{ value: 1, title: '是' }, { value: 0, title: '否' }] } as UiRadio,
+            isInquiry: { widget: 'radio', label: '询价联系人', list: [{ value: 1, title: '是' }, { value: 0, title: '否' }] } as UiRadio,
         }
     }
 
@@ -112,27 +130,6 @@ export class VSupplierContactDetail extends VPage<CSupplierContact> {
     }
 
     private page = () => {
-        let { defaultContact } = this.parent;
-        let { id, name, firstName, lastName, gender, salutation, position, departmentName, telephone, mobile, email, fax, zipCode, wechatId, addressString, address } = this.item;
-        this.contactData = {
-            name: name,
-            firstName: firstName,
-            lastName: lastName,
-            gender: gender,
-            salutation: salutation,
-            position: position,
-            departmentName: departmentName,
-            telephone: telephone,
-            mobile: mobile,
-            email: email,
-            fax: fax,
-            zipCode: zipCode,
-            wechatId: wechatId,
-            addressString: addressString,
-            address: address,
-            isDefault: defaultContact === undefined ? 0 : (defaultContact.id === id ? 1 : 0)
-        };
-
         let buttonDel: any;
         if (this.item !== undefined) {
             buttonDel = <div className="d-flex align-items-center">

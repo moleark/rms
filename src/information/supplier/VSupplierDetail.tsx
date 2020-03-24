@@ -79,29 +79,34 @@ export class VSupplierDetail extends VPage<CSupplier> {
     }
 
     private renderContact = (item: any, index: number) => {
-        let { showSupplierContactDetail } = this.controller.cApp.cSupplierContact;
+        let { showEditSupplierContact } = this.controller.cApp.cSupplierContact;
         let { no, name, id, gender, mobile, telephone, email } = item;
-        let { defaultContact } = this.supplier;
-        let fa_text = defaultContact === undefined ? "px-2" : (defaultContact.id === id ? "px-2 text-info " : "px-2 ");
+        let { defaultContact, financeContact, inquiryContact } = this.supplier;
+        let fa_defaultContact = defaultContact === undefined ? "" : defaultContact.id === id ? <div className="small text-muted">订单负责人</div> : "";
+        let fa_financeContact = financeContact === undefined ? "" : financeContact.id === id ? <div className="small text-muted">财务负责人</div> : "";
+        let fa_inquiryContact = inquiryContact === undefined ? "" : inquiryContact.id === id ? <div className="small text-muted">询价负责人</div> : "";
         let fa_gender = gender === "0" ? <FA name="female" className="px-2 text-danger"></FA> : <FA name="male" className="px-2 text-primary"></FA>;
         let tele = (telephone === undefined) ? <span></span> :
-            <div className="small text-muted">{telephone}</div>;
+            <div className="small px-4 text-muted">{telephone}</div>;
         let mob = (mobile === undefined) ? <span></span> :
-            <div className="small text-muted">{mobile}</div>;
+            <div className="small px-4 text-muted">{mobile}</div>;
 
         let ema = (email === undefined) ? <span></span> :
             <div className="small px-4 text-muted">{email}</div>;
 
-        let left = <div className={fa_text}>
+        let left = <div className="px-2">
             {fa_gender}{name}
             {ema}
+            {tele}
+            {mob}
         </div>
         let right =
             <div className="px-2 text-right">
-                {tele}
-                {mob}
+                {fa_defaultContact}
+                {fa_financeContact}
+                {fa_inquiryContact}
             </div>;
-        return <LMR left={left} right={right} className="p-1 d-flex cursor-pointer" onClick={() => showSupplierContactDetail(item, this.supplier)}>
+        return <LMR left={left} right={right} className="p-1 d-flex cursor-pointer" onClick={() => showEditSupplierContact(item, this.supplier)}>
         </LMR>;
     }
 
