@@ -562,3 +562,31 @@ returns ret (
     where   v.isValid=1
     order by v.id;
 };
+
+/** 根据产品搜索产品性质*/
+QUERY SearchProductProperty(_id ID Product)
+returns ret (
+    id bigint,
+    product ID Product,
+    useFor text,                           --产品用途
+    remark text,                           --产品备注
+    isspot smallint,                       --是否现货产品（1 表示是现货产品，0表示定制产品）
+    storageRange ID StorageRange,          --存储条件
+    expiry char(40),                       --保质期
+    expiryUnit char(10),                   --保质期单位
+    restrictMark ID RestrictMark,          --限制性标记
+    refractiveIndex char(20),              --折射率
+    opticalRotation char(20),              --旋光度
+    flashPoint char(200),                  --闪点
+    meltingPoint char(200),                --熔点
+    boilingPoint char(200),                --沸点
+    character char(1000),                  --性状
+    chroma char(100),                      --色度
+    density char(100),                     --密度
+    waterContent char(50)                  --含水量
+) { 
+    into ret select p.id,p.product, p.useFor, p.remark, p.isspot, p.storageRange, p.expiry, p.expiryUnit, p.restrictMark, p.refractiveIndex, p.opticalRotation, p.flashPoint, p.meltingPoint, p.boilingPoint, p.character, p.chroma, p.density, p.waterContent
+    from    ProductProperty as p
+    where   p.product = _id
+    order by p.id;
+};

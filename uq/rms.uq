@@ -260,9 +260,49 @@ MAP PackPrice ver 2.0 (
     tariffRate dec(12,4),               --关税税率
 );
 
+--增值税率
 TUID VatRate (
     id,
     main description  dec(12,3),         --增值税率
-    main isValid smallint default 1,    --是否有效（1 有效、0 无效）
+    main isValid smallint default 1,     --是否有效（1 有效、0 无效）
     unique(description),
+);
+
+--存储条件
+TUID StorageRange (
+    id,
+    main no char(10),               --编号
+    main description  char(100),         --英文描述
+    main type char(10),                  --类型（冷冻、冷藏）
+    unique(no),
+);
+
+--限制性标记
+TUID RestrictMark (
+    id,
+    main no char(10),                    --编号
+    main description  char(100),         --描述
+    unique(no),
+);
+
+--产品性质
+TUID ProductProperty (
+    id,
+    main product ID Product,
+    main useFor text,                           --产品用途
+    main remark text,                           --产品备注
+    main isspot smallint,                       --是否现货产品（1 表示是现货产品，0表示定制产品）
+    main storageRange ID StorageRange,          --存储条件
+    main expiry char(40),                       --保质期
+    main expiryUnit char(10),                   --保质期单位
+    main restrictMark ID RestrictMark,          --限制性标记
+    main refractiveIndex char(20),              --折射率
+    main opticalRotation char(20),              --旋光度
+    main flashPoint char(200),                  --闪点
+    main meltingPoint char(200),                --熔点
+    main boilingPoint char(200),                --沸点
+    main character char(1000),                  --性状
+    main chroma char(100),                      --色度
+    main density char(100),                     --密度
+    main waterContent char(50)                  --含水量
 );

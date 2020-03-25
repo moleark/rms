@@ -10,6 +10,10 @@ import { CPickSupplier } from 'information/supplier/CPickSupplier';
 import { CChemical } from './CChemical';
 import { CBrand } from './CBrand';
 import { SupplierItem } from "model/supplierItem";
+import { CStorageRange } from './CStorageRange';
+import { CRestrictMark } from './CRestrictMark';
+import { VProductProperty } from './VProductProperty';
+import { VProductPropertyDetail } from './VProductPropertyDetail';
 
 class PageProduct extends PageItems<any> {
 
@@ -60,6 +64,16 @@ export class CProduct extends CUqBase {
         let mode: any = await this.cApp.cChemical.call();
     }
 
+    pickStorageRange = async (context: Context, name: string, value: number): Promise<number> => {
+        let cStorageRange = this.newC(CStorageRange);
+        return await cStorageRange.call<number>();
+    }
+
+    pickRestrictMark = async (context: Context, name: string, value: number): Promise<number> => {
+        let cRestrictMark = this.newC(CRestrictMark);
+        return await cRestrictMark.call<number>();
+    }
+
     saveProductData = async (product: any) => {
 
         if (product.id === undefined) {
@@ -86,6 +100,23 @@ export class CProduct extends CUqBase {
         }
     }
 
+    saveProductProperty = async (property: any, product: any) => {
+
+        if (property.id === undefined) {
+            property.product = product;
+            let result = await this.uqs.rms.ProductProperty.save(undefined, property);
+        }
+        this.closePage();
+        await this.loadList();
+    }
+
+    updatProductPropertyData = async (propertydata: any) => {
+
+        if (propertydata) {
+            await this.uqs.rms.ProductProperty.save(propertydata.id, propertydata);
+        }
+    }
+
     /**
     * 打开新建界面
     */
@@ -107,6 +138,19 @@ export class CProduct extends CUqBase {
             child: pitem.ret,
         }
         this.openVPage(VProductDetail, param);
+    }
+
+    /**
+    * 打开产品性质详情界面
+    */
+    showProductPropertyDetail = async (product: any) => {
+        let { id } = product;
+        let property = await this.uqs.rms.SearchProductProperty.query({ _id: id });
+        // if (property.ret.length === 0) {
+        //     this.openVPage(VProductProperty, id);
+        // } else {
+        this.openVPage(VProductPropertyDetail, property.ret[0]);
+        // }
     }
 
     loadList = async () => {

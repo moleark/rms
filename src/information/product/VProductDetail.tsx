@@ -116,33 +116,36 @@ export class VProductDetail extends VPage<CProduct> {
         return <div className="bg-white py-2">
             {no === undefined ? "" :
                 <><div className="row no-gutters px-3 my-1">
-                    <div className="col-4">产品编号:</div><div className="col-8 text-muted text-right">{no}</div>
+                    <div className="col-4">产品编号</div><div className="col-8 text-muted text-right">{no}</div>
                 </div></>}
             <div className="row no-gutters px-3 my-1">
-                <div className="col-4">供应商:</div><div className="col-8 text-muted text-right"><b>{suppliername} {supplierno}</b></div>
+                <div className="col-4">供应商</div><div className="col-8 text-muted text-right"><b>{suppliername} {supplierno}</b></div>
             </div>
             <div className="row no-gutters px-3 my-1">
-                <div className="col-4">询价联系人:</div><div className="col-8 text-muted text-right">{inquiryContact === undefined ? "[无]" : inquiryContact.obj.name}</div>
+                <div className="col-4">询价联系人</div><div className="col-8 text-muted text-right">{inquiryContact === undefined ? "[无]" : inquiryContact.obj.name}</div>
             </div>
             {brandno === undefined ? "" :
                 <><div className="row no-gutters px-3 my-1">
-                    <div className="col-4">品牌:</div><div className="col-8 text-muted text-right">{brandno}</div>
+                    <div className="col-4">品牌</div><div className="col-8 text-muted text-right">{brandno}</div>
                 </div></>}
             <div className="row no-gutters px-3 my-1">
-                <div className="col-4">CAS:</div><div className="col-8 text-muted text-right">{CAS}</div>
+                <div className="col-4">CAS</div><div className="col-8 text-muted text-right">{CAS}</div>
             </div>
             {origin === undefined ? "" :
                 <><div className="row no-gutters px-3 my-1">
-                    <div className="col-4">自编号:</div><div className="col-8 text-muted text-right">{origin}</div>
+                    <div className="col-4">自编号</div><div className="col-8 text-muted text-right">{origin}</div>
                 </div></>}
             {molecularFomula === undefined ? "" :
                 <><div className="row no-gutters px-3 my-1">
-                    <div className="col-4">分子式:</div><div className="col-8 text-muted text-right">{molecularFomula}</div>
+                    <div className="col-4">分子式</div><div className="col-8 text-muted text-right">{molecularFomula}</div>
                 </div></>}
             {molecularWeight === undefined ? "" :
                 <><div className="row no-gutters px-3 my-1">
-                    <div className="col-4">分子量:</div><div className="col-8 text-muted text-right">{molecularWeight}</div>
+                    <div className="col-4">分子量</div><div className="col-8 text-muted text-right">{molecularWeight}</div>
                 </div></>}
+            <div className="row no-gutters px-3 my-1" onClick={() => this.controller.showProductPropertyDetail(this.product)}>
+                <div className="col-4">产品性质</div><div className="col-8 text-muted text-right"><b>></b></div>
+            </div>
         </div>;
     }
 
