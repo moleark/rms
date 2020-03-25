@@ -146,11 +146,11 @@ export class CProduct extends CUqBase {
     showProductPropertyDetail = async (product: any) => {
         let { id } = product;
         let property = await this.uqs.rms.SearchProductProperty.query({ _id: id });
-        // if (property.ret.length === 0) {
-        //     this.openVPage(VProductProperty, id);
-        // } else {
-        this.openVPage(VProductPropertyDetail, property.ret[0]);
-        // }
+        if (property.ret.length === 0) {
+            this.openVPage(VProductProperty, id);
+        } else {
+            this.openVPage(VProductPropertyDetail, property.ret[0]);
+        }
     }
 
     loadList = async () => {

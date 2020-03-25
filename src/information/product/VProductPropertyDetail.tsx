@@ -29,6 +29,7 @@ export class VProductPropertyDetail extends VPage<CProduct> {
     private propertyData: any;
 
     async open(param: any) {
+        this.property = undefined;
         this.property = param;
         this.openPage(this.page);
     }
