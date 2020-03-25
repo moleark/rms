@@ -43,7 +43,7 @@ export class VProductProperty extends VPage<CProduct> {
                 Templet: (item: any) => {
                     if (!item) return <small className="text-muted">请选择存储条件</small>;
                     return <>
-                        {tv(item, v => <>{v.no}</>)}
+                        {tv(item, v => <>{v.description}</>)}
                     </>;
                 }
             } as UiIdItem,
@@ -55,7 +55,7 @@ export class VProductProperty extends VPage<CProduct> {
                 Templet: (item: any) => {
                     if (!item) return <small className="text-muted">请选择限制性标记</small>;
                     return <>
-                        {tv(item, v => <>{v.no}</>)}
+                        {tv(item, v => <>{v.description}</>)}
                     </>;
                 }
             } as UiIdItem,
