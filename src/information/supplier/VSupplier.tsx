@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { VPage, Page, UiSchema, UiInputItem, Form, Context, BoxId, tv, UiIdItem, UiTextItem } from 'tonva';
+import { VPage, Page, UiSchema, UiInputItem, Form, Context, BoxId, tv, UiIdItem, UiTextItem, UiRadio } from 'tonva';
 import { Schema } from 'tonva';
 import _ from 'lodash';
 import { CSupplier } from './CSupplier';
@@ -9,6 +9,7 @@ const schema: Schema = [
     { name: 'id', type: 'id', required: false },
     { name: 'name', type: 'string', required: true },
     { name: 'abbreviation', type: 'string', required: false },
+    { name: 'businessArea', type: 'string', required: true },
     { name: 'webSite', type: 'string', required: false },
     { name: 'address', type: 'id', required: true },
     { name: 'addressString', type: 'string', required: true },
@@ -28,6 +29,7 @@ export class VSupplier extends VPage<CSupplier> {
             id: { visible: false },
             name: { widget: 'text', label: '供应商名称', placeholder: '必填' } as UiInputItem,
             abbreviation: { widget: 'text', label: '供应商简称', placeholder: '供应商简称' } as UiInputItem,
+            businessArea: { widget: 'radio', label: '业务区域', list: [{ value: '内贸', title: '内贸' }, { value: '外贸', title: '外贸' }] } as UiRadio,
             webSite: { widget: 'text', label: '网址', placeholder: '网址' } as UiInputItem,
             address: {
                 widget: 'id', label: '所在地区',

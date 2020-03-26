@@ -78,17 +78,32 @@ export class CSupplierContact extends CUqBase {
         if (id === undefined) {
             id = result.id;
         }
-        let defaultid = undefined;
         if (isDefault === true) {
             parent.defaultContact = id;
+        } else {
+            if (parent.defaultContact !== undefined) {
+                if (parent.defaultContact.id === id) {
+                    parent.defaultContact = undefined;
+                }
+            }
         }
-        let financeid = undefined;
         if (isFinance === true) {
             parent.financeContact = id;
+        } else {
+            if (parent.financeContact !== undefined) {
+                if (parent.financeContact.id === id) {
+                    parent.financeContact = undefined;
+                }
+            }
         }
-        let inquiryid = undefined;
         if (isInquiry === true) {
             parent.inquiryContact = id;
+        } else {
+            if (parent.inquiryContact !== undefined) {
+                if (parent.inquiryContact.id === id) {
+                    parent.inquiryContact = undefined;
+                }
+            }
         }
         await this.uqs.rms.Supplier.save(parent.id, { no: parent.no, name: parent.name, abbreviation: parent.abbreviation, webSite: parent.webSite, address: parent.address, addressString: parent.addressString, productionAddress: parent.productionAddress, profile: parent.profile, taxNo: parent.taxNo, isValid: 1, defaultContact: parent.defaultContact, financeContact: parent.financeContact, inquiryContact: parent.inquiryContact });
         this.cApp.cSupplier.onSupplierSelected(parent);

@@ -107,7 +107,6 @@ export class CProduct extends CUqBase {
             let result = await this.uqs.rms.ProductProperty.save(undefined, property);
         }
         this.closePage();
-        await this.loadList();
     }
 
     updatProductPropertyData = async (propertydata: any) => {

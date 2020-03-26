@@ -14,14 +14,17 @@ export class VProductList extends VPage<CProduct> {
     }
 
     private renderRootCategory = (item: any, parent: any) => {
-        let { no, description, createTime, supplier, CAS, purity } = item;
+        let { origin, description, createTime, supplier, CAS, purity, brand } = item;
         let { showProductDetail } = this.controller;
         let showcas = CAS === undefined ? <b>[无]</b> : <b>{CAS}</b>;
         let showpurity = purity === undefined ? "" : <b>{purity}</b>;
+        let brandno = brand === undefined ? undefined : brand.obj.no;
+        let first = origin === undefined && brandno === undefined ? "" : origin === undefined ? <b>{brandno}</b> : <b>{origin}&nbsp;&nbsp;{brandno}</b>;
+
 
         return <LMR className="px-3 d-flex p-1 cursor-pointer">
             <div onClick={() => showProductDetail(item)}>
-                <b>{no}</b>
+                {first}
                 <div>{showcas}&nbsp;&nbsp;{showpurity}</div>
                 <div><b>{description}</b></div>
                 <div className="py-1 text-muted">{tv(supplier, v => <>{v.name}</>)}</div>

@@ -51,11 +51,11 @@ export class VSupplierContact extends VPage<CSupplierContact> {
             salutation: { widget: 'radio', label: '称谓', list: [{ value: 'Mr.', title: 'Mr.' }, { value: 'Ms.', title: 'Ms.' }] } as UiRadio,
             position: { widget: 'text', label: '职位', placeholder: '职位' } as UiTextItem,
             departmentName: { widget: 'text', label: '部门名称', placeholder: '部门名称', rules: departmentNameValidation } as UiTextItem,
-            telephone: { widget: 'text', label: '固定电话', placeholder: '固定电话', rules: telephoneValidation } as UiTextItem,
+            telephone: { widget: 'text', label: '固定电话', placeholder: '如：+86-010-40020020-0852', rules: telephoneValidation } as UiTextItem,
             mobile: { widget: 'text', label: '手机号', placeholder: '手机号', rules: mobileValidation } as UiTextItem,
             wechatId: { widget: 'text', label: '微信号', placeholder: '微信号' } as UiTextItem,
             email: { widget: 'text', label: 'Email', placeholder: 'Email', rules: emailValidation } as UiTextItem,
-            fax: { widget: 'text', label: '传真', placeholder: '传真', rules: faxValidation } as UiTextItem,
+            fax: { widget: 'text', label: '传真', placeholder: '如：+86-010-40020020-0852', rules: faxValidation } as UiTextItem,
             address: {
                 widget: 'id', label: '所在地区',
                 pickId: async (context: Context, name: string, value: number) => await this.controller.pickAddress(context, name, value),

@@ -7,6 +7,7 @@ import { CProduct } from './CProduct';
 import { SupplierItem } from "model/supplierItem";
 
 const schema: ItemSchema[] = [
+    { name: 'origin', type: 'string', required: false },
     { name: 'description', type: 'string', required: true },
     { name: 'descriptionC', type: 'string', required: false },
     { name: 'purity', type: 'string', required: false },
@@ -28,8 +29,9 @@ export class VProductDetail extends VPage<CProduct> {
 
     private loadProduct = async (product: any) => {
         this.product = product;
-        let { description, descriptionC, purity } = this.product;
+        let { origin, description, descriptionC, purity } = this.product;
         this.purityData = {
+            origin: origin,
             description: description,
             descriptionC: descriptionC,
             purity: purity
@@ -38,6 +40,7 @@ export class VProductDetail extends VPage<CProduct> {
 
     private uiSchema: UiSchema = {
         items: {
+            origin: { widget: 'text', label: '供应商自编号', placeholder: '供应商自编号' } as UiInputItem,
             description: { widget: 'text', label: '英文名称', placeholder: '英文名称' } as UiInputItem,
             descriptionC: { widget: 'text', label: '中文名称', placeholder: '中文名称' } as UiInputItem,
             purity: { widget: 'text', label: '纯度', placeholder: '纯度' } as UiInputItem,
@@ -49,7 +52,7 @@ export class VProductDetail extends VPage<CProduct> {
         let { onNewPendingInquiry } = this.controller.cApp.cNewPendingInquiry;
         let { supplier, inquiryContact } = this.product;
         let showd = inquiryContact === undefined ?
-            "" : <div className=" d-flex px-3 py-2">
+            <b className="px-3 py-2 text-danger small">须先设置供应商询价或订单联系人才可添加包装或询价！</b> : <div className=" d-flex px-3 py-2">
                 <button className="btn btn-sm btn-primary" onClick={() => showCreatePackage(this.product)}>
                     <span className="px-2"><FA className="text-warning px-1" name="cube" /><b>包&nbsp;装</b></span>
                     <span className="px-2"><FA name="plus fa-1x" /></span>
@@ -131,10 +134,6 @@ export class VProductDetail extends VPage<CProduct> {
             <div className="row no-gutters px-3 my-1">
                 <div className="col-4">CAS</div><div className="col-8 text-muted text-right">{CAS}</div>
             </div>
-            {origin === undefined ? "" :
-                <><div className="row no-gutters px-3 my-1">
-                    <div className="col-4">自编号</div><div className="col-8 text-muted text-right">{origin}</div>
-                </div></>}
             {molecularFomula === undefined ? "" :
                 <><div className="row no-gutters px-3 my-1">
                     <div className="col-4">分子式</div><div className="col-8 text-muted text-right">{molecularFomula}</div>

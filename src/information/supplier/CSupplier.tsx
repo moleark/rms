@@ -75,6 +75,7 @@ export class CSupplier extends CUqBase {
             supplier.defaultContact = model.defaultContact;
             supplier.financeContact = model.financeContact;
             supplier.inquiryContact = model.inquiryContact;
+            supplier.no = model.no;
             await this.uqs.rms.Supplier.save(id, supplier);
         }
         this.closePage();

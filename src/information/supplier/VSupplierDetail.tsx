@@ -117,7 +117,7 @@ export class VSupplierDetail extends VPage<CSupplier> {
     }
 
     private rowTop = (supplierData: any) => {
-        let { name, no, abbreviation, webSite, address, addressString, productionAddress, profile, taxNo } = supplierData;
+        let { name, no, abbreviation, businessArea, webSite, address, addressString, productionAddress, profile, taxNo } = supplierData;
 
 
         return <div className="bg-white py-2">
@@ -126,7 +126,7 @@ export class VSupplierDetail extends VPage<CSupplier> {
                     <div className="col-3">编号:</div><div className="col-9 text-muted">{no}</div>
                 </div></>}
             <div className="row no-gutters px-3 my-1">
-                <div className="col-3">名称:</div><div className="col-9"><b>{name}</b></div>
+                <div className="col-3">名称:</div><div className="col-9"><b>{businessArea} {name}</b></div>
             </div>
             <div className="row no-gutters px-3 my-1">
                 <div className="col-3">网址:</div><div className="col-9 text-muted">{webSite === undefined ? "(无)" : webSite}</div>

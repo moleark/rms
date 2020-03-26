@@ -34,30 +34,6 @@ export class VProductPropertyDetail extends VPage<CProduct> {
         this.openPage(this.page);
     }
 
-    private loadProperty = async (param: any) => {
-        this.property = param;
-        // let { product, useFor, remark, isspot, storageRange, expiry, expiryUnit, restrictMark, refractiveIndex, opticalRotation, flashPoint, meltingPoint, boilingPoint, character, chroma, density, waterContent } = this.property;
-        // this.propertyData = {
-        //     product: product,
-        //     useFor: useFor,
-        //     remark: remark,
-        //     isspot: isspot,
-        //     storageRange: storageRange,
-        //     expiry: expiry,
-        //     expiryUnit: expiryUnit,
-        //     restrictMark: restrictMark,
-        //     refractiveIndex: refractiveIndex,
-        //     opticalRotation: opticalRotation,
-        //     flashPoint: flashPoint,
-        //     meltingPoint: meltingPoint,
-        //     boilingPoint: boilingPoint,
-        //     character: character,
-        //     chroma: chroma,
-        //     density: density,
-        //     waterContent: waterContent
-        // };
-    }
-
     private uiSchema: UiSchema = {
         items: {
             isspot: { widget: 'radio', label: '是否现货', list: [{ value: 1, title: '现货' }, { value: 0, title: '定制' }] } as UiRadio,

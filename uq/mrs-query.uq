@@ -58,12 +58,13 @@ PAGE (
     address ID Address,
     productionAddress char(500),        --生产厂址
     profile  text,                      --企业简介(供应商信息概况)
-    taxNo char(50)
+    taxNo char(50),
+    businessArea char(10)               --业务区域
 ) {
     var key2 char(102);
     set key2 = concat('%', key, '%');
 
-    PAGE select w.id, w.no, w.name,w.abbreviation,w.defaultContact,w.financeContact, w.inquiryContact, w.webSite,w.addressString,w.address,w.productionAddress,w.profile,w.taxNo
+    PAGE select w.id, w.no, w.name,w.abbreviation,w.defaultContact,w.financeContact, w.inquiryContact, w.webSite,w.addressString,w.address,w.productionAddress,w.profile,w.taxNo,w.businessArea
     from    Supplier as w
     where   ( w.name like key2 or w.no like key2 )
             and w.id > $pageStart and w.isValid = 1 
@@ -132,7 +133,8 @@ PAGE (
     var key2 char(102);
     set key2 = concat('%', key, '%');
 
-    PAGE select w.id, w.no, w.supplier,w.brand,w.origin,w.description,w.descriptionC,w.createTime,p.chemical,p.CAS,p.purity,p.molecularFomula,p.molecularWeight,s.inquiryContact
+    PAGE select w.id, w.no, w.supplier,w.brand,w.origin,w.description,w.descriptionC,w.createTime,p.chemical,p.CAS,p.purity,p.molecularFomula,p.molecularWeight
+    ,case when s.inquiryContact is null then s.defaultContact else s.inquiryContact end as inquiryContact
     from    Product as w
             left join RsProductChemical as p on w.id=p.product
             left join Supplier as s on w.supplier=s.id
@@ -371,7 +373,7 @@ ACTION UpdateInquiryPending(
     var contactMobile char(50);
     var contactEmail char(60);
     var contactfax char(60);
-    set contact=s.inquiryContact,
+    set contact=case when c.id is null then c1.id else c.id end,
         contactName=c.name,
         contactSalutation=c.salutation,
         contactDepartmentName=c.departmentName,
@@ -380,7 +382,8 @@ ACTION UpdateInquiryPending(
         contactEmail=c.email,
         contactfax=c.fax
     from  Supplier as s
-          join SupplierContact as c on s.inquiryContact = c.id
+          left join SupplierContact as c on s.inquiryContact = c.id
+          left join SupplierContact as c1 on s.defaultContact = c1.id
     where s.id=supplier
     limit 1;
 
@@ -522,7 +525,7 @@ ACTION AddPackage ver 3.0(
     var contactMobile char(50);
     var contactEmail char(60);
     var contactfax char(60);
-    set contact=s.inquiryContact,
+    set contact=case when c.id is null then c1.id else c.id end,
         contactName=c.name,
         contactSalutation=c.salutation,
         contactDepartmentName=c.departmentName,
@@ -531,7 +534,8 @@ ACTION AddPackage ver 3.0(
         contactEmail=c.email,
         contactfax=c.fax
     from  Supplier as s
-          join SupplierContact as c on s.inquiryContact = c.id
+          left join SupplierContact as c on s.inquiryContact = c.id
+          left join SupplierContact as c1 on s.defaultContact = c1.id
     where s.id=supplierid
     limit 1;   
 
