@@ -3,6 +3,7 @@ import { VPage, Page, UiSchema, UiInputItem, Form, Context, UiTextItem, UiRadio,
 import { Schema } from 'tonva';
 import _ from 'lodash';
 import { CPendingInquiry } from './CPendingInquiry';
+import { tariffRateValidation } from 'tools/inputValidations';
 
 const schema: Schema = [
     { name: 'id', type: 'id', required: false },
@@ -10,10 +11,13 @@ const schema: Schema = [
     { name: 'radiox', type: 'number', required: true },
     { name: 'radioy', type: 'number', required: true },
     { name: 'unit', type: 'id', required: true },
+    { name: 'purity', type: 'string', required: false },
     { name: 'listPrice', type: 'number', required: false },
     { name: 'price', type: 'number', required: true },
     { name: 'currency', type: 'id', required: true },
     { name: 'isTaxIn', type: 'number', required: true },
+    { name: 'vatRate', type: 'id', required: false },
+    { name: 'tariffRate', type: 'number', required: false },
     { name: 'isTransFeeIn', type: 'number', required: true },
     { name: 'transFee', type: 'number', required: false },
     { name: 'transFeecurrency', type: 'id', required: false },
@@ -26,8 +30,6 @@ const schema: Schema = [
     { name: 'minArriveDate', type: 'date', required: true },
     { name: 'maxArriveDate', type: 'date', required: true },
     { name: 'invoiceType', type: 'number', required: true },
-    { name: 'vatRate', type: 'id', required: false },
-    { name: 'tariffRate', type: 'number', required: false },
     { name: 'packType', type: 'number', required: true },
     { name: 'remarks', type: 'string', required: false },
     { name: 'coaFilePath', type: 'string', required: false },
@@ -58,6 +60,7 @@ export class VPendingInquiryResult extends VPage<CPendingInquiry> {
                     </>;
                 }
             } as UiIdItem,
+            purity: { widget: 'text', label: '报价纯度', placeholder: '报价纯度' } as UiInputItem,
             listPrice: { widget: 'text', label: '目录价', placeholder: '目录价' } as UiInputItem,
             price: { widget: 'text', label: '结算价', placeholder: '必填' } as UiInputItem,
             currency: {
@@ -71,6 +74,17 @@ export class VPendingInquiryResult extends VPage<CPendingInquiry> {
                 }
             } as UiIdItem,
             isTaxIn: { widget: 'radio', label: '含税费', list: [{ value: "0", title: '否' }, { value: "1", title: '是' }] } as UiRadio,
+            vatRate: {
+                widget: 'id', label: '增值税率', placeholder: '增值税率',
+                pickId: async (context: Context, name: string, value: number) => await this.controller.cApp.cPackage.pickVatRate(context, name, value),
+                Templet: (item: any) => {
+                    if (!item) return <small className="text-muted">请选择增值税率</small>;
+                    return <>
+                        {tv(item, v => <>{v.description * 100}</>)}%
+                    </>;
+                }
+            } as UiIdItem,
+            tariffRate: { widget: 'text', label: '关税税率', placeholder: '关税税率', rules: tariffRateValidation } as UiInputItem,
             isTransFeeIn: { widget: 'radio', label: '含运费', list: [{ value: "0", title: '否' }, { value: "1", title: '是' }] } as UiRadio,
             transFee: { widget: 'text', label: '运费', placeholder: '运费' } as UiInputItem,
             transFeecurrency: {
@@ -110,17 +124,6 @@ export class VPendingInquiryResult extends VPage<CPendingInquiry> {
             minArriveDate: { widget: 'date', label: '最短到货期', placeholder: '必填' } as UiInputItem,
             maxArriveDate: { widget: 'date', label: '最长到货期', placeholder: '必填' } as UiInputItem,
             invoiceType: { widget: 'radio', label: '发票类型', list: [{ value: "1", title: '增值税专用发票' }, { value: "2", title: '增值税普通发票' }, { value: "3", title: '形式发票' }] } as UiRadio,
-            vatRate: {
-                widget: 'id', label: '增值税率', placeholder: '增值税率',
-                pickId: async (context: Context, name: string, value: number) => await this.controller.cApp.cPackage.pickVatRate(context, name, value),
-                Templet: (item: any) => {
-                    if (!item) return <small className="text-muted">请选择增值税率</small>;
-                    return <>
-                        {tv(item, v => <>{v.description}</>)}
-                    </>;
-                }
-            } as UiIdItem,
-            tariffRate: { widget: 'text', label: '关税税率', placeholder: '关税税率' } as UiInputItem,
             packType: { widget: 'radio', label: '包装类型', list: [{ value: "1", title: '目录包装' }, { value: "2", title: '非目录包装' }] } as UiRadio,
             remarks: { widget: 'text', label: '备注', row: 10, placeholder: '备注' } as UiInputItem,
             coaFilePath: { widget: 'text', label: 'COA文件路径', placeholder: 'COA文件路径' } as UiInputItem,

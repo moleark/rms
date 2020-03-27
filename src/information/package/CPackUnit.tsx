@@ -8,7 +8,8 @@ export class CPackUnit extends CUqBase {
     @observable packUnits: any;
 
     protected async internalStart() {
-        this.packUnits = await this.uqs.common.PackType.search("", 0, 100);
+        let result = await this.uqs.common.SearchPackType.query("");
+        this.packUnits = result.ret;
         this.openVPage(VPackUnit);
     }
 

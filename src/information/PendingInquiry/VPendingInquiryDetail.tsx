@@ -29,7 +29,7 @@ export class VPendingInquiryDetail extends VPage<CPendingInquiry> {
 
         let { id, inquiryPackage, user, createDate, product, quantity, radiox, radioy, unit, CAS, purity, inquiryRemarks } = item;
         let { brand, description, descriptionC } = product.obj;
-        let { name } = unit.obj;
+        let name = unit === undefined ? undefined : unit.obj.name;
         let radio = (radiox !== 1) ? <>{radiox} * {radioy}{name}</> : <>{radioy}{name}</>;
         let brandname = brand === undefined ? undefined : brand.obj.name;
 

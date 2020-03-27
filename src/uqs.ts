@@ -9,6 +9,7 @@ export interface UqRMS {
     VatRate: Tuid;
     StorageRange: Tuid;
     RestrictMark: Tuid;
+    InquiryPackage: Tuid;
     ProductProperty: Tuid;
     RsProductChemical: Map;
     SupplierBankAccount: Map;
@@ -46,9 +47,11 @@ export interface UqCommon {
     GetCountryProvinces: Query;
     GetProvinceCities: Query;
     GetCityCounties: Query;
+    SearchPackType: Query;
 }
 
 export interface UqChemical {
+    Chemical: Tuid;
     SearchChemical: Query;
 }
 

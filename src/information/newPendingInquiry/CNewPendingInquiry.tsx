@@ -48,7 +48,10 @@ export class CNewPendingInquiry extends CUqBase {
     */
     onNewPendingInquiry = async (model: any) => {
         this.product = model;
-        this.openVPage(VNewPendingInquiry, { pendingInquiry: undefined });
+        if (model !== undefined) {
+            model.remarks = model.inquiryRemarks;
+        }
+        this.openVPage(VNewPendingInquiry, model);
     }
 
     onPendingInquiry = async (model: any) => {
@@ -60,22 +63,27 @@ export class CNewPendingInquiry extends CUqBase {
     }
 
     saveNewPendingInquiryData = async (model: any) => {
-
-        if (model.id === undefined) {
-            if (this.product) {
-                let { id, supplier } = this.product;
-                let { id: supplierid } = supplier;
-                let { quantity, radiox, radioy, unit, remarks } = model;
-                let param = {
-                    supplier: supplierid,
-                    product: id,
-                    quantity: quantity,
-                    radiox: radiox,
-                    radioy: radioy,
-                    unit: unit,
-                    remarks: remarks
-                };
+        if (this.product) {
+            let { id, supplier, inquiryPending, user, createDate, jsonStr } = this.product;
+            let { id: supplierid } = supplier;
+            let { quantity, radiox, radioy, unit, remarks, purity } = model;
+            let param = {
+                supplier: supplierid,
+                product: id,
+                quantity: quantity,
+                radiox: radiox,
+                radioy: radioy,
+                unit: unit,
+                purity: purity,
+                remarks: remarks
+            };
+            if (model.id === undefined) {
                 await this.uqs.rms.AddInquiryPending.submit(param);
+            } else {
+                model.supplier = supplierid;
+                model.product = id;
+                await this.uqs.rms.InquiryPackage.save(model.id, model);
+                await this.uqs.rms.InquiryPendingItem.add({ inquiryPending: inquiryPending, arr1: [{ inquiryPackage: model.id, user: user, createDate: createDate, remarks: remarks, jsonStr: jsonStr }] });
             }
         }
         this.closePage();

@@ -5,7 +5,7 @@ import { CPackUnit } from './CPackUnit';
 
 export class VPackUnit extends VPage<CPackUnit> {
 
-    async open(param: any) {
+    async open(param: any[]) {
         this.openPage(this.page);
     }
 

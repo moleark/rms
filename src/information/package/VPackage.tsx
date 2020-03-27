@@ -3,6 +3,7 @@ import { VPage, Page, BoxId, Form, UiRadio, UiSchema, UiTextItem, UiInputItem, U
 import { observer } from 'mobx-react';
 import { SupplierItem } from "model/supplierItem";
 import { CPackage } from './CPackage';
+import { tariffRateValidation } from 'tools/inputValidations';
 
 export class VPackage extends VPage<CPackage> {
     private form: Form;
@@ -20,11 +21,14 @@ export class VPackage extends VPage<CPackage> {
         { name: 'radiox', type: 'number', required: true },
         { name: 'radioy', type: 'number', required: true },
         { name: 'unit', type: 'id', required: true },
+        { name: 'purity', type: 'string', required: false },
         { name: 'type', type: 'string', required: true },
         { name: 'listPrice', type: 'number', required: false },
         { name: 'price', type: 'number', required: true },
         { name: 'currency', type: 'id', required: true },
         { name: 'isTaxIn', type: 'number', required: true },
+        { name: 'vatRate', type: 'id', required: false },
+        { name: 'tariffRate', type: 'number', required: false },
         { name: 'isTransFeeIn', type: 'number', required: true },
         { name: 'transFee', type: 'number', required: false },
         { name: 'transFeecurrency', type: 'id', required: false },
@@ -37,8 +41,7 @@ export class VPackage extends VPage<CPackage> {
         { name: 'minArriveDate', type: 'date', required: true },
         { name: 'maxArriveDate', type: 'date', required: true },
         { name: 'invoiceType', type: 'number', required: true },
-        { name: 'vatRate', type: 'id', required: false },
-        { name: 'tariffRate', type: 'number', required: false },
+        { name: 'remark', type: 'string', required: false },
         { name: 'submit', type: 'submit' }
     ];
 
@@ -57,6 +60,7 @@ export class VPackage extends VPage<CPackage> {
                     </>;
                 }
             } as UiIdItem,
+            purity: { widget: 'text', label: '报价纯度', placeholder: '报价纯度' } as UiInputItem,
             type: { widget: 'radio', label: '类型', list: [{ value: 1, title: '目录包装' }, { value: 2, title: '非目录包装' }] } as UiRadio,
             listPrice: { widget: 'text', label: '目录价', placeholder: '目录价' } as UiInputItem,
             price: { widget: 'text', label: '结算价', placeholder: '必填' } as UiInputItem,
@@ -71,6 +75,17 @@ export class VPackage extends VPage<CPackage> {
                 }
             } as UiIdItem,
             isTaxIn: { widget: 'radio', label: '含税费', list: [{ value: "0", title: '否' }, { value: "1", title: '是' }] } as UiRadio,
+            vatRate: {
+                widget: 'id', label: '增值税率', placeholder: '增值税率',
+                pickId: async (context: Context, name: string, value: number) => await this.controller.pickVatRate(context, name, value),
+                Templet: (item: any) => {
+                    if (!item) return <small className="text-muted">请选择增值税率</small>;
+                    return <>
+                        {tv(item, v => <>{v.description * 100}</>)}%
+                    </>;
+                }
+            } as UiIdItem,
+            tariffRate: { widget: 'text', label: '关税税率', placeholder: '关税税率', rules: tariffRateValidation } as UiInputItem,
             isTransFeeIn: { widget: 'radio', label: '含运费', list: [{ value: "0", title: '否' }, { value: "1", title: '是' }] } as UiRadio,
             transFee: { widget: 'text', label: '运费', placeholder: '运费' } as UiInputItem,
             transFeecurrency: {
@@ -110,17 +125,7 @@ export class VPackage extends VPage<CPackage> {
             minArriveDate: { widget: 'date', label: '最短到货期', placeholder: '必填' } as UiInputItem,
             maxArriveDate: { widget: 'date', label: '最长到货期', placeholder: '必填' } as UiInputItem,
             invoiceType: { widget: 'radio', label: '发票类型', list: [{ value: "1", title: '增值税专用发票' }, { value: "2", title: '增值税普通发票' }, { value: "3", title: '形式发票' }] } as UiRadio,
-            vatRate: {
-                widget: 'id', label: '增值税率', placeholder: '增值税率',
-                pickId: async (context: Context, name: string, value: number) => await this.controller.pickVatRate(context, name, value),
-                Templet: (item: any) => {
-                    if (!item) return <small className="text-muted">请选择增值税率</small>;
-                    return <>
-                        {tv(item, v => <>{v.description}</>)}
-                    </>;
-                }
-            } as UiIdItem,
-            tariffRate: { widget: 'text', label: '关税税率', placeholder: '关税税率' } as UiInputItem,
+            remark: { widget: 'textarea', label: '报价备注', placeholder: '报价备注', rows: 2 } as UiInputItem,
             submit: { widget: 'button', label: '提交', className: "btn btn-primary mr-3 px-6" }
         }
     };

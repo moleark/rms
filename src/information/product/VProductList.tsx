@@ -84,6 +84,7 @@ class VSelectType extends VPage<CProduct> {
                 <button className="btn btn-outline-info mr-3" onClick={() => this.onConfirm(undefined)}>取消</button>
                 <button className="btn btn-outline-info mr-3" onClick={() => this.onConfirm('供应商')}>供应商</button>
                 <button className="btn btn-outline-info mr-3" onClick={() => this.onConfirm('中英文名称')}>中英文名称</button>
+                <button className="btn btn-outline-info mr-3" onClick={() => this.onConfirm('供应商自编号')}>供应商自编号</button>
                 <button className="btn btn-outline-info mr-3" onClick={() => this.onConfirm('CAS')}>CAS</button>
             </div>
         </Page>;

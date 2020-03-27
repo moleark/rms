@@ -10,6 +10,7 @@ const schema: Schema = [
     { name: 'radiox', type: 'number', required: true },
     { name: 'radioy', type: 'number', required: true },
     { name: 'unit', type: 'id', required: true },
+    { name: 'purity', type: 'string', required: false },
     { name: 'remarks', type: 'number', required: false },
     { name: 'submit', type: 'submit' }
 ];
@@ -35,6 +36,7 @@ export class VNewPendingInquiry extends VPage<CNewPendingInquiry> {
                     </>;
                 }
             } as UiIdItem,
+            purity: { widget: 'text', label: '询价纯度', placeholder: '询价纯度' } as UiInputItem,
             remarks: { widget: 'textarea', label: '备注', placeholder: '备注', rows: 5 } as UiInputItem,
             submit: { widget: 'button', label: '提交', className: "btn btn-primary mr-3 px-6" }
         }

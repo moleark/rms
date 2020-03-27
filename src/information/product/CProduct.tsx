@@ -82,8 +82,15 @@ export class CProduct extends CUqBase {
                 product.createTime = Date.now();
                 product.isTrue = 1;
                 product.inquiryContact = undefined;
+                let len = CAS.length;
+                let newCAS = CAS;
+                if (len > 4 && len <= 15) {
+                    newCAS = CAS.trim();
+                    newCAS = CAS.slice(0, len - 3) + '-' + CAS.slice(len - 3, len - 1) + '-' + CAS.slice(len - 1, len);
+                }
+
                 let result = await this.uqs.rms.Product.save(undefined, product);
-                await this.uqs.rms.RsProductChemical.add({ product: result.id, arr1: [{ chemical: id, CAS: CAS, molecularFomula: molecularFomula, molecularWeight: molecularWeight, purity: product.purity }] });
+                await this.uqs.rms.RsProductChemical.add({ product: result.id, arr1: [{ chemical: id, CAS: newCAS, molecularFomula: molecularFomula, molecularWeight: molecularWeight, purity: product.purity }] });
             }
         }
         this.closePage();

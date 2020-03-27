@@ -115,7 +115,8 @@ TUID InquiryPackage(
     main quantity int,                           --数量
     main radiox dec(12,2),                       --套
     main radioy dec(12,4),                       --包装规格
-    main unit ID PackType,                         --单位
+    main unit ID PackType,                       --单位
+    main purity char(80),                        --询价纯度   
     search(supplier, product),  
 );
 
@@ -167,13 +168,15 @@ SHEET InquirySheet ver 0.4 (
         inquiryQuantity int,                --询价数量
         inquiryRadiox dec(12,2),            --询价套
         inquiryRadioy dec(12,4),            --询价包装规格
-        inquiryUnit ID PackType,              --询价单位  
+        inquiryUnit ID PackType,            --询价单位  
+        inquirypurity char(80),             --询价纯度
         itemuser ID [$user],                --创建人
         itemcreateDate datetime,            --创建时间
         quantity int,                       --反馈数量
         radiox dec(12,2),                   --反馈套
         radioy dec(12,4),                   --反馈包装规格
         unit ID PackType,                      --反馈单位
+        purity char(80),                    --反馈纯度
         listPrice dec(12,2),                --目录单价
         price dec(12,2),                    --结算单价
         currency ID Currency,               --结算币种
@@ -259,6 +262,7 @@ MAP PackPrice ver 2.0 (
     invoiceType ID InvoiceType,         --发票类型
     vatRate ID VatRate,                 --增值税率
     tariffRate dec(12,4),               --关税税率
+    remark text,                        --报价备注
 );
 
 --增值税率

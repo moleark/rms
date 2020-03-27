@@ -26,7 +26,7 @@ export class VVatRate extends VPage<CVatRate> {
             >
                 <span className="ml-1 align-middle">
                     <FA name="chevron-right" className="text-info small" />
-                    &nbsp; {description}
+                    &nbsp; {description * 100}%
                 </span>
             </div>
         </div>;

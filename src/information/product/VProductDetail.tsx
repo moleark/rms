@@ -82,7 +82,7 @@ export class VProductDetail extends VPage<CProduct> {
     private renderPackage = (item: any, index: number) => {
         let { showEditPackage, showPackageDetail } = this.controller.cApp.cPackage;
         let { id, radiox, radioy, unit, type, price, currency, validUpto, minArriveDate, maxArriveDate } = item;
-        let { name } = unit.obj;
+        let name = unit === undefined ? undefined : unit.obj.name;
         let { inquiryContact } = this.product;
         let radio = (radiox !== 1) ? <>{radiox} * {radioy}{name}</> : <>{radioy}{name}</>;
         let valid = (validUpto < Date.now()) ? <span className="text-danger"><EasyDate date={validUpto} /></span> : <span><EasyDate date={validUpto} /></span>;

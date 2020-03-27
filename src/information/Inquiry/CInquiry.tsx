@@ -98,16 +98,18 @@ export class VProductView extends View<CInquiry> {
 export function groupByPack(packItems: any[]) {
     let result: any[] = [];
     for (let packItem of packItems) {
-        let { product, inquiryQuantity, inquiryRadiox, inquiryRadioy, inquiryUnit, itemuser, itemcreateDate, quantity, radiox, radioy, unit, listPrice, price
+        let { product, inquiryQuantity, inquiryRadiox, inquiryRadioy, inquiryUnit, inquirypurity, itemuser, itemcreateDate, quantity, radiox, radioy, unit, purity, listPrice, price
             , currency, isTaxIn, isTransFeeIn, transFee, transFeecurrency, packingFee, packingcurrency, otherFee, otherFeecurrency, customizeUpto, validUpto
             , minArriveDate, maxArriveDate, invoiceType, vatRate, tariffRate, packType, inquiryRemarks, coaFilePath, msdsFilePath, quotationFilePath } = packItem;
         let packRow: any = {
             inquiryQuantity: inquiryQuantity,
             pack: (inquiryRadiox !== 1) ? <>{inquiryRadiox} * {inquiryRadioy}</> : <>{inquiryRadioy}</>,
             inquiryUnit: inquiryUnit,
+            inquirypurity: inquirypurity,
             quantity: quantity,
             radio: (radiox !== 1) ? <>{radiox} * {radioy}</> : <>{radioy}</>,
             unit: unit,
+            purity: purity,
             itemuser: itemuser,
             itemcreateDate: itemcreateDate,
             listPrice: listPrice,

@@ -51,3 +51,10 @@ export function salutationValidation(value: string) {
 export function nameValidation(value: string) {
     return (value && value.length > 50) ? "姓名最多50个字！" : undefined;
 }
+
+export function tariffRateValidation(value: string) {
+    if (value && !/^\d+(\.\d{1,4})$/.test(value))
+        return "关税最多小数点后4位，请重新输入！";
+    else
+        return undefined;
+}

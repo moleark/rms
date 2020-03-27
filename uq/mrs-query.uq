@@ -141,7 +141,8 @@ PAGE (
     where   ((pickType='供应商' and s.name  like key2 ) 
             or (pickType='CAS' and p.CAS  like key2 )
             or (pickType='中英文名称' and (w.description like key2 or w.descriptionC like key2) )
-            or (pickType is null and ( w.description like key2 or w.descriptionC like key2 or p.CAS like key2  or w.no like key2)))
+            or (pickType='供应商自编号' and (w.origin like key2) )
+            or (pickType is null and ( w.description like key2 or w.descriptionC like key2 or p.CAS like key2  or w.origin like key2)))
             and w.id > $pageStart 
             and w.isTrue = 1  
     order by w.id
@@ -200,13 +201,14 @@ returns ret (
     maxArriveDate datetime,             --最长到货期
     invoiceType ID InvoiceType,         --发票类型
     vatRate dec(12,3),                  --增值税率
-    tariffRate dec(12,4)                --关税税率
+    tariffRate dec(12,4),               --关税税率
+    remark text                         --报价备注
 ) {
     into ret select pp.id,p.id as product, pp.radiox, pp.radioy,pp.unit,pp.type
                     ,pr.listPrice,pr.price,pr.currency,pr.isTaxIn,pr.isTransFeeIn,pr.transFee
                     ,pr.transFeecurrency,pr.packingFee,pr.packingcurrency,pr.otherFee
                     ,pr.otherFeecurrency,pr.customizeUpto,pr.validUpto,pr.minArriveDate
-                    ,pr.maxArriveDate,pr.invoiceType,v.description as vatRate,pr.tariffRate
+                    ,pr.maxArriveDate,pr.invoiceType,v.description as vatRate,pr.tariffRate,pr.remark
     from    Product as p 
             join Product.Pack as pp on p.id = pp.owner
             left join PackPrice as pr on pp.id=pr.pack and p.id=pr.product
@@ -276,6 +278,7 @@ QUERY SearchInquiryPendingBySupplier ver 2.0(_id ID)
 returns ret (
     id bigint,
     inquiryPackage ID InquiryPackage,
+    inquiryPending ID,
     user id [$user],
     createDate datetime,
     supplier ID Supplier not null,          --供应商编号
@@ -291,7 +294,7 @@ returns ret (
     inquiryRemarks char(1000)
 ) {
 
-    into ret select p.id,i.inquiryPackage, i.user,i.createDate,p.supplier,k.product,k.quantity,k.radiox,k.radioy,k.unit, p.date,c.CAS,c.purity,i.jsonStr,i.remarks as inquiryRemarks
+    into ret select p.id,i.inquiryPackage,i.inquiryPending, i.user,i.createDate,p.supplier,k.product,k.quantity,k.radiox,k.radioy,k.unit, p.date,c.CAS,k.purity,i.jsonStr,i.remarks as inquiryRemarks
     from    InquiryPending as p
             join Supplier as s on p.supplier=s.id
             join InquiryPendingItem as i on p.id=i.inquiryPending
@@ -310,6 +313,7 @@ ACTION AddInquiryPending(
     radiox dec(12,2),                       --套
     radioy dec(12,4),                       --包装规格
     unit ID PackType,                          --单位
+    purity char(80),                        --询价纯度 
     remarks char(1000)                      --备注
 ){
     var pid ID;
@@ -322,7 +326,7 @@ ACTION AddInquiryPending(
     --新建询价产品包装
     var packid ID;
     TUID InquiryPackage into packid set
-        supplier=supplier,product=product,quantity=quantity,radiox=radiox,radioy=radioy,unit=unit;  
+        supplier=supplier,product=product,quantity=quantity,radiox=radiox,radioy=radioy,unit=unit,purity=purity;  
 
     if(pid is null){
         PENDING InquiryPending +(supplier:supplier,status:0,contact:null,contactName:null,contactSalutation:null,contactDepartmentName:null,contactTelephone:null,contactMobile:null,contactEmail:null,contactfax:null,way:null,inquiryUser:null,inquiryDate:null) to pid;
@@ -424,7 +428,7 @@ ACTION AddPackagePrice ver 1.0(
     quantity int,                       --数量
     radiox dec(12,2),                   --套
     radioy dec(12,4),                   --包装规格
-    unit ID PackType,                      --单位
+    unit ID PackType,                   --单位
     listPrice dec(12,2),                --目录单价
     price dec(12,2),                    --结算单价
     currency ID Currency,               --结算币种
@@ -469,7 +473,7 @@ ACTION AddPackagePrice ver 1.0(
     BOOK PackPrice at (Product, packid) set listPrice=listPrice, price = price,currency=currency,
         isTaxIn = isTaxIn, isTransFeeIn = isTransFeeIn, transFee = transFee, transFeecurrency = transFeecurrency,packingFee=packingFee,packingcurrency=packingcurrency,
         otherFee = otherFee,otherFeecurrency=otherFeecurrency,customizeUpto=customizeUpto,validUpto=validUpto,minArriveDate=minArriveDate,maxArriveDate=maxArriveDate,
-        invoiceType=invoiceType,vatRate=vatRate,tariffRate=tariffRate;
+        invoiceType=invoiceType,vatRate=vatRate,tariffRate=tariffRate,remark=remarks;
 };
 
 --新建包装
@@ -497,7 +501,9 @@ ACTION AddPackage ver 3.0(
     invoiceType ID InvoiceType,         --发票类型
     vatRate ID VatRate,                 --增值税率
     tariffRate dec(12,4),               --关税税率
-    type smallint                       --包装类型，分为两种：1.目录包装，2.非目录包装
+    type smallint,                      --包装类型，分为两种：1.目录包装，2.非目录包装
+    purity char(80),                    --报价纯度
+    remark text                         --报价备注
 ){
     VAR packid ID;
     if(packid is null){
@@ -509,13 +515,20 @@ ACTION AddPackage ver 3.0(
     BOOK PackPrice at (Product, packid) set listPrice=listPrice, price = price,currency=currency,
         isTaxIn = isTaxIn, isTransFeeIn = isTransFeeIn, transFee = transFee, transFeecurrency = transFeecurrency,packingFee=packingFee,packingcurrency=packingcurrency,
         otherFee = otherFee,otherFeecurrency=otherFeecurrency,customizeUpto=customizeUpto,validUpto=validUpto,minArriveDate=minArriveDate,maxArriveDate=maxArriveDate,
-        invoiceType=invoiceType,vatRate=vatRate,tariffRate=tariffRate;
+        invoiceType=invoiceType,vatRate=vatRate,tariffRate=tariffRate,remark=remark;
 
     VAR supplierid ID;
     set supplierid=p.supplier
     from  Product as p 
     where p.id=product
-    limit 1;   
+    limit 1; 
+
+    var ppurity char(80);
+    set ppurity=p.purity
+    from  RsProductChemical as p 
+    where p.product=product
+    limit 1;
+
     
     var contact ID;        --供应商默认联系人
     var contactName char(50);             --供应商联系人姓名
@@ -551,7 +564,8 @@ ACTION AddPackage ver 3.0(
             , transFee=transFee, transFeecurrency=transFeecurrency, packingFee=packingFee, packingcurrency=packingcurrency
             , otherFee=otherFee, otherFeecurrency=otherFeecurrency, customizeUpto=customizeUpto, validUpto=validUpto
             , minArriveDate=minArriveDate, maxArriveDate=maxArriveDate, invoiceType=invoiceType, vatRate=vatRate, tariffRate=tariffRate
-            , packType=type, coaFilePath=null, msdsFilePath=null, quotationFilePath=null, inquiryRemarks='手动添加',remarks=null,result=1;
+            , packType=type, coaFilePath=null, msdsFilePath=null, quotationFilePath=null, inquiryRemarks=remark,remarks='手动添加',result=1
+            , inquirypurity=ppurity,purity=purity;
 };
 
 --查询有效增值税率  

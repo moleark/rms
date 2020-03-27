@@ -28,7 +28,7 @@ export class VNewPendingInquiryDetail extends VPage<CNewPendingInquiry> {
 
         let { id, inquiryPackage, user, createDate, product, quantity, radiox, radioy, unit, CAS, purity, inquiryRemarks } = item;
         let { brand, description, descriptionC } = product.obj;
-        let { name } = unit.obj;
+        let name = unit === undefined ? undefined : unit.obj.name;
         let radio = (radiox !== 1) ? <>{radiox} * {radioy}{name}</> : <>{radioy}{name}</>;
         let brandname = brand === undefined ? undefined : brand.obj.name;
 
@@ -37,9 +37,11 @@ export class VNewPendingInquiryDetail extends VPage<CNewPendingInquiry> {
                 <span onClick={() => this.onDelInquiryPackage(id, inquiryPackage)}><FA className="align-middle p-2 cursor-pointer text-danger" name="trash" /></span>
             </div>;
         return <LMR right={right} className="p-1 d-flex cursor-pointer">
-            <div><FA name="caret-right" className="px-2 text-primary"></FA>{CAS}&nbsp;&nbsp;{quantity} * {radio}</div>
-            <div className="px-4 text-muted">{description}</div>
-            <div className="px-4 text-muted"><span className="text-muted small">{inquiryRemarks}</span></div>
+            <div onClick={() => this.controller.onNewPendingInquiry(item)}>
+                <div><FA name="caret-right" className="px-2 text-primary"></FA>{CAS}&nbsp;&nbsp;{quantity} * {radio}&nbsp;&nbsp;{purity}</div>
+                <div className="px-4 text-muted">{description}</div>
+                <div className="px-4 text-muted"><span className="text-muted small">{inquiryRemarks}</span></div>
+            </div>
         </LMR>;
     }
 

@@ -17,8 +17,8 @@ export class VPackageDetail extends VPage<CPackage> {
         let { radiox, radioy, unit, type, listPrice, price, currency, isTaxIn, isTransFeeIn, transFee
             , transFeecurrency, packingFee, packingcurrency, otherFee
             , otherFeecurrency, customizeUpto, validUpto, minArriveDate
-            , maxArriveDate, invoiceType, vatRate, tariffRate } = packageData;
-        let { name } = unit.obj;
+            , maxArriveDate, invoiceType, vatRate, tariffRate, remark } = packageData;
+        let name = unit === undefined ? undefined : unit.obj.name;
         let radio = (radiox !== 1) ? <>{radiox} * {radioy}{name}</> : <>{radioy}{name}</>;
 
         let header = <header>
@@ -101,6 +101,11 @@ export class VPackageDetail extends VPage<CPackage> {
                 <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
                     <div>关税税率:</div>
                     <div className="flex-fill d-flex justify-content-end">{tariffRate}</div>
+                </div>
+                <div className="border-top edit-sep-light-gray"></div>
+                <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
+                    <div>报价备注:</div>
+                    <div className="flex-fill d-flex justify-content-end">{remark}</div>
                 </div>
             </div>
         </Page >

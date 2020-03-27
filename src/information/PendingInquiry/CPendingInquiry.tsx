@@ -80,7 +80,7 @@ export class CPendingInquiry extends CUqBase {
                 , packingcurrency: pack.packingcurrency, otherFee: pack.otherFee, otherFeecurrency: pack.otherFeecurrency, customizeUpto: pack.customizeUpto, validUpto: pack.validUpto
                 , minArriveDate: pack.minArriveDate, maxArriveDate: pack.maxArriveDate, invoiceType: pack.invoiceType, vatRate: pack.vatRate, tariffRate: pack.tariffRate
                 , packType: pack.packType, coaFilePath: pack.coaFilePath, msdsFilePath: pack.msdsFilePath, quotationFilePath: pack.quotationFilePath
-                , inquiryRemarks: pack.remarks, remarks: pk.inquiryRemarks, result: pack.result
+                , inquiryRemarks: pack.remarks, remarks: pk.inquiryRemarks, result: pack.result, inquirypurity: pk.purity, purity: pack.pack
             })
         });
         return {
@@ -159,7 +159,7 @@ export class CPendingInquiry extends CUqBase {
                 remarks: rremarks,
                 coaFilePath: coaFilePath,
                 msdsFilePath: msdsFilePath,
-                quotationFilePath: quotationFilePath,
+                quotationFilePath: quotationFilePath
             };
             await this.uqs.rms.AddPackagePrice.submit(param);
         }
