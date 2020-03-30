@@ -27,18 +27,18 @@ export class VNewPendingInquiryDetail extends VPage<CNewPendingInquiry> {
     private renderPackage = (item: any, index: number) => {
 
         let { id, inquiryPackage, user, createDate, product, quantity, radiox, radioy, unit, CAS, purity, inquiryRemarks } = item;
-        let { brand, description, descriptionC } = product.obj;
+        let { brand, description, descriptionC, origin } = product.obj;
         let name = unit === undefined ? undefined : unit.obj.name;
         let radio = (radiox !== 1) ? <>{radiox} * {radioy}{name}</> : <>{radioy}{name}</>;
         let brandname = brand === undefined ? undefined : brand.obj.name;
 
         let right =
             <div className="px-2 text-muted text-right">
-                <span onClick={() => this.onDelInquiryPackage(id, inquiryPackage)}><FA className="align-middle p-2 cursor-pointer text-danger" name="trash" /></span>
+                <span onClick={() => this.onDelInquiryPackage(item, inquiryPackage)}><FA className="align-middle p-2 cursor-pointer text-danger" name="trash" /></span>
             </div>;
         return <LMR right={right} className="p-1 d-flex cursor-pointer">
-            <div onClick={() => this.controller.onNewPendingInquiry(item)}>
-                <div><FA name="caret-right" className="px-2 text-primary"></FA>{CAS}&nbsp;&nbsp;{quantity} * {radio}&nbsp;&nbsp;{purity}</div>
+            <div onClick={() => this.controller.onEditPendingInquiry(item, inquiryPackage)}>
+                <div><FA name="caret-right" className="px-2 text-primary"></FA>{origin} {CAS}&nbsp;&nbsp;{quantity} * {radio}&nbsp;&nbsp;{purity}</div>
                 <div className="px-4 text-muted">{description}</div>
                 <div className="px-4 text-muted"><span className="text-muted small">{inquiryRemarks}</span></div>
             </div>
@@ -49,6 +49,13 @@ export class VNewPendingInquiryDetail extends VPage<CNewPendingInquiry> {
 
         let { supplier, user, date } = suppplierData;
         let { id } = user;
+        let { inquiryContact, defaultContact } = supplier.obj;
+        let cont = inquiryContact === undefined ? undefined : defaultContact;
+        let contactName = cont === undefined ? undefined : cont.obj.name;
+        let contactTelephone = cont === undefined ? undefined : cont.obj.telephone;
+        let contactMobile = cont === undefined ? undefined : cont.obj.mobile;
+        let contactEmail = cont === undefined ? undefined : cont.obj.email;
+
 
         return <div className="bg-white py-2">
             <div className="row no-gutters px-3 my-1">
@@ -56,6 +63,9 @@ export class VNewPendingInquiryDetail extends VPage<CNewPendingInquiry> {
             </div>
             <div className="row no-gutters px-3 my-1">
                 <div className="col-3">创建人:</div><div className="col-9 text-muted">{id}&nbsp;<EasyDate date={date} /></div>
+            </div>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">联系人:</div><div className="col-9"><span>{contactName}&nbsp;{contactTelephone} {contactMobile} {contactEmail}</span></div>
             </div>
         </div>;
     }
@@ -81,12 +91,13 @@ export class VNewPendingInquiryDetail extends VPage<CNewPendingInquiry> {
         };
     }
 
-    private onDelInquiryPackage = async (id: number, pack: any) => {
+    private onDelInquiryPackage = async (item: any, pack: any) => {
         if (await this.vCall(VConfirmDeleteInquiryPackage, pack) === true) {
             let { id: packid } = pack;
+            let { id } = item;
             await this.controller.deletePendingInquiryPackage(id, packid);
-            await this.controller.loadList();
             this.closePage();
+            await this.controller.onShowNewPendingInquiryDetail(item);
         };
     }
 

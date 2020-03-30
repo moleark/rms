@@ -84,9 +84,6 @@ export class VNewPendingInquiry extends VPage<CNewPendingInquiry> {
 
     private page = () => {
         let descriptionData = _.clone(this.pendingInquiryData);
-
-        let footer: any;
-
         return <Page header="待询出" headerClassName="py-1 bg-primary">
             {this.showProductlData()}
             <div className="App-container container text-left">

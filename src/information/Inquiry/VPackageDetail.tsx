@@ -100,7 +100,7 @@ export class VPackageDetail extends VPage<CInquiry> {
                 <div className="border-top edit-sep-light-gray"></div>
                 <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
                     <div>发票类型:</div>
-                    <div className="flex-fill d-flex justify-content-end">{invoiceType === undefined ? "" : (invoiceType === 1 ? "增值税专用发票" : (invoiceType === 2 ? "增值税普通发票" : "形式发票"))}</div>
+                    <div className="flex-fill d-flex justify-content-end">{invoiceType === undefined ? "" : (invoiceType === 1 ? "增值税专用发票" : (invoiceType === 2 ? "增值税普通发票" : (invoiceType === 3 ? "形式发票" : "无发票")))}</div>
                 </div>
                 <div className="border-top edit-sep-light-gray"></div>
                 <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">

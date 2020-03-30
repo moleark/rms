@@ -48,10 +48,18 @@ export class CNewPendingInquiry extends CUqBase {
     */
     onNewPendingInquiry = async (model: any) => {
         this.product = model;
+        this.openVPage(VNewPendingInquiry, undefined);
+    }
+
+    /**
+    * 打开修改界面
+    */
+    onEditPendingInquiry = async (model: any, inquiryPackage: any) => {
+        this.product = model;
         if (model !== undefined) {
-            model.remarks = model.inquiryRemarks;
+            inquiryPackage.obj.remarks = model.inquiryRemarks;
         }
-        this.openVPage(VNewPendingInquiry, model);
+        this.openVPage(VNewPendingInquiry, inquiryPackage.obj);
     }
 
     onPendingInquiry = async (model: any) => {
@@ -64,7 +72,7 @@ export class CNewPendingInquiry extends CUqBase {
 
     saveNewPendingInquiryData = async (model: any) => {
         if (this.product) {
-            let { id, supplier, inquiryPending, user, createDate, jsonStr } = this.product;
+            let { id, supplier } = this.product;
             let { id: supplierid } = supplier;
             let { quantity, radiox, radioy, unit, remarks, purity } = model;
             let param = {
@@ -79,15 +87,18 @@ export class CNewPendingInquiry extends CUqBase {
             };
             if (model.id === undefined) {
                 await this.uqs.rms.AddInquiryPending.submit(param);
+                this.closePage();
+                await this.loadList();
             } else {
-                model.supplier = supplierid;
-                model.product = id;
+                let { supplier, inquiryPending, user, createDate, jsonStr, product } = this.product;
+                model.supplier = supplier.id;
+                model.product = product.obj.id;
                 await this.uqs.rms.InquiryPackage.save(model.id, model);
                 await this.uqs.rms.InquiryPendingItem.add({ inquiryPending: inquiryPending, arr1: [{ inquiryPackage: model.id, user: user, createDate: createDate, remarks: remarks, jsonStr: jsonStr }] });
+                this.closePage();
+                await this.onShowNewPendingInquiryDetail(this.product);
             }
         }
-        this.closePage();
-        await this.loadList();
     }
 
     deletePendingInquiryData = async (item: any) => {
@@ -115,7 +126,7 @@ export class CNewPendingInquiry extends CUqBase {
             way: model.way,
         };
         await this.uqs.rms.UpdateInquiryPending.submit(param);
-        this.closePage();
+        this.closePage(2);
         await this.loadList();
     }
 

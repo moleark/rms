@@ -38,8 +38,8 @@ export class VPackage extends VPage<CPackage> {
         { name: 'otherFeecurrency', type: 'id', required: false },
         { name: 'customizeUpto', type: 'date', required: false },
         { name: 'validUpto', type: 'date', required: true },
-        { name: 'minArriveDate', type: 'date', required: true },
-        { name: 'maxArriveDate', type: 'date', required: true },
+        { name: 'minArriveDate', type: 'date', required: false },
+        { name: 'maxArriveDate', type: 'date', required: false },
         { name: 'invoiceType', type: 'number', required: true },
         { name: 'remark', type: 'string', required: false },
         { name: 'submit', type: 'submit' }
@@ -124,7 +124,7 @@ export class VPackage extends VPage<CPackage> {
             validUpto: { widget: 'date', label: '报价有效期', placeholder: '必填' } as UiInputItem,
             minArriveDate: { widget: 'date', label: '最短到货期', placeholder: '必填' } as UiInputItem,
             maxArriveDate: { widget: 'date', label: '最长到货期', placeholder: '必填' } as UiInputItem,
-            invoiceType: { widget: 'radio', label: '发票类型', list: [{ value: "1", title: '增值税专用发票' }, { value: "2", title: '增值税普通发票' }, { value: "3", title: '形式发票' }] } as UiRadio,
+            invoiceType: { widget: 'radio', label: '发票类型', list: [{ value: "1", title: '增值税专用发票' }, { value: "2", title: '增值税普通发票' }, { value: "3", title: '形式发票' }, { value: "4", title: '无发票' }] } as UiRadio,
             remark: { widget: 'textarea', label: '报价备注', placeholder: '报价备注', rows: 2 } as UiInputItem,
             submit: { widget: 'button', label: '提交', className: "btn btn-primary mr-3 px-6" }
         }

@@ -123,7 +123,7 @@ export class VPendingInquiryResult extends VPage<CPendingInquiry> {
             validUpto: { widget: 'date', label: '报价有效期', placeholder: '必填' } as UiInputItem,
             minArriveDate: { widget: 'date', label: '最短到货期', placeholder: '必填' } as UiInputItem,
             maxArriveDate: { widget: 'date', label: '最长到货期', placeholder: '必填' } as UiInputItem,
-            invoiceType: { widget: 'radio', label: '发票类型', list: [{ value: "1", title: '增值税专用发票' }, { value: "2", title: '增值税普通发票' }, { value: "3", title: '形式发票' }] } as UiRadio,
+            invoiceType: { widget: 'radio', label: '发票类型', list: [{ value: "1", title: '增值税专用发票' }, { value: "2", title: '增值税普通发票' }, { value: "3", title: '形式发票' }, { value: "4", title: '无发票' }] } as UiRadio,
             packType: { widget: 'radio', label: '包装类型', list: [{ value: "1", title: '目录包装' }, { value: "2", title: '非目录包装' }] } as UiRadio,
             remarks: { widget: 'text', label: '备注', row: 10, placeholder: '备注' } as UiInputItem,
             coaFilePath: { widget: 'text', label: 'COA文件路径', placeholder: 'COA文件路径' } as UiInputItem,
