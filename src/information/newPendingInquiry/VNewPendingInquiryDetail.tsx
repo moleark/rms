@@ -50,7 +50,7 @@ export class VNewPendingInquiryDetail extends VPage<CNewPendingInquiry> {
         let { supplier, user, date } = suppplierData;
         let { id } = user;
         let { inquiryContact, defaultContact } = supplier.obj;
-        let cont = inquiryContact === undefined ? undefined : defaultContact;
+        let cont = inquiryContact === undefined ? defaultContact : inquiryContact;
         let contactName = cont === undefined ? undefined : cont.obj.name;
         let contactTelephone = cont === undefined ? undefined : cont.obj.telephone;
         let contactMobile = cont === undefined ? undefined : cont.obj.mobile;

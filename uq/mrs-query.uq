@@ -128,13 +128,14 @@ PAGE (
     purity char(80),
     molecularFomula char(200),
     molecularWeight char(30),
+    chinaHSCode char(50),
     inquiryContact ID SupplierContact --询价联系人
 ) {
     var key2 char(102);
     set key2 = concat('%', key, '%');
 
     PAGE select w.id, w.no, w.supplier,w.brand,w.origin,w.description,w.descriptionC,w.createTime,p.chemical,p.CAS,p.purity,p.molecularFomula,p.molecularWeight
-    ,case when s.inquiryContact is null then s.defaultContact else s.inquiryContact end as inquiryContact
+    , w.chinaHSCode,case when s.inquiryContact is null then s.defaultContact else s.inquiryContact end as inquiryContact
     from    Product as w
             left join RsProductChemical as p on w.id=p.product
             left join Supplier as s on w.supplier=s.id
@@ -164,10 +165,11 @@ returns ret (
     CAS char(20),
     purity char(80),
     molecularFomula char(200),
-    molecularWeight char(30)
+    molecularWeight char(30),
+    chinaHSCode char(50)
 ) {
 
-    into ret select  w.id, w.no, w.supplier,w.brand,w.origin,w.description,w.descriptionC,w.createTime,p.chemical,p.CAS,p.purity,p.molecularFomula,p.molecularWeight
+    into ret select  w.id, w.no, w.supplier,w.brand,w.origin,w.description,w.descriptionC,w.createTime,p.chemical,p.CAS,p.purity,p.molecularFomula,p.molecularWeight,w.chinaHSCode
     from    Product as w
             left join RsProductChemical as p on w.id=p.product
     where   w.id=_id
@@ -274,6 +276,34 @@ PAGE (
 };
 
 --查询待询价包装   
+QUERY SearchInquiryPendingByID ver 1.0(_id ID)
+returns ret (
+    id bigint,
+    user id [$user],
+    date datetime,
+    supplier ID Supplier,          --供应商编号
+    status smallint default 0,              --询价状态（0 未询出 1 已询出）
+    contact ID SupplierContact,        --供应商默认联系人
+    contactName char(50) null,              --供应商联系人姓名
+    contactSalutation char(10),
+    contactDepartmentName char(100),
+    contactTelephone char(50),
+    contactMobile char(50),
+    contactEmail char(50),
+    contactfax char(20),
+    way smallint null,                      --询价方式：2：电话询价；3：传真询价；1：Email询价
+    inquiryUser ID [$user],                 --询价人
+    inquiryDate datetime                    --询出时间
+) {
+
+    into ret select p.id,p.user,p.date, p.supplier,p.status,p.contact,p.contactName,p.contactSalutation,p.contactDepartmentName,p.contactTelephone,p.contactMobile, p.contactEmail,p.contactfax,p.way,p.inquiryUser,p.inquiryDate
+    from    InquiryPending as p
+    where   p.id=_id
+    order by p.id;
+};
+
+
+--查询待询价包装   
 QUERY SearchInquiryPendingBySupplier ver 2.0(_id ID)
 returns ret (
     id bigint,
@@ -378,13 +408,13 @@ ACTION UpdateInquiryPending(
     var contactEmail char(60);
     var contactfax char(60);
     set contact=case when c.id is null then c1.id else c.id end,
-        contactName=c.name,
-        contactSalutation=c.salutation,
-        contactDepartmentName=c.departmentName,
-        contactTelephone=c.telephone,
-        contactMobile=c.mobile,
-        contactEmail=c.email,
-        contactfax=c.fax
+        contactName=case when c.id is null then c1.name else c.name end,
+        contactSalutation=case when c.id is null then c1.salutation else c.salutation end,
+        contactDepartmentName=case when c.id is null then c1.departmentName else c.departmentName end,
+        contactTelephone=case when c.id is null then c1.telephone else c.telephone end,
+        contactMobile=case when c.id is null then c1.mobile else c.mobile end,
+        contactEmail=case when c.id is null then c1.email else c.email end,
+        contactfax=case when c.id is null then c1.fax else c.fax end
     from  Supplier as s
           left join SupplierContact as c on s.inquiryContact = c.id
           left join SupplierContact as c1 on s.defaultContact = c1.id
@@ -539,13 +569,13 @@ ACTION AddPackage ver 3.0(
     var contactEmail char(60);
     var contactfax char(60);
     set contact=case when c.id is null then c1.id else c.id end,
-        contactName=c.name,
-        contactSalutation=c.salutation,
-        contactDepartmentName=c.departmentName,
-        contactTelephone=c.telephone,
-        contactMobile=c.mobile,
-        contactEmail=c.email,
-        contactfax=c.fax
+        contactName=case when c.id is null then c1.name else c.name end,
+        contactSalutation=case when c.id is null then c1.salutation else c.salutation end,
+        contactDepartmentName=case when c.id is null then c1.departmentName else c.departmentName end,
+        contactTelephone=case when c.id is null then c1.telephone else c.telephone end,
+        contactMobile=case when c.id is null then c1.mobile else c.mobile end,
+        contactEmail=case when c.id is null then c1.email else c.email end,
+        contactfax=case when c.id is null then c1.fax else c.fax end
     from  Supplier as s
           left join SupplierContact as c on s.inquiryContact = c.id
           left join SupplierContact as c1 on s.defaultContact = c1.id
@@ -565,7 +595,7 @@ ACTION AddPackage ver 3.0(
             , otherFee=otherFee, otherFeecurrency=otherFeecurrency, customizeUpto=customizeUpto, validUpto=validUpto
             , minArriveDate=minArriveDate, maxArriveDate=maxArriveDate, invoiceType=invoiceType, vatRate=vatRate, tariffRate=tariffRate
             , packType=type, coaFilePath=null, msdsFilePath=null, quotationFilePath=null, inquiryRemarks=remark,remarks='手动添加',result=1
-            , inquirypurity=ppurity,purity=purity;
+            , inquirypurity=ppurity,purity=purity,notProvidedReason=null,isUsed=1;
 };
 
 --查询有效增值税率  

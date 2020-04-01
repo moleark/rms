@@ -80,6 +80,7 @@ TUID Product(
     main origin char(50),                        --供应商自编号
     main description char(1000) null,            --产品英文名称
     main descriptionC char(1000) null,           --产品中文名称
+    main chinaHSCode char(50),                   --中国海关税则编码
     arr Pack (
         owner,
         id,
@@ -151,6 +152,13 @@ Map InquiryPendingItem (
     jsonStr char(1000)                      --询价结果json串
 );
 
+--询价结果中提供不了的原因
+TUID NotProvidedReason(
+    id,
+    main description char(100),
+    main isValid smallint not null default 1,    --是否有效（0 无效、1 有效）
+);
+
 --询价单（询价需求+询价结果）
 SHEET InquirySheet ver 0.4 (
     supplier ID Supplier,                   --供应商编号
@@ -201,7 +209,9 @@ SHEET InquirySheet ver 0.4 (
         quotationFilePath char(1000),       --供应商提供的报价单的上传路径
         remarks char(1000),                 --备注：资源部新建的询价单需要国际部完成询价时，填写的询价要求
         inquiryRemarks char(1000),          --报价备注
-        result smallint,                    --询价结果（1: 正常询价有结果; 2: 供应商无回复; 3: 供应商有回复,但无价格; 4: 未在询价单中的结果）
+        result smallint,                    --询价结果（0:不可供；1：可供）
+        notProvidedReason ID NotProvidedReason, --不可供原因
+        isUsed smallint                     --价格是否同步到包装上（0：不使用 1：使用）
     ),
     way smallint not null,                  --询价方式：2：电话询价；3：传真询价；1：Email询价
     user ID [$user],                        --创建人
@@ -209,7 +219,7 @@ SHEET InquirySheet ver 0.4 (
     inquiryUser ID [$user],                 --询价人
     inquiryDate datetime                    --询出时间
 )
-Action submit{
+Action{
         history InquiryHistory
             set supplier = supplier, contact = contact, contactName = contactName, contactSalutation = contactSalutation, contactDepartmentName = contactDepartmentName
             , contactTelephone = contactTelephone, contactMobile = contactMobile,contactEmail = contactEmail, contactfax = contactfax

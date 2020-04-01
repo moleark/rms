@@ -112,7 +112,7 @@ export class VProductDetail extends VPage<CProduct> {
 
     private rowTop = (productData: any) => {
 
-        let { no, supplier, brand, origin, description, descriptionC, createTime, chemical, CAS, purity, molecularFomula, molecularWeight, inquiryContact } = this.product;
+        let { no, supplier, brand, origin, description, descriptionC, createTime, chemical, CAS, purity, molecularFomula, molecularWeight, inquiryContact, chinaHSCode } = this.product;
         let { name: suppliername, no: supplierno, id } = supplier.obj;
         let brandno = brand === undefined ? undefined : brand.obj.name;
 
@@ -141,6 +141,10 @@ export class VProductDetail extends VPage<CProduct> {
             {molecularWeight === undefined ? "" :
                 <><div className="row no-gutters px-3 my-1">
                     <div className="col-4">分子量</div><div className="col-8 text-muted text-right">{molecularWeight}</div>
+                </div></>}
+            {chinaHSCode === undefined ? "" :
+                <><div className="row no-gutters px-3 my-1">
+                    <div className="col-4">中国海关编码</div><div className="col-8 text-muted text-right">{chinaHSCode}</div>
                 </div></>}
             <div className="row no-gutters px-3 my-1" onClick={() => this.controller.showProductPropertyDetail(this.product)}>
                 <div className="col-4">产品性质</div><div className="col-8 text-muted text-right"><b>></b></div>

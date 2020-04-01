@@ -12,6 +12,7 @@ const schema: Schema = [
     { name: 'description', type: 'string', required: true },
     { name: 'descriptionC', type: 'string', required: false },
     { name: 'purity', type: 'string', required: false },
+    { name: 'chinaHSCode', type: 'string', required: false },
     { name: 'submit', type: 'submit' }
 ];
 
@@ -49,6 +50,7 @@ export class VAddProduct extends VPage<CProduct> {
             description: { widget: 'text', label: '英文名称', placeholder: '英文名称', defaultValue: this.controller.chemical.description } as UiInputItem,
             descriptionC: { widget: 'text', label: '中文名称', placeholder: '中文名称', defaultValue: this.controller.chemical.descriptionC } as UiInputItem,
             purity: { widget: 'text', label: '纯度', placeholder: '纯度' } as UiInputItem,
+            chinaHSCode: { widget: 'text', label: '中国海关编码', placeholder: '中国海关编码' } as UiInputItem,
             submit: { widget: 'button', label: '提交', className: "btn btn-primary mr-3 px-6" }
         }
     }

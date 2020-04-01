@@ -1,4 +1,4 @@
-import { Query, Map, Tuid, Action, Sheet, History } from "tonva";
+import { Query, Map, Tuid, Action, Sheet, History, Pending } from "tonva";
 
 export interface UqRMS {
     Supplier: Tuid;
@@ -11,6 +11,7 @@ export interface UqRMS {
     RestrictMark: Tuid;
     InquiryPackage: Tuid;
     ProductProperty: Tuid;
+    NotProvidedReason: Tuid;
     RsProductChemical: Map;
     SupplierBankAccount: Map;
     InquiryPendingItem: Map;
@@ -37,6 +38,7 @@ export interface UqRMS {
     AddPackage: Action;
     SearchVatRate: Query;
     SearchProductProperty: Query;
+    SearchInquiryPendingByID: Query;
 }
 
 export interface UqCommon {

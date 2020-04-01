@@ -29,15 +29,16 @@ export class VPendingInquiryDetail extends VPage<CPendingInquiry> {
 
         let { id, inquiryPackage, user, createDate, product, quantity, radiox, radioy, unit, CAS, purity, inquiryRemarks, jsonStr } = item;
         let { brand, description, descriptionC, origin } = product.obj;
+        let packresult = jsonStr === undefined ? jsonStr : JSON.parse(jsonStr);
         let name = unit === undefined ? undefined : unit.obj.name;
         let radio = (radiox !== 1) ? <>{radiox} * {radioy}{name}</> : <>{radioy}{name}</>;
         let brandname = brand === undefined ? undefined : brand.obj.name;
         let resultclass = jsonStr === undefined ? "px-2 text-warning" : "px-2 text-primary";
-        let right =
+        let right = packresult !== undefined && packresult.result === "1" && packresult.isUsed === "1" ? "" :
             <div className="px-2 text-muted text-right">
                 <span><FA className="align-middle p-2 cursor-pointer text-info" name="edit" /></span>
-            </div>;
-        return <LMR right={right} className="p-1 d-flex cursor-pointer" onClick={() => this.controller.openPendingInquiryResult(item)}>
+            </div >;
+        return <LMR right={right} className="p-1 d-flex cursor-pointer" onClick={() => packresult !== undefined && packresult.result === "1" && packresult.isUsed === "1" ? this.controller.openPackageDetail(item) : this.controller.openPendingInquiryResult(item)}>
             <div><FA name="caret-right" className={resultclass}></FA>{origin}&nbsp;&nbsp;{CAS}&nbsp;&nbsp;{quantity} * {radio}</div>
             <div className="px-4 text-muted">{description}</div>
             <div className="px-4 text-muted"><span className="text-muted small">{inquiryRemarks}</span></div>
