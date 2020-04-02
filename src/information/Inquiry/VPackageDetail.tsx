@@ -15,13 +15,24 @@ export class VPackageDetail extends VPage<CInquiry> {
 
         let { inquiryQuantity, pack, unit, inquirypurity, itemuser, itemcreateDate, quantity, radio, inquiryUnit, listPrice, price, purity
             , currency, isTaxIn, isTransFeeIn, transFee, transFeecurrency, packingFee, packingcurrency, otherFee, otherFeecurrency, customizeUpto, validUpto
-            , minArriveDate, maxArriveDate, invoiceType, vatRate, tariffRate, packType, inquiryRemarks, coaFilePath, msdsFilePath, quotationFilePath } = item;
+            , minArriveDate, maxArriveDate, invoiceType, vatRate, tariffRate, packType, inquiryRemarks, coaFilePath, msdsFilePath, quotationFilePath, notProvidedReason, isUsed, result } = item;
         let name = unit === undefined ? undefined : unit.obj.name;
         let { name: inquiryname } = inquiryUnit.obj;
 
         let header = <>询价包装详情: {inquiryQuantity} * {pack}{inquiryname}  {inquirypurity}</>
         return <Page header={header} headerClassName="py-1 bg-primary">
             <div>
+                <div className="border-top edit-sep-light-gray"></div>
+                <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
+                    <div>询价结果:</div>
+                    <div className="flex-fill d-flex justify-content-end">{result === 1 ? "可供" : (result === 0 ? "不可供" : "")}</div>
+                </div>
+                {result === 1 ? "" : <>
+                    <div className="border-top edit-sep-light-gray"></div>
+                    <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
+                        <div>不可供原因:</div>
+                        <div className="flex-fill d-flex justify-content-end">{notProvidedReason === undefined ? "" : tv(notProvidedReason, v => <>{v.description}</>)}</div>
+                    </div></>}
                 <div className="border-top edit-sep-light-gray"></div>
                 <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
                     <div>报价包装:</div>
@@ -105,7 +116,7 @@ export class VPackageDetail extends VPage<CInquiry> {
                 <div className="border-top edit-sep-light-gray"></div>
                 <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
                     <div>增值税率:</div>
-                    <div className="flex-fill d-flex justify-content-end">{vatRate === undefined ? "" : tv(vatRate, v => <>{v.name}</>)}</div>
+                    <div className="flex-fill d-flex justify-content-end">{vatRate === undefined ? "" : tv(vatRate, v => <>{v.description}</>)}</div>
                 </div>
                 <div className="border-top edit-sep-light-gray"></div>
                 <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
@@ -131,6 +142,11 @@ export class VPackageDetail extends VPage<CInquiry> {
                 <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
                     <div>报价单文件路径:</div>
                     <div className="flex-fill d-flex justify-content-end">{quotationFilePath}</div>
+                </div>
+                <div className="border-top edit-sep-light-gray"></div>
+                <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
+                    <div>价格是否被使用:</div>
+                    <div className="flex-fill d-flex justify-content-end">{isUsed === 1 ? "是" : (isUsed === 0 ? "否" : "")}</div>
                 </div>
             </div>
         </Page>

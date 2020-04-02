@@ -16,7 +16,7 @@ export class VPendingPackageDetail extends VPage<CPendingInquiry> {
         let packageData = _.clone(this.package);
         let { quantity, radiox, radioy, unit, packType, listPrice, price, currency, isTaxIn, isTransFeeIn, transFee
             , transFeecurrency, packingFee, packingcurrency, otherFee
-            , otherFeecurrency, customizeUpto, validUpto, minArriveDate
+            , otherFeecurrency, customizeUpto, validUpto, minArriveDate, result
             , maxArriveDate, invoiceType, vatRate, tariffRate, remarks, notProvidedReason, isUsed, coaFilePath, msdsFilePath, quotationFilePath } = packageData;
         let name = unit === undefined ? undefined : unit.name;
         let radio = (radiox !== 1) ? <>{radiox} * {radioy}{name}</> : <>{radioy}{name}</>;
@@ -27,6 +27,11 @@ export class VPendingPackageDetail extends VPage<CPendingInquiry> {
 
         return <Page header={header} headerClassName="py-1 bg-primary" >
             <div>
+                <div className="border-top edit-sep-light-gray"></div>
+                <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
+                    <div>询价结果:</div>
+                    <div className="flex-fill d-flex justify-content-end">{result === "1" ? "可供" : (result === "0" ? "不可供" : "")}</div>
+                </div>
                 <div className="border-top edit-sep-light-gray"></div>
                 <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
                     <div>包装类型:</div>
@@ -114,7 +119,7 @@ export class VPendingPackageDetail extends VPage<CPendingInquiry> {
                 </div>
                 <div className="border-top edit-sep-light-gray"></div>
                 <div className="d-flex align-items-centerd-flex px-3 py-2 bg-white align-items-center cursor-pointer">
-                    <div>MSOS文件路径:</div>
+                    <div>MSDS文件路径:</div>
                     <div className="flex-fill d-flex justify-content-end">{msdsFilePath}</div>
                 </div>
                 <div className="border-top edit-sep-light-gray"></div>

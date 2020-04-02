@@ -201,7 +201,7 @@ returns ret (
     validUpto datetime,                 --报价有效期
     minArriveDate datetime,             --最短到货期
     maxArriveDate datetime,             --最长到货期
-    invoiceType ID InvoiceType,         --发票类型
+    invoiceType smallint,         --发票类型
     vatRate dec(12,3),                  --增值税率
     tariffRate dec(12,4),               --关税税率
     remark text                         --报价备注
@@ -474,7 +474,7 @@ ACTION AddPackagePrice ver 1.0(
     validUpto datetime,                 --报价有效期
     minArriveDate datetime,             --最短到货期
     maxArriveDate datetime,             --最长到货期
-    invoiceType ID InvoiceType,         --发票类型
+    invoiceType smallint,         --发票类型
     vatRate ID VatRate,                 --增值税率
     tariffRate dec(12,4),               --关税税率
     packType smallint,                  --包装类型，分为两种：1.目录包装，2.非目录包装
@@ -528,7 +528,7 @@ ACTION AddPackage ver 3.0(
     validUpto datetime,                 --报价有效期
     minArriveDate datetime,             --最短到货期
     maxArriveDate datetime,             --最长到货期
-    invoiceType ID InvoiceType,         --发票类型
+    invoiceType smallint,         --发票类型
     vatRate ID VatRate,                 --增值税率
     tariffRate dec(12,4),               --关税税率
     type smallint,                      --包装类型，分为两种：1.目录包装，2.非目录包装
@@ -637,4 +637,91 @@ returns ret (
     from    ProductProperty as p
     where   p.product = _id
     order by p.id;
+};
+
+--保存询价结果
+ACTION AddInquiryResult ver 4.0(
+    id bigint,
+    supplier ID Supplier,                   --供应商编号
+    contact ID SupplierContact,             --供应商默认联系人
+    contactName char(50),              --供应商联系人姓名
+    contactSalutation char(10),
+    contactDepartmentName char(100),
+    contactTelephone char(50),
+    contactMobile char(50),
+    contactEmail char(50),
+    contactfax char(20),
+    way smallint not null,                  --询价方式：2：电话询价；3：传真询价；1：Email询价
+    user ID [$user],                        --创建人
+    createDate datetime,                    --创建时间
+    inquiryUser ID [$user],                 --询价人
+    inquiryDate datetime,                    --询出时间
+    Arr items(
+        no char(50),                        --老询价结果编号
+        product ID Product,                 --询价产品编号
+        inquiryQuantity int,                --询价数量
+        inquiryRadiox dec(12,2),            --询价套
+        inquiryRadioy dec(12,4),            --询价包装规格
+        inquiryUnit ID PackType,            --询价单位  
+        inquirypurity char(80),             --询价纯度
+        itemuser ID [$user],                --创建人
+        itemcreateDate datetime,            --创建时间
+        quantity int,                       --反馈数量
+        radiox dec(12,2),                   --反馈套
+        radioy dec(12,4),                   --反馈包装规格
+        unit ID PackType,                      --反馈单位
+        purity char(80),                    --反馈纯度
+        listPrice dec(12,2),                --目录单价
+        price dec(12,2),                    --结算单价
+        currency ID Currency,               --结算币种
+        isTaxIn smallint,                   --结算单价中是否已经包含税费；0：不包含；1：包含
+        isTransFeeIn smallint,              --结算单价中是否已经包含税费；0：不包含；1：包含
+        transFee dec(12,2),                 --运费
+        transFeecurrency ID Currency,       --运费币种
+        packingFee dec(12,2),               --包装费
+        packingcurrency ID Currency,        --包装费币种
+        otherFee dec(12,2),                 --其他费用
+        otherFeecurrency ID Currency,       --其他费用币种
+        customizeUpto datetime,             --用于计算定制周期。产品需要定制时，用于计算定制周期，CustomizeUpto减去CreateDate为定制周期
+        validUpto datetime,                 --报价有效期
+        minArriveDate datetime,             --最短到货期
+        maxArriveDate datetime,             --最长到货期
+        invoiceType smallint,         --发票类型
+        vatRate ID VatRate,                 --增值税率
+        tariffRate dec(12,4),               --关税税率
+        packType smallint,                  --包装类型，分为两种：1.目录包装，2.非目录包装
+        coaFilePath char(1000),             --供应商所提供的COA文件路径
+        msdsFilePath char(1000),            --供应商所提供的MSDS文件的上传路径
+        quotationFilePath char(1000),       --供应商提供的报价单的上传路径
+        remarks char(1000),                 --备注：资源部新建的询价单需要国际部完成询价时，填写的询价要求
+        inquiryRemarks char(1000),          --报价备注
+        result smallint,                    --询价结果（0:不可供；1：可供）
+        notProvidedReason ID NotProvidedReason, --不可供原因
+        isUsed smallint,                    --价格是否同步到包装上（0：不使用 1：使用）
+    ),
+){
+    --新建询价单及询价历史
+    var sheetId id;
+    sheet InquirySheet into sheetId set supplier = supplier, contact = contact, contactName = contactName, contactSalutation = contactSalutation, contactDepartmentName = contactDepartmentName
+            , contactTelephone = contactTelephone, contactMobile = contactMobile,contactEmail = contactEmail, contactfax = contactfax
+            , inquiryUser = inquiryUser, user=user,createDate = createDate,inquiryDate=inquiryDate,way=way;
+    foreach items {
+        sheet InquirySheet of sheetId arr inquiryitems
+            add no=null,product=product, inquiryQuantity=inquiryQuantity, inquiryRadiox=inquiryRadiox, inquiryRadioy=inquiryRadioy, inquiryUnit=inquiryUnit
+                , itemuser=itemuser, itemcreateDate=itemcreateDate, quantity=quantity, radiox=radiox, radioy=radioy, unit=unit
+                , listPrice=listPrice, price=price, currency=currency, isTaxIn=isTaxIn, isTransFeeIn=isTransFeeIn
+                , transFee=transFee, transFeecurrency=transFeecurrency, packingFee=packingFee, packingcurrency=packingcurrency
+                , otherFee=otherFee, otherFeecurrency=otherFeecurrency, customizeUpto=customizeUpto, validUpto=validUpto
+                , minArriveDate=minArriveDate, maxArriveDate=maxArriveDate, invoiceType=invoiceType, vatRate=vatRate, tariffRate=tariffRate
+                , packType=packType, coaFilePath=coaFilePath, msdsFilePath=msdsFilePath, quotationFilePath=quotationFilePath, inquiryRemarks=inquiryRemarks,remarks=remarks,result=result
+                , inquirypurity=inquirypurity,purity=purity,notProvidedReason=notProvidedReason,isUsed=isUsed;
+    }
+    if(sheetId>0){
+        delete
+        from  InquiryPackage
+        where id in (select inquiryPackage from InquiryPendingItem  where inquiryPending=id);
+
+        delete from InquiryPendingItem where inquiryPending=id;
+        Pending InquiryPending - at id;
+    }
 };

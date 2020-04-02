@@ -29,6 +29,7 @@ export interface UqRMS {
     DeleteInquiryPending: Action;
     DeleteInquiryPackage: Action;
     DeleteInquiryPendingBySupplier: Action;
+    AddInquiryResult: Action;
     InquirySheet: Sheet;
     GetInquirySheet: Query;
     InquiryHistory: History;

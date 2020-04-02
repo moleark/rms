@@ -81,49 +81,102 @@ export class CPendingInquiry extends CUqBase {
             if (pk.jsonStr === undefined) { return; };
             let pack = JSON.parse(pk.jsonStr);
             inquiryItems.push({
-                no: undefined, product: pk.product, inquiryQuantity: pk.quantity, inquiryRadiox: pk.radiox, inquiryRadioy: pk.radioy, inquiryUnit: pk.unit, itemuser: pk.user, itemcreateDate: pk.createDate
-                , quantity: pack.quantity, radiox: pack.radiox, radioy: pack.radioy, unit: pack.unit, listPrice: pack.listPrice, price: pack.price, currency: pack.currency
-                , isTaxIn: pack.isTaxIn, isTransFeeIn: pack.isTransFeeIn, transFee: pack.transFee, transFeecurrency: pack.transFeecurrency, packingFee: pack.packingFee
-                , packingcurrency: pack.packingcurrency, otherFee: pack.otherFee, otherFeecurrency: pack.otherFeecurrency, customizeUpto: pack.customizeUpto, validUpto: pack.validUpto
-                , minArriveDate: pack.minArriveDate, maxArriveDate: pack.maxArriveDate, invoiceType: pack.invoiceType, vatRate: pack.vatRate, tariffRate: pack.tariffRate
-                , packType: pack.packType, coaFilePath: pack.coaFilePath, msdsFilePath: pack.msdsFilePath, quotationFilePath: pack.quotationFilePath
-                , inquiryRemarks: pack.remarks, remarks: pk.inquiryRemarks, result: pack.result, inquirypurity: pk.purity, purity: pack.purity
-                , notProvidedReason: pack.notProvidedReason, isUsed: pack.isUsed
+                no: undefined
+                , product: pk.product
+                , inquiryQuantity: pk.quantity
+                , inquiryRadiox: pk.radiox
+                , inquiryRadioy: pk.radioy
+                , inquiryUnit: pk.unit
+                , itemuser: pk.user
+                , itemcreateDate: pk.createDate
+                , inquiryRemarks: pack.remarks
+                , remarks: pk.inquiryRemarks
+                , inquirypurity: pk.purity
+                , ...pack
+                // , quantity: pack.quantity
+                // , radiox: pack.radiox
+                // , radioy: pack.radioy
+                // , unit: pack.unit
+                // , listPrice: pack.listPrice
+                // , price: pack.price
+                // , currency: pack.currency
+                // , isTaxIn: pack.isTaxIn
+                // , isTransFeeIn: pack.isTransFeeIn
+                // , transFee: pack.transFee
+                // , transFeecurrency: pack.transFeecurrency
+                // , packingFee: pack.packingFee
+                // , packingcurrency: pack.packingcurrency
+                // , otherFee: pack.otherFee
+                // , otherFeecurrency: pack.otherFeecurrency
+                // , customizeUpto: pack.customizeUpto
+                // , validUpto: pack.validUpto
+                // , minArriveDate: pack.minArriveDate
+                // , maxArriveDate: pack.maxArriveDate
+                // , invoiceType: pack.invoiceType
+                // , vatRate: pack.vatRate
+                // , tariffRate: pack.tariffRate
+                // , packType: pack.packType
+                // , coaFilePath: pack.coaFilePath
+                // , msdsFilePath: pack.msdsFilePath
+                // , quotationFilePath: pack.quotationFilePath
+                // , result: pack.result
+                // , purity: pack.purity
+                // , notProvidedReason: pack.notProvidedReason
+                // , isUsed: pack.isUsed
             })
         });
         return {
-            supplier: supplier,
-            contact: contact,
-            contactName: contactName,
-            contactSalutation: contactSalutation,
-            contactDepartmentName: contactDepartmentName,
-            contactTelephone: contactTelephone,
-            contactMobile: contactMobile,
-            contactEmail: contactEmail,
-            contactfax: contactfax,
-            way: way,
-            user: user,
+            supplier,
+            contact,
+            contactName,
+            contactSalutation,
+            contactDepartmentName,
+            contactTelephone,
+            contactMobile,
+            contactEmail,
+            contactfax,
+            way,
+            user,
             createDate: date,
-            inquiryUser: inquiryUser,
-            inquiryDate: inquiryDate,
-            inquiryitems: inquiryItems,
+            inquiryUser,
+            inquiryDate,
+            inquiryItems,
         }
     }
 
     saveInquiryData = async (pending: any, packageList: any[]) => {
 
         let { id } = pending;
-        //保存sheet和保存history
-        let result: any = await this.uqs.rms.InquirySheet.save("InquirySheet", this.getDataForSave(pending, packageList));
-        await this.uqs.rms.InquirySheet.action(result.id, result.flow, result.state, "submit");
-        if (result) {
-            //删除pending及其明细
-            let param = {
-                id: id,
-            };
-            await this.uqs.rms.DeleteInquiryPending.submit(param);
-        }
-
+        // //保存sheet和保存history
+        // let result: any = await this.uqs.rms.InquirySheet.save("InquirySheet", this.getDataForSave(pending, packageList));
+        // await this.uqs.rms.InquirySheet.action(result.id, result.flow, result.state, "submit");
+        // if (result) {
+        //     //删除pending及其明细
+        //     let param = {
+        //         id: id,
+        //     };
+        //     await this.uqs.rms.DeleteInquiryPending.submit(param);
+        // }
+        let model = this.getDataForSave(pending, packageList);
+        let param = {
+            id: id,
+            supplier: model.supplier,
+            contact: model.contact,
+            contactName: model.contactName,
+            contactSalutation: model.contactSalutation,
+            contactDepartmentName: model.contactDepartmentName,
+            contactTelephone: model.contactTelephone,
+            contactMobile: model.contactMobile,
+            contactEmail: model.contactEmail,
+            contactfax: model.contactfax,
+            way: model.way,
+            user: model.user,
+            createDate: model.createDate,
+            inquiryUser: model.inquiryUser,
+            inquiryDate: model.inquiryDate,
+            items: model.inquiryItems
+        };
+        await this.uqs.rms.AddInquiryResult.submit(param);
         this.closePage();
         await this.loadList();
     }
@@ -226,6 +279,7 @@ export class CPendingInquiry extends CUqBase {
             model.unit = unit.obj;
         } else {
             model = JSON.parse(newjsonStr);
+            model.inquiryRemarks = item.inquiryRemarks;
             model.inquiryPending = newinquiryPending;
             model.inquiryPackage = newinquiryPackage;
             model.user = user;
