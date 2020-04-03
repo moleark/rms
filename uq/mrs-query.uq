@@ -371,14 +371,15 @@ ACTION DeleteInquiryPending(
     id bigint
 ) {
 
-    VAR packid ID;
-    set packid=pp.id
-    from  InquiryPendingItem as p 
-          join InquiryPackage as pp on p.inquiryPackage = pp.id
-    where p.inquiryPending=id
-    limit 1;
+    foreach (var a ID InquiryPackage
+        of select a.id as a
+        from    InquiryPackage as a
+                join InquiryPendingItem as b on a.id=b.inquiryPackage
+        where   b.inquiryPending=id)
+    {
+        delete from InquiryPackage where id=a;
+    };
 
-    delete from InquiryPackage where id=packid;
     delete from InquiryPendingItem where inquiryPending=id;
     Pending InquiryPending - at id;
 };
@@ -717,9 +718,15 @@ ACTION AddInquiryResult ver 4.0(
                 , inquirypurity=inquirypurity,purity=purity,notProvidedReason=notProvidedReason,isUsed=isUsed;
     }
     if(sheetId>0){
-        delete
-        from  InquiryPackage
-        where id in (select inquiryPackage from InquiryPendingItem  where inquiryPending=id);
+        
+    foreach (var a ID InquiryPackage
+        of select a.id as a
+        from    InquiryPackage as a
+                join InquiryPendingItem as b on a.id=b.inquiryPackage
+        where   b.inquiryPending=id)
+        {
+            delete from InquiryPackage where id=a;
+        };
 
         delete from InquiryPendingItem where inquiryPending=id;
         Pending InquiryPending - at id;

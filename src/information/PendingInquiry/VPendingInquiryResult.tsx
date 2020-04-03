@@ -153,7 +153,7 @@ export class VPendingInquiryResult extends VPage<CPendingInquiry> {
             coaFilePath: { widget: 'text', label: 'COA文件路径', placeholder: 'COA文件路径' } as UiInputItem,
             msdsFilePath: { widget: 'text', label: 'MSDS文件路径', placeholder: 'MSDS文件路径' } as UiInputItem,
             quotationFilePath: { widget: 'text', label: '报价单文件路径', placeholder: '报价单文件路径' } as UiInputItem,
-            isUsed: { widget: 'radio', label: '更新包装价格', list: [{ value: "0", title: '否' }, { value: "1", title: '是' }] } as UiRadio,
+            isUsed: { widget: 'radio', label: '更新包装价格', className: "text-danger", list: [{ value: "0", title: '否' }, { value: "1", title: '是' }] } as UiRadio,
             submit: { widget: 'button', label: '提交', className: "btn btn-primary mr-3 px-6" }
         }
     }
