@@ -100,7 +100,7 @@ export function groupByPack(packItems: any[]) {
     for (let packItem of packItems) {
         let { product, inquiryQuantity, inquiryRadiox, inquiryRadioy, inquiryUnit, inquirypurity, itemuser, itemcreateDate, quantity, radiox, radioy, unit, purity, listPrice, price
             , currency, isTaxIn, isTransFeeIn, transFee, transFeecurrency, packingFee, packingcurrency, otherFee, otherFeecurrency, customizeUpto, validUpto
-            , minArriveDate, maxArriveDate, invoiceType, vatRate, tariffRate, packType, inquiryRemarks, coaFilePath, msdsFilePath, quotationFilePath, notProvidedReason, isUsed, result } = packItem;
+            , minArriveDate, maxArriveDate, invoiceType, vatRate, tariffRate, packType, inquiryRemarks, remarks, coaFilePath, msdsFilePath, quotationFilePath, notProvidedReason, isUsed, result } = packItem;
         let packRow: any = {
             inquiryQuantity: inquiryQuantity,
             pack: (inquiryRadiox !== 1) ? <>{inquiryRadiox} * {inquiryRadioy}</> : <>{inquiryRadioy}</>,
@@ -137,7 +137,8 @@ export function groupByPack(packItems: any[]) {
             quotationFilePath: quotationFilePath,
             notProvidedReason: notProvidedReason,
             isUsed: isUsed,
-            result: result
+            result: result,
+            remarks: remarks
         }
         let cpi = iresult.find(e => e.product.id === product.id);
         if (cpi === undefined) {

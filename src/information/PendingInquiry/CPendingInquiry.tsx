@@ -92,37 +92,37 @@ export class CPendingInquiry extends CUqBase {
                 , inquiryRemarks: pack.remarks
                 , remarks: pk.inquiryRemarks
                 , inquirypurity: pk.purity
-                , ...pack
-                // , quantity: pack.quantity
-                // , radiox: pack.radiox
-                // , radioy: pack.radioy
-                // , unit: pack.unit
-                // , listPrice: pack.listPrice
-                // , price: pack.price
-                // , currency: pack.currency
-                // , isTaxIn: pack.isTaxIn
-                // , isTransFeeIn: pack.isTransFeeIn
-                // , transFee: pack.transFee
-                // , transFeecurrency: pack.transFeecurrency
-                // , packingFee: pack.packingFee
-                // , packingcurrency: pack.packingcurrency
-                // , otherFee: pack.otherFee
-                // , otherFeecurrency: pack.otherFeecurrency
-                // , customizeUpto: pack.customizeUpto
-                // , validUpto: pack.validUpto
-                // , minArriveDate: pack.minArriveDate
-                // , maxArriveDate: pack.maxArriveDate
-                // , invoiceType: pack.invoiceType
-                // , vatRate: pack.vatRate
-                // , tariffRate: pack.tariffRate
-                // , packType: pack.packType
-                // , coaFilePath: pack.coaFilePath
-                // , msdsFilePath: pack.msdsFilePath
-                // , quotationFilePath: pack.quotationFilePath
-                // , result: pack.result
-                // , purity: pack.purity
-                // , notProvidedReason: pack.notProvidedReason
-                // , isUsed: pack.isUsed
+                // , ...pack
+                , quantity: pack.quantity
+                , radiox: pack.radiox
+                , radioy: pack.radioy
+                , unit: pack.unit
+                , listPrice: pack.listPrice
+                , price: pack.price
+                , currency: pack.currency
+                , isTaxIn: pack.isTaxIn
+                , isTransFeeIn: pack.isTransFeeIn
+                , transFee: pack.transFee
+                , transFeecurrency: pack.transFeecurrency
+                , packingFee: pack.packingFee
+                , packingcurrency: pack.packingcurrency
+                , otherFee: pack.otherFee
+                , otherFeecurrency: pack.otherFeecurrency
+                , customizeUpto: pack.customizeUpto
+                , validUpto: pack.validUpto
+                , minArriveDate: pack.minArriveDate
+                , maxArriveDate: pack.maxArriveDate
+                , invoiceType: pack.invoiceType
+                , vatRate: pack.vatRate
+                , tariffRate: pack.tariffRate
+                , packType: pack.packType
+                , coaFilePath: pack.coaFilePath
+                , msdsFilePath: pack.msdsFilePath
+                , quotationFilePath: pack.quotationFilePath
+                , result: pack.result
+                , purity: pack.purity
+                , notProvidedReason: pack.notProvidedReason
+                , isUsed: pack.isUsed
             })
         });
         return {
