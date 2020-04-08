@@ -69,14 +69,12 @@ export class CSupplier extends CUqBase {
         let { id } = supplier;
         if (id === undefined) {
             supplier.defaultContact = undefined;
-            supplier.financeContact = undefined;
             supplier.inquiryContact = undefined;
             supplier.isValid = 1;
             id = await this.uqs.rms.Supplier.save(undefined, supplier);
         } else {
             supplier.isValid = 1;
             supplier.defaultContact = model.defaultContact;
-            supplier.financeContact = model.financeContact;
             supplier.inquiryContact = model.inquiryContact;
             supplier.no = model.no;
             await this.uqs.rms.Supplier.save(id, supplier);
