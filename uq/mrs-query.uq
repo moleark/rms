@@ -19,22 +19,25 @@ returns ret (
     wechatId char(50),
     addressString char(400),
     address ID Address,
-    defaultContact ID SupplierContact,  --订单、默认联系人
-    financeContact ID SupplierContact,  --财务联系人
-    inquiryContact ID SupplierContact,   --询价联系人
+    defaultContact smallint,  --订单、默认联系人
+    financeContact smallint,  --财务联系人
+    inquiryContact smallint,   --询价联系人
     isValid smallint
 ) { 
     into ret select tabl.id, tabl.no, tabl.supplier, tabl.name, tabl.firstName,tabl.lastName, tabl.gender, tabl.salutation, tabl.position, tabl.departmentName
     ,tabl.telephone,tabl.mobile, tabl.email ,tabl.fax,tabl.zipCode ,tabl.wechatId ,tabl.addressString ,tabl.address
     ,tabl.defaultContact, tabl.financeContact, tabl.inquiryContact , tabl.isValid
     from (
-    select  (case when s.defaultContact is null then (case when s1.financeContact is null then (case when s2.inquiryContact is null then w.id else 0 end) else -1 end) else -2 end) as num
+    select  (case when s.defaultContact is null then (case when s2.inquiryContact is null then (case when s1.financeContact is null then w.id else -1 end) else 0 end) else -2 end) as num
             ,w.id, w.no, w.supplier, w.name, w.firstName,w.lastName, w.gender, w.salutation, w.position, w.departmentName
             ,w.telephone,w.mobile, w.email ,w.fax,w.zipCode ,w.wechatId ,w.addressString ,w.address
-            ,s.defaultContact, s1.financeContact, s2.inquiryContact, w.isValid
+            ,case when s.defaultContact is null then 0 else 1 end  as defaultContact
+            ,case when s1.financeContact is null then 0 else 1 end  as financeContact
+            ,case when s2.inquiryContact is null then 0 else 1 end  as inquiryContact
+            , w.isValid
     from    SupplierContact as w
             left join Supplier as s on w.id=s.defaultContact
-            left join Supplier as s1 on w.id=s1.financeContact
+            left join SupplierFinanceContact as s1 on w.id=s1.financeContact
             left join Supplier as s2 on w.id=s2.inquiryContact
     where   w.supplier = _id and w.isValid=1
     order by w.id
@@ -51,7 +54,6 @@ PAGE (
     name char(200),
     abbreviation char(200),
     defaultContact ID SupplierContact,  --订单、默认联系人
-    financeContact ID SupplierContact,  --财务联系人
     inquiryContact ID SupplierContact,   --询价联系人
     webSite char(500),                  --供应商网址1
     addressString char(400),
@@ -59,13 +61,15 @@ PAGE (
     productionAddress char(500),        --生产厂址
     profile  text,                      --企业简介(供应商信息概况)
     taxNo char(50),
-    businessArea char(10)               --业务区域
+    businessArea char(10),               --业务区域
+    principal ID Employee
 ) {
     var key2 char(102);
     set key2 = concat('%', key, '%');
 
-    PAGE select w.id, w.no, w.name,w.abbreviation,w.defaultContact,w.financeContact, w.inquiryContact, w.webSite,w.addressString,w.address,w.productionAddress,w.profile,w.taxNo,w.businessArea
+    PAGE select w.id, w.no, w.name,w.abbreviation,w.defaultContact, w.inquiryContact, w.webSite,w.addressString,w.address,w.productionAddress,w.profile,w.taxNo,w.businessArea,h.principal
     from    Supplier as w
+            left join SupplierHandler as h on w.id=h.supplier
     where   ( w.name like key2 or w.no like key2 )
             and w.id > $pageStart and w.isValid = 1 
     order by w.id

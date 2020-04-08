@@ -27,6 +27,7 @@ export class VPackage extends VPage<CPackage> {
         { name: 'price', type: 'number', required: true },
         { name: 'currency', type: 'id', required: true },
         { name: 'isTaxIn', type: 'number', required: true },
+        { name: 'invoiceType', type: 'number', required: true },
         { name: 'vatRate', type: 'id', required: false },
         { name: 'tariffRate', type: 'number', required: false },
         { name: 'isTransFeeIn', type: 'number', required: true },
@@ -40,7 +41,6 @@ export class VPackage extends VPage<CPackage> {
         { name: 'validUpto', type: 'date', required: true },
         { name: 'minArriveDate', type: 'date', required: false },
         { name: 'maxArriveDate', type: 'date', required: false },
-        { name: 'invoiceType', type: 'number', required: true },
         { name: 'remark', type: 'string', required: false },
         { name: 'submit', type: 'submit' }
     ];
@@ -75,6 +75,7 @@ export class VPackage extends VPage<CPackage> {
                 }
             } as UiIdItem,
             isTaxIn: { widget: 'radio', label: '含税费', list: [{ value: "0", title: '否' }, { value: "1", title: '是' }] } as UiRadio,
+            invoiceType: { widget: 'radio', label: '发票类型', list: [{ value: "1", title: '增值税专用发票' }, { value: "2", title: '增值税普通发票' }, { value: "3", title: '形式发票' }, { value: "4", title: '无发票' }] } as UiRadio,
             vatRate: {
                 widget: 'id', label: '增值税率', placeholder: '增值税率',
                 pickId: async (context: Context, name: string, value: number) => await this.controller.pickVatRate(context, name, value),
@@ -124,7 +125,6 @@ export class VPackage extends VPage<CPackage> {
             validUpto: { widget: 'date', label: '报价有效期', placeholder: '必填' } as UiInputItem,
             minArriveDate: { widget: 'date', label: '最短到货期', placeholder: '必填' } as UiInputItem,
             maxArriveDate: { widget: 'date', label: '最长到货期', placeholder: '必填' } as UiInputItem,
-            invoiceType: { widget: 'radio', label: '发票类型', list: [{ value: "1", title: '增值税专用发票' }, { value: "2", title: '增值税普通发票' }, { value: "3", title: '形式发票' }, { value: "4", title: '无发票' }] } as UiRadio,
             remark: { widget: 'textarea', label: '报价备注', placeholder: '报价备注', rows: 2 } as UiInputItem,
             submit: { widget: 'button', label: '提交', className: "btn btn-primary mr-3 px-6" }
         }

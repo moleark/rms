@@ -3,13 +3,11 @@ import { View, BoxId, Image, PageItems, Query, Context } from 'tonva';
 import { CUqBase } from 'CBase';
 import { nav } from 'tonva';
 import { observable } from 'mobx';
-import { observer } from 'mobx-react';
-import iconj from '../images/icon.jpg';
 import { VSupplier } from './VSupplier';
 import { VSupplierBankAccount } from './VSupplierBankAccount';
 import { VSupplierBankAccountDetail } from './VSupplierBankAccountDetail';
 import { VSupplierList } from './VSupplierList';
-import { VHome } from '../VHome';
+import { CEmployee } from '../employee/CEmployee';
 import { VSupplierDetail } from './VSupplierDetail';
 import { ParamItem, SupplierItem } from "model/supplierItem";
 import { CAddress } from "../supplierContact/CAddress";
@@ -56,6 +54,11 @@ export class CSupplier extends CUqBase {
         let mode: any = await this.cApp.cChemical.call(supplier);
     }
 
+    pickEmployee = async (context: Context, name: string, value: number): Promise<number> => {
+        let cEmployee = this.newC(CEmployee);
+        return await cEmployee.call<number>();
+    }
+
     renderRootList() {
         return this.renderView(VSupplierList);
     }
@@ -63,20 +66,28 @@ export class CSupplier extends CUqBase {
     saveSupplierData = async (supplier: any, model: any) => {
 
         let name = supplier.name;
-        if (supplier.id === undefined) {
+        let { id } = supplier;
+        if (id === undefined) {
             supplier.defaultContact = undefined;
             supplier.financeContact = undefined;
             supplier.inquiryContact = undefined;
             supplier.isValid = 1;
-            await this.uqs.rms.Supplier.save(undefined, supplier);
+            id = await this.uqs.rms.Supplier.save(undefined, supplier);
         } else {
-            let { id } = supplier;
             supplier.isValid = 1;
             supplier.defaultContact = model.defaultContact;
             supplier.financeContact = model.financeContact;
             supplier.inquiryContact = model.inquiryContact;
             supplier.no = model.no;
             await this.uqs.rms.Supplier.save(id, supplier);
+        }
+        let { principal } = supplier;
+        if (principal !== undefined) {
+            let { principal: oldprincipal } = model;
+            if (oldprincipal !== undefined) {
+                await this.uqs.rms.SupplierHandler.del({ supplier: id, arr1: [{ principal: oldprincipal }] });
+            }
+            await this.uqs.rms.SupplierHandler.add({ supplier: id, arr1: [{ principal: principal }] });
         }
         this.closePage();
         await this.searchSupplierByKey(name);
@@ -143,6 +154,8 @@ export class CSupplier extends CUqBase {
     onSupplierSelected = async (supplier: any) => {
         let { id } = supplier;
         supplier = await this.uqs.rms.Supplier.load(id);
+        let principals = await this.uqs.rms.SupplierHandler.table({ supplier: id });
+        supplier.principal = principals[0];
         let contact = await this.uqs.rms.SearchSupplierContact.query({ _id: id });
         let bankAccount = await this.uqs.rms.SearchSupplierBankAccount.query({ _id: id });
         let param: ParamItem = {

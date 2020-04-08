@@ -18,7 +18,7 @@ export class VProductList extends VPage<CProduct> {
         let { showProductDetail } = this.controller;
         let showcas = CAS === undefined ? <b>[无]</b> : <b>{CAS}</b>;
         let showpurity = purity === undefined ? "" : <b>{purity}</b>;
-        let brandno = brand === undefined ? undefined : brand.obj.no;
+        let brandno = brand === undefined ? undefined : brand.obj.name;
         let first = origin === undefined && brandno === undefined ? "" : origin === undefined ? <b>{brandno}</b> : <b>{origin}&nbsp;&nbsp;{brandno}</b>;
 
 

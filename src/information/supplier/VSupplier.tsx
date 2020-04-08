@@ -14,6 +14,7 @@ const schema: Schema = [
     { name: 'address', type: 'id', required: true },
     { name: 'addressString', type: 'string', required: true },
     { name: 'productionAddress', type: 'string', required: false },
+    { name: 'principal', type: 'id', required: false },
     { name: 'taxNo', type: 'string', required: false },
     { name: 'profile', type: 'string', required: false },
     { name: 'submit', type: 'submit' }
@@ -51,6 +52,16 @@ export class VSupplier extends VPage<CSupplier> {
             } as UiIdItem,
             addressString: { widget: 'text', label: '详细地址', placeholder: '详细地址', rules: addressDetailValidation } as UiTextItem,
             productionAddress: { widget: 'text', label: '生产厂址', placeholder: '生产厂址', rules: addressDetailValidation } as UiTextItem,
+            principal: {
+                widget: 'id', label: '采购负责人', placeholder: '采购负责人',
+                pickId: async (context: Context, name: string, value: number) => await this.controller.pickEmployee(context, name, value),
+                Templet: (item: any) => {
+                    if (!item) return <small className="text-muted">请选择采购负责人</small>;
+                    return <>
+                        {tv(item, v => <>{v.name}</>)}
+                    </>;
+                }
+            } as UiIdItem,
             taxNo: { widget: 'text', label: '税号', placeholder: '税号' } as UiInputItem,
             profile: { widget: 'textarea', label: '企业简介', placeholder: '企业简介', rows: 10 } as UiInputItem,
             submit: { widget: 'button', label: '提交', className: "btn btn-primary mr-3 px-6" }

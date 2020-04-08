@@ -80,11 +80,10 @@ export class VSupplierDetail extends VPage<CSupplier> {
 
     private renderContact = (item: any, index: number) => {
         let { showEditSupplierContact } = this.controller.cApp.cSupplierContact;
-        let { no, name, id, gender, mobile, telephone, email } = item;
-        let { defaultContact, financeContact, inquiryContact } = this.supplier;
-        let fa_defaultContact = defaultContact === undefined ? "" : defaultContact.id === id ? <div className="small text-muted">订单负责人</div> : "";
-        let fa_financeContact = financeContact === undefined ? "" : financeContact.id === id ? <div className="small text-muted">财务负责人</div> : "";
-        let fa_inquiryContact = inquiryContact === undefined ? "" : inquiryContact.id === id ? <div className="small text-muted">询价负责人</div> : "";
+        let { no, name, id, gender, mobile, telephone, email, defaultContact, financeContact, inquiryContact } = item;
+        let fa_defaultContact = defaultContact === 1 ? <div className="small text-muted">订单负责人</div> : "";
+        let fa_financeContact = financeContact === 1 ? <div className="small text-muted">财务负责人</div> : "";
+        let fa_inquiryContact = inquiryContact === 1 ? <div className="small text-muted">询价负责人</div> : "";
         let fa_gender = gender === "0" ? <FA name="female" className="px-2 text-danger"></FA> : <FA name="male" className="px-2 text-primary"></FA>;
         let tele = (telephone === undefined) ? <span></span> :
             <div className="small px-4 text-muted">{telephone}</div>;
@@ -117,8 +116,9 @@ export class VSupplierDetail extends VPage<CSupplier> {
     }
 
     private rowTop = (supplierData: any) => {
-        let { name, no, abbreviation, businessArea, webSite, address, addressString, productionAddress, profile, taxNo } = supplierData;
-
+        let { name, no, abbreviation, businessArea, webSite, address, addressString, productionAddress, principal, taxNo } = supplierData;
+        let supprincipal = principal === undefined ? undefined : principal.principal;
+        let principalname = supprincipal === undefined ? undefined : supprincipal.obj.name;
 
         return <div className="bg-white py-2">
             {no === undefined ? "" :
@@ -130,6 +130,9 @@ export class VSupplierDetail extends VPage<CSupplier> {
             </div>
             <div className="row no-gutters px-3 my-1">
                 <div className="col-3">网址:</div><div className="col-9 text-muted">{webSite === undefined ? "(无)" : webSite}</div>
+            </div>
+            <div className="row no-gutters px-3 my-1">
+                <div className="col-3">负责人:</div><div className="col-9 text-muted">{principalname === undefined ? "(无)" : principalname}</div>
             </div>
             {taxNo === undefined ? "" :
                 <><div className="row no-gutters px-3 my-1">

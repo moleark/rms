@@ -21,6 +21,7 @@ const schema: Schema = [
     { name: 'price', type: 'number', required: false },
     { name: 'currency', type: 'id', required: false },
     { name: 'isTaxIn', type: 'number', required: false },
+    { name: 'invoiceType', type: 'number', required: false },
     { name: 'vatRate', type: 'id', required: false },
     { name: 'tariffRate', type: 'number', required: false },
     { name: 'isTransFeeIn', type: 'number', required: false },
@@ -34,7 +35,6 @@ const schema: Schema = [
     { name: 'validUpto', type: 'date', required: false },
     { name: 'minArriveDate', type: 'date', required: false },
     { name: 'maxArriveDate', type: 'date', required: false },
-    { name: 'invoiceType', type: 'number', required: false },
     { name: 'packType', type: 'number', required: false },
     { name: 'remarks', type: 'string', required: false },
     { name: 'coaFilePath', type: 'string', required: false },
@@ -98,6 +98,7 @@ export class VPendingInquiryResult extends VPage<CPendingInquiry> {
                 }
             } as UiIdItem,
             isTaxIn: { widget: 'radio', label: '含税费', list: [{ value: "0", title: '否' }, { value: "1", title: '是' }] } as UiRadio,
+            invoiceType: { widget: 'radio', label: '发票类型', list: [{ value: "1", title: '增值税专用发票' }, { value: "2", title: '增值税普通发票' }, { value: "3", title: '形式发票' }, { value: "4", title: '无发票' }] } as UiRadio,
             vatRate: {
                 widget: 'id', label: '增值税率', placeholder: '增值税率',
                 pickId: async (context: Context, name: string, value: number) => await this.controller.cApp.cPackage.pickVatRate(context, name, value),
@@ -147,7 +148,6 @@ export class VPendingInquiryResult extends VPage<CPendingInquiry> {
             validUpto: { widget: 'date', label: '报价有效期', placeholder: '必填' } as UiInputItem,
             minArriveDate: { widget: 'date', label: '最短到货期', placeholder: '必填' } as UiInputItem,
             maxArriveDate: { widget: 'date', label: '最长到货期', placeholder: '必填' } as UiInputItem,
-            invoiceType: { widget: 'radio', label: '发票类型', list: [{ value: "1", title: '增值税专用发票' }, { value: "2", title: '增值税普通发票' }, { value: "3", title: '形式发票' }, { value: "4", title: '无发票' }] } as UiRadio,
             packType: { widget: 'radio', label: '包装类型', list: [{ value: "1", title: '目录包装' }, { value: "2", title: '非目录包装' }] } as UiRadio,
             remarks: { widget: 'text', label: '备注', row: 10, placeholder: '备注' } as UiInputItem,
             coaFilePath: { widget: 'text', label: 'COA文件路径', placeholder: 'COA文件路径' } as UiInputItem,

@@ -51,9 +51,9 @@ export class CSupplierContact extends CUqBase {
     }
 
     showEditSupplierContact = async (model: any, supplier: any) => {
-        model.isDefault = supplier.defaultContact === undefined ? false : supplier.defaultContact.id === model.id ? true : false;
-        model.isFinance = supplier.financeContact === undefined ? false : supplier.financeContact.id === model.id ? true : false;
-        model.isInquiry = supplier.inquiryContact === undefined ? false : supplier.inquiryContact.id === model.id ? true : false;
+        model.isDefault = model.defaultContact === 1 ? true : false;
+        model.isFinance = model.financeContact === 1 ? true : false;
+        model.isInquiry = model.inquiryContact === 1 ? true : false;
         let param: SupplierItem = {
             parent: supplier,
             item: model,
@@ -87,15 +87,6 @@ export class CSupplierContact extends CUqBase {
                 }
             }
         }
-        if (isFinance === true) {
-            parent.financeContact = id;
-        } else {
-            if (parent.financeContact !== undefined) {
-                if (parent.financeContact.id === id) {
-                    parent.financeContact = undefined;
-                }
-            }
-        }
         if (isInquiry === true) {
             parent.inquiryContact = id;
         } else {
@@ -105,7 +96,11 @@ export class CSupplierContact extends CUqBase {
                 }
             }
         }
-        await this.uqs.rms.Supplier.save(parent.id, { no: parent.no, name: parent.name, abbreviation: parent.abbreviation, webSite: parent.webSite, address: parent.address, addressString: parent.addressString, productionAddress: parent.productionAddress, profile: parent.profile, taxNo: parent.taxNo, isValid: 1, defaultContact: parent.defaultContact, financeContact: parent.financeContact, inquiryContact: parent.inquiryContact });
+        await this.uqs.rms.Supplier.save(parent.id, { no: parent.no, name: parent.name, abbreviation: parent.abbreviation, webSite: parent.webSite, address: parent.address, addressString: parent.addressString, productionAddress: parent.productionAddress, profile: parent.profile, taxNo: parent.taxNo, isValid: 1, defaultContact: parent.defaultContact, inquiryContact: parent.inquiryContact });
+        await this.uqs.rms.SupplierFinanceContact.del({ supplier: parent.id, arr1: [{ financeContact: id }] });
+        if (isFinance === true) {
+            await this.uqs.rms.SupplierFinanceContact.add({ supplier: parent.id, arr1: [{ financeContact: id }] });
+        }
         this.cApp.cSupplier.onSupplierSelected(parent);
         this.closePage();
     }
@@ -114,9 +109,12 @@ export class CSupplierContact extends CUqBase {
         let { isDefault, isFinance, inquiryid } = param;
         await this.uqs.rms.SupplierContact.save(param.id, param);
         parent.defaultContact = (isDefault === 1 ? param : undefined);
-        parent.financeContact = (isFinance === 1 ? param : undefined);
         parent.inquiryContact = (inquiryid === 1 ? param : undefined);
-        await this.uqs.rms.Supplier.save(parent.id, { no: parent.no, name: parent.name, abbreviation: parent.abbreviation, webSite: parent.webSite, address: parent.address, addressString: parent.addressString, productionAddress: parent.productionAddress, profile: parent.profile, taxNo: parent.taxNo, isValid: 1, defaultContact: parent.defaultContact, financeContact: parent.financeContact, inquiryContact: parent.inquiryContact });
+        await this.uqs.rms.Supplier.save(parent.id, { no: parent.no, name: parent.name, abbreviation: parent.abbreviation, webSite: parent.webSite, address: parent.address, addressString: parent.addressString, productionAddress: parent.productionAddress, profile: parent.profile, taxNo: parent.taxNo, isValid: 1, defaultContact: parent.defaultContact, inquiryContact: parent.inquiryContact });
+        await this.uqs.rms.SupplierFinanceContact.del({ supplier: parent.id, arr1: [{ financeContact: param.id }] });
+        if (isFinance === 1) {
+            await this.uqs.rms.SupplierFinanceContact.add({ supplier: parent.id, arr1: [{ financeContact: param.id }] });
+        }
     }
 
     //联系人列表

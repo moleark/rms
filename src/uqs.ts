@@ -16,6 +16,8 @@ export interface UqRMS {
     SupplierBankAccount: Map;
     InquiryPendingItem: Map;
     PackPrice: Map;
+    SupplierHandler: Map;
+    SupplierFinanceContact: Map;
     SearchSupplierContact: Query;
     SearchSupplierBankAccount: Query;
     SearchSupplier: Query;
@@ -58,8 +60,13 @@ export interface UqChemical {
     SearchChemical: Query;
 }
 
+export interface UqHr {
+    SearchEmployee: Query;
+}
+
 export interface UQs {
     rms: UqRMS;
     common: UqCommon;
     chemical: UqChemical;
+    hr: UqHr;
 }

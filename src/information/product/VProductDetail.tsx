@@ -81,7 +81,7 @@ export class VProductDetail extends VPage<CProduct> {
 
     private renderPackage = (item: any, index: number) => {
         let { showEditPackage, showPackageDetail } = this.controller.cApp.cPackage;
-        let { id, radiox, radioy, unit, type, price, currency, validUpto, minArriveDate, maxArriveDate } = item;
+        let { id, radiox, radioy, unit, type, price, currency, validUpto, minArriveDate, maxArriveDate, remark } = item;
         let name = unit === undefined ? undefined : unit.obj.name;
         let { inquiryContact } = this.product;
         let radio = (radiox !== 1) ? <>{radiox} * {radioy}{name}</> : <>{radioy}{name}</>;
@@ -101,11 +101,14 @@ export class VProductDetail extends VPage<CProduct> {
                     <div className="text-muted small">{mi}{arriveDate}</div>
                 </div>
             </div>;
+
+        let showremark = remark === undefined ? "" : remark.toString().length > 8 ? remark.toString().slice(0, 8) + '...' : remark;
         let left = <div className="px-2" onClick={() => showPackageDetail(item)}>
             <FA name="cube" className="px-2 text-primary"></FA>
             {radio} <span className="small">{type === 1 ? "目录" : "非目录"}</span>
             {down}
-        </div>;
+            <div className="px-4 text-success small">&nbsp;{showremark}</div>
+        </div >;
         return <LMR left={left} right={right} className="py-2">
         </LMR>;
     }
