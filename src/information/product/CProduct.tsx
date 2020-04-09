@@ -74,7 +74,7 @@ export class CProduct extends CUqBase {
         // return await cRestrictMark.call<number>();
         let param: SupplierItem = {
             parent: product,
-            item: restrictMark[0],
+            item: restrictMark === undefined ? undefined : restrictMark[0],
             child: restrictMark,
         }
         await cRestrictMark.call(param);

@@ -28,8 +28,10 @@ export class CRestrictMark extends CUqBase {
 
         if (this.product !== undefined && models !== undefined) {
             let { id } = this.product;
-            for (let olditem of this.restrictMarkList) {
-                await this.uqs.rms.ProductRestrictMark.del({ product: id, arr1: [{ restrictMark: olditem.id }] });
+            if (this.restrictMarkList !== undefined) {
+                for (let olditem of this.restrictMarkList) {
+                    await this.uqs.rms.ProductRestrictMark.del({ product: id, arr1: [{ restrictMark: olditem.id }] });
+                }
             }
             for (let item of this.restrictMarkResult) {
                 await this.uqs.rms.ProductRestrictMark.add({ product: id, arr1: [{ restrictMark: item.id }] });
