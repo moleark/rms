@@ -10,7 +10,6 @@ const schema: Schema = [
     { name: 'storageRange', type: 'id', required: false },
     { name: 'expiry', type: 'string', required: false },
     { name: 'expiryUnit', type: 'string', required: false },
-    { name: 'restrictMark', type: 'id', required: false },
     { name: 'refractiveIndex', type: 'string', required: false },
     { name: 'opticalRotation', type: 'string', required: false },
     { name: 'flashPoint', type: 'string', required: false },
@@ -49,16 +48,6 @@ export class VProductProperty extends VPage<CProduct> {
             } as UiIdItem,
             expiry: { widget: 'text', label: '保质期', placeholder: '保质期' } as UiInputItem,
             expiryUnit: { widget: 'select', label: '保质期单位', list: [{ value: '天', title: '天' }, { value: '周', title: '周' }, { value: '月', title: '月' }, { value: '年', title: '年' }] } as UiSelect,
-            restrictMark: {
-                widget: 'id', label: '限制性标记', placeholder: '限制性标记',
-                pickId: async (context: Context, name: string, value: number) => await this.controller.pickRestrictMark(context, name, value),
-                Templet: (item: any) => {
-                    if (!item) return <small className="text-muted">请选择限制性标记</small>;
-                    return <>
-                        {tv(item, v => <>{v.description}</>)}
-                    </>;
-                }
-            } as UiIdItem,
             refractiveIndex: { widget: 'text', label: '折射率', placeholder: '折射率' } as UiInputItem,
             opticalRotation: { widget: 'text', label: '旋光度', placeholder: '旋光度' } as UiInputItem,
             flashPoint: { widget: 'text', label: '闪点', placeholder: '闪点' } as UiInputItem,

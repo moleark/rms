@@ -69,9 +69,15 @@ export class CProduct extends CUqBase {
         return await cStorageRange.call<number>();
     }
 
-    pickRestrictMark = async (context: Context, name: string, value: number): Promise<number> => {
+    pickRestrictMark = async (product: any, restrictMark: any[]): Promise<any> => {
         let cRestrictMark = this.newC(CRestrictMark);
-        return await cRestrictMark.call<number>();
+        // return await cRestrictMark.call<number>();
+        let param: SupplierItem = {
+            parent: product,
+            item: restrictMark[0],
+            child: restrictMark,
+        }
+        await cRestrictMark.call(param);
     }
 
     saveProductData = async (product: any) => {
@@ -139,6 +145,17 @@ export class CProduct extends CUqBase {
     showProductDetail = async (model: any) => {
         let { id } = model;
         let pitem = await this.uqs.rms.GetPack.query({ _id: id });
+        let restrictMark: any[] = await this.uqs.rms.ProductRestrictMark.table({ product: id });
+        if (restrictMark.length > 0) {
+            let result: any[] = [];
+            for (let item of restrictMark) {
+                let res = await this.uqs.rms.RestrictMark.load(item.restrictMark.id);
+                if (res !== undefined) {
+                    result.push(res);
+                }
+            }
+            model.restrictMark = result;
+        }
         let param: SupplierItem = {
             parent: model,
             item: pitem.ret[0],

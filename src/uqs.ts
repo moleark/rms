@@ -18,6 +18,7 @@ export interface UqRMS {
     PackPrice: Map;
     SupplierHandler: Map;
     SupplierFinanceContact: Map;
+    ProductRestrictMark: Map;
     SearchSupplierContact: Query;
     SearchSupplierBankAccount: Query;
     SearchSupplier: Query;

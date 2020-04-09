@@ -321,7 +321,6 @@ TUID ProductProperty (
     main storageRange ID StorageRange,          --存储条件
     main expiry char(40),                       --保质期
     main expiryUnit char(10),                   --保质期单位
-    main restrictMark ID RestrictMark,          --限制性标记
     main refractiveIndex char(20),              --折射率
     main opticalRotation char(20),              --旋光度
     main flashPoint char(200),                  --闪点
@@ -331,4 +330,9 @@ TUID ProductProperty (
     main chroma char(100),                      --色度
     main density char(100),                     --密度
     main waterContent char(50)                  --含水量
+);
+
+MAP ProductRestrictMark (
+    key product ID Product,
+    key restrictMark ID RestrictMark,          --限制性标记
 );

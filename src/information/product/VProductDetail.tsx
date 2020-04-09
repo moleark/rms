@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { observable } from 'mobx';
-import { VPage, Page, FA, EasyDate, tv, LMR, List, Edit, ItemSchema, UiSchema, StringSchema, UiInputItem } from 'tonva';
+import { VPage, Page, FA, EasyDate, tv, LMR, List, Edit, ItemSchema, UiSchema, StringSchema, UiInputItem, UiIdItem, Context } from 'tonva';
 import { observer } from 'mobx-react';
 import _ from 'lodash';
 import { CProduct } from './CProduct';
@@ -11,6 +11,7 @@ const schema: ItemSchema[] = [
     { name: 'description', type: 'string', required: true },
     { name: 'descriptionC', type: 'string', required: false },
     { name: 'purity', type: 'string', required: false },
+    { name: 'restrictMark', type: 'id', required: false },
 ];
 
 export class VProductDetail extends VPage<CProduct> {
@@ -18,6 +19,7 @@ export class VProductDetail extends VPage<CProduct> {
     private firstPackage: any;
     private packages: any[] = [];
     private purityData: any;
+    private restrictMarks: any[] = [];
 
     async open(param: SupplierItem) {
         let { parent, item, child } = param;
@@ -29,12 +31,14 @@ export class VProductDetail extends VPage<CProduct> {
 
     private loadProduct = async (product: any) => {
         this.product = product;
-        let { origin, description, descriptionC, purity } = this.product;
+        let { origin, description, descriptionC, purity, restrictMark } = this.product;
+        this.restrictMarks = restrictMark;
         this.purityData = {
             origin: origin,
             description: description,
             descriptionC: descriptionC,
-            purity: purity
+            purity: purity,
+            restrictMark: restrictMark
         };
     }
 
@@ -44,6 +48,25 @@ export class VProductDetail extends VPage<CProduct> {
             description: { widget: 'text', label: '英文名称', placeholder: '英文名称' } as UiInputItem,
             descriptionC: { widget: 'text', label: '中文名称', placeholder: '中文名称' } as UiInputItem,
             purity: { widget: 'text', label: '纯度', placeholder: '纯度' } as UiInputItem,
+            restrictMark: {
+                widget: 'id', label: '限制性标记', placeholder: '限制性标记',
+                pickId: async (context: Context, name: string, value: number) => await this.controller.pickRestrictMark(this.product, this.restrictMarks),
+                Templet: (restrictMark: any[]) => {
+                    if (!restrictMark) return <small className="text-muted">请选择限制性标记</small>;
+                    let result: string = "";
+                    for (let item of restrictMark) {
+                        let { no } = item;
+                        if (result.length === 0) {
+                            result += no;
+                        } else {
+                            result += "-" + no;
+                        }
+                    }
+                    return <>
+                        {result}
+                    </>;
+                }
+            } as UiIdItem,
         }
     }
 

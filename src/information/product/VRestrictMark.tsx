@@ -5,17 +5,64 @@ import { CRestrictMark } from './CRestrictMark';
 
 export class VRestrictMark extends VPage<CRestrictMark> {
 
+    private result: string = "";
+
     async open(param: any) {
         this.openPage(this.page);
     }
 
     private page = () => {
-        let { restrictMarks } = this.controller;
-        return <Page header="选择限制性标记">
+        let { restrictMarks, restrictMarkResult, restrictMarkList } = this.controller;
+        let oldresult: string = " ";
+        if (restrictMarkList !== undefined) {
+            for (let item of restrictMarkList) {
+                let { no } = item;
+                if (oldresult.length === 1) {
+                    oldresult += no;
+                } else {
+                    oldresult += "-" + no;
+                }
+
+            }
+        }
+        if (restrictMarkResult !== undefined) {
+            for (let item of restrictMarkResult) {
+                let { no } = item;
+                if (this.result.length === 0) {
+                    this.result += no;
+                } else {
+                    this.result += "-" + no;
+                }
+
+            }
+        }
+
+        let right = <div className="d-flex align-items-center">
+            <div><span onClick={() => this.onReturn(restrictMarkResult)} className="fa-stack text-success">
+                <i className="fa fa-check-circle-o fa-stack-2x cursor-pointer my-1" style={{ fontSize: '1.6rem' }}></i>
+            </span></div>
+            <div><span onClick={() => this.onCancel()} className="fa-stack text-danger">
+                <i className="fa fa-times-circle-o fa-stack-2x cursor-pointer my-1" style={{ fontSize: '1.6rem' }}></i>
+            </span></div>
+        </div>;
+
+        let showhead = "选择限制性标记" + oldresult;
+        return <Page header={showhead} right={right} >
+            <div className="bg-white py-2">结果：{this.result}</div>
             <div className="row no-gutters">
                 {restrictMarks.map((v: any) => this.renderRestrictMark(v, this.onRestrictMarkClick))}
             </div>
-        </Page>
+        </Page >
+    }
+
+    private onCancel = async () => {
+        this.controller.restrictMarkResult = [];
+        this.result = "";
+        await this.controller.call<number>();
+    }
+
+    private onReturn = async (restrictMarkResult: any[]) => {
+        await this.controller.saveProductRestrictMark(restrictMarkResult);
     }
 
     private renderRestrictMark = (restrictMark: any, onClick: any) => {
@@ -33,7 +80,14 @@ export class VRestrictMark extends VPage<CRestrictMark> {
     }
 
     private onRestrictMarkClick = async (item: any) => {
-        await this.controller.returnRestrictMark(item);
-        this.closePage();
+        let { restrictMarkResult } = this.controller;
+        let cpi = restrictMarkResult.find(e => e.id === item.id);
+        if (cpi === undefined) {
+            restrictMarkResult.push(item);
+        }
+
+        await this.controller.call<number>();
+        // await this.controller.returnRestrictMark(item);
+        // this.closePage();
     }
 }

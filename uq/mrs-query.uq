@@ -627,7 +627,6 @@ returns ret (
     storageRange ID StorageRange,          --存储条件
     expiry char(40),                       --保质期
     expiryUnit char(10),                   --保质期单位
-    restrictMark ID RestrictMark,          --限制性标记
     refractiveIndex char(20),              --折射率
     opticalRotation char(20),              --旋光度
     flashPoint char(200),                  --闪点
@@ -638,7 +637,7 @@ returns ret (
     density char(100),                     --密度
     waterContent char(50)                  --含水量
 ) { 
-    into ret select p.id,p.product, p.useFor, p.remark, p.isspot, p.storageRange, p.expiry, p.expiryUnit, p.restrictMark, p.refractiveIndex, p.opticalRotation, p.flashPoint, p.meltingPoint, p.boilingPoint, p.character, p.chroma, p.density, p.waterContent
+    into ret select p.id,p.product, p.useFor, p.remark, p.isspot, p.storageRange, p.expiry, p.expiryUnit, p.refractiveIndex, p.opticalRotation, p.flashPoint, p.meltingPoint, p.boilingPoint, p.character, p.chroma, p.density, p.waterContent
     from    ProductProperty as p
     where   p.product = _id
     order by p.id;
