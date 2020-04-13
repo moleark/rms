@@ -9,13 +9,17 @@ export class VChemical extends VPage<CChemical> {
     }
 
     private page = observer(() => {
-        let { chemicals, searchChemicalByKey } = this.controller;
+        let { chemicals, searchChemicalByKey, onNewChemical } = this.controller;
 
         let right = <div className="d-flex align-items-center">
             <SearchBox
                 size='sm'
                 onSearch={(key: string) => searchChemicalByKey(key)}
                 placeholder="请输入CAS、名称关键字" />
+            <div><span onClick={() => onNewChemical()} className="fa-stack">
+                <i className="fa fa-plus-square fa-stack-2x cursor-pointer my-1" style={{ fontSize: '1.6rem' }}></i>
+            </span>
+            </div>
         </div>;
 
         return <Page header="选择标准库" right={right} onScrollBottom={this.onScrollBottom} headerClassName="bg-primary">

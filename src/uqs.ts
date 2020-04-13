@@ -28,6 +28,7 @@ export interface UqRMS {
     SearchNewInquiryPending: Query;
     SearchInquiryPending: Query;
     SearchInquiryPendingBySupplier: Query;
+    SearchProductByOrigin: Query;
     AddInquiryPending: Action;
     DeleteInquiryPending: Action;
     DeleteInquiryPackage: Action;

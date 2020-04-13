@@ -1,6 +1,6 @@
 
 export function telephoneValidation(value: string) {
-    if (value && !/^(\+\d{2,3}-)?(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}(-\d{3,5})?$/.test(value))
+    if (value && !/^(\+\d{1,3}-)?(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}(-\d{3,5})?$/.test(value))
         return "固定电话格式不正确，请重新输入！";
     else
         return undefined;
@@ -21,7 +21,7 @@ export function emailValidation(value: string) {
 }
 
 export function faxValidation(value: string) {
-    if (value && !/^(\+\d{2,3}-)?(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}(-\d{3,5})?$/.test(value))
+    if (value && !/^(\+\d{1,3}-)?(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}(-\d{3,5})?$/.test(value))
         return "传真号码格式不正确，请重新输入！";
     else
         return undefined;

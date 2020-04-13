@@ -62,7 +62,8 @@ export class VAddProduct extends VPage<CProduct> {
     }
 
     private onFormButtonClick = async (name: string, context: Context) => {
-        await this.controller.saveProductData(context.form.data);
+        let { origin } = this.productData;
+        await this.controller.saveProductData(origin, context.form.data);
     }
 
     private showChemicalData = () => {

@@ -181,6 +181,21 @@ returns ret (
     order by w.id;
 };
 
+/** 搜索产品*/
+QUERY SearchProductByOrigin(supplier ID Supplier,brand ID RsBrand,origin char(50))
+returns ret (
+    id bigint
+) {
+
+    into ret select  w.id
+    from    Product as w
+    where   w.supplier=supplier
+            and w.brand=brand
+            and w.origin=origin
+            and w.isTrue = 1  
+    order by w.id;
+};
+
 --获取产品包装
 QUERY GetPack(_id ID Product)
 returns ret (

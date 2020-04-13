@@ -42,7 +42,7 @@ export class CProduct extends CUqBase {
 
     async internalStart(param: any) {
         this.searchProductByKey("", param);
-        //this.openVPage(VProductList);
+        // this.openVPage(VProductList);
     }
 
     searchProductByKey = async (pickType: string, key: string) => {
@@ -80,7 +80,7 @@ export class CProduct extends CUqBase {
         await cRestrictMark.call(param);
     }
 
-    saveProductData = async (product: any) => {
+    saveProductData = async (oldorigin: any, product: any) => {
 
         if (product.id === undefined) {
             if (this.chemical) {
@@ -94,20 +94,28 @@ export class CProduct extends CUqBase {
                     newCAS = CAS.trim();
                     newCAS = CAS.slice(0, len - 3) + '-' + CAS.slice(len - 3, len - 1) + '-' + CAS.slice(len - 1, len);
                 }
-
-                let result = await this.uqs.rms.Product.save(undefined, product);
-                await this.uqs.rms.RsProductChemical.add({ product: result.id, arr1: [{ chemical: id, CAS: newCAS, molecularFomula: molecularFomula, molecularWeight: molecularWeight, purity: product.purity }] });
+                // 同一供应商同品牌不能存在相同的供应商自编号
+                let origin = await this.uqs.rms.SearchProductByOrigin.query({ supplier: product.supplier, brand: product.brand, origin: product.origin });
+                if (origin.ret.length === 0) {
+                    let result = await this.uqs.rms.Product.save(undefined, product);
+                    await this.uqs.rms.RsProductChemical.add({ product: result.id, arr1: [{ chemical: id, CAS: newCAS, molecularFomula: molecularFomula, molecularWeight: molecularWeight, purity: product.purity }] });
+                }
             }
         }
-        this.closePage();
+        this.closePage(2);
         await this.loadList();
     }
 
-    updateProductData = async (productdata: any) => {
+    updateProductData = async (productdata: any, oldorigin: any) => {
 
         if (productdata) {
             productdata.isTrue = 1;
             let { chemical } = productdata;
+            // 同一供应商同品牌不能存在相同的供应商自编号
+            let origin = await this.uqs.rms.SearchProductByOrigin.query({ supplier: productdata.supplier, brand: productdata.brand, origin: productdata.origin });
+            if (origin.ret.length > 0) {
+                productdata.origin = oldorigin;
+            }
             await this.uqs.rms.Product.save(productdata.id, productdata);
             await this.uqs.rms.RsProductChemical.add({ product: productdata.id, arr1: [{ chemical: chemical.id, CAS: productdata.CAS, molecularFomula: productdata.molecularFomula, molecularWeight: productdata.molecularWeight, purity: productdata.purity }] });
         }

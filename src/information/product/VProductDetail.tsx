@@ -7,11 +7,14 @@ import { CProduct } from './CProduct';
 import { SupplierItem } from "model/supplierItem";
 
 const schema: ItemSchema[] = [
-    { name: 'origin', type: 'string', required: false },
     { name: 'description', type: 'string', required: true },
     { name: 'descriptionC', type: 'string', required: false },
     { name: 'purity', type: 'string', required: false },
     { name: 'restrictMark', type: 'id', required: false },
+];
+
+const originschema: ItemSchema[] = [
+    { name: 'origin', type: 'string', required: false },
 ];
 
 export class VProductDetail extends VPage<CProduct> {
@@ -44,7 +47,6 @@ export class VProductDetail extends VPage<CProduct> {
 
     private uiSchema: UiSchema = {
         items: {
-            origin: { widget: 'text', label: '供应商自编号', placeholder: '供应商自编号' } as UiInputItem,
             description: { widget: 'text', label: '英文名称', placeholder: '英文名称' } as UiInputItem,
             descriptionC: { widget: 'text', label: '中文名称', placeholder: '中文名称' } as UiInputItem,
             purity: { widget: 'text', label: '纯度', placeholder: '纯度' } as UiInputItem,
@@ -67,6 +69,12 @@ export class VProductDetail extends VPage<CProduct> {
                     </>;
                 }
             } as UiIdItem,
+        }
+    }
+
+    private uiOriginSchema: UiSchema = {
+        items: {
+            origin: { widget: 'text', label: '供应商自编号', placeholder: '供应商自编号' } as UiInputItem,
         }
     }
 
@@ -172,8 +180,14 @@ export class VProductDetail extends VPage<CProduct> {
                 <><div className="row no-gutters px-3 my-1">
                     <div className="col-4">中国海关编码</div><div className="col-8 text-muted text-right">{chinaHSCode}</div>
                 </div></>}
+            {origin === undefined ? <Edit schema={originschema} uiSchema={this.uiOriginSchema}
+                data={this.purityData}
+                onItemChanged={this.onPurityChanged} /> :
+                <><div className="row no-gutters px-3 my-1">
+                    <div className="col-4">供应商自编号</div><div className="col-8 text-muted text-right">{origin}</div>
+                </div></>}
             <div className="row no-gutters px-3 my-1" onClick={() => this.controller.showProductPropertyDetail(this.product)}>
-                <div className="col-4">产品性质</div><div className="col-8 text-muted text-right"><b>></b></div>
+                <div className="col-4">产品性质</div><div className="col-8 text-muted text-right"><b><FA name="angle-right" /></b></div>
             </div>
         </div>;
     }
@@ -181,7 +195,8 @@ export class VProductDetail extends VPage<CProduct> {
     private onPurityChanged = async (itemSchema: ItemSchema, newValue: any, preValue: any) => {
         let { name } = itemSchema;
         this.product[name] = newValue;
-        await this.controller.updateProductData(this.product);
+        let { origin } = this.purityData;
+        await this.controller.updateProductData(this.product, origin);
         this.closePage();
         this.controller.showProductDetail(this.product);
     }

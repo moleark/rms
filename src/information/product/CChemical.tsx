@@ -5,6 +5,8 @@ import { nav } from 'tonva';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { VChemical } from './VChemical';
+import { VAddChemical } from './VAddChemical';
+import { httpClient } from "../../tools/webApiClient";
 
 class PageChemical extends PageItems<any> {
 
@@ -37,7 +39,28 @@ export class CChemical extends CUqBase {
     }
 
     searchChemicalByKey = async (key: string) => {
+        if (key.length < 20) {
+            key = key.replace("-", "").replace("-", "");
+        }
+
         this.chemicals = new PageChemical(this.uqs.chemical.SearchChemical);
         this.chemicals.first({ key: key });
+    }
+
+    /**
+    * 打开新建界面
+    */
+    onNewChemical = async () => {
+        this.openVPage(VAddChemical, { description: undefined });
+    }
+
+    saveChemicalData = async (chemical: any) => {
+
+        if (chemical.id === undefined) {
+            chemical.no = await httpClient.newChemical(chemical);
+            await this.uqs.chemical.Chemical.save(undefined, chemical);
+        }
+        this.closePage();
+        await this.searchChemicalByKey("");
     }
 }
