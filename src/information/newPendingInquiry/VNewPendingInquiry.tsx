@@ -53,8 +53,7 @@ export class VNewPendingInquiry extends VPage<CNewPendingInquiry> {
     private showProductlData = () => {
 
         let { product } = this.controller;
-        let { product: pro, CAS } = product;
-        let { no, supplier, origin, brand, description, descriptionC, purity } = pro.obj;
+        let { no, supplier, origin, brand, description, descriptionC, purity, CAS } = product;
         let { name } = supplier.obj;
         let brandname = brand === undefined ? undefined : brand.obj.name;
 
