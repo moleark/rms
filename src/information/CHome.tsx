@@ -7,7 +7,7 @@ export class CHome extends CUqBase {
 
         let { cSupplier } = this.cApp;
         await cSupplier.start();
-        this.openVPage(VHome);
+        // this.openVPage(VHome);
     }
 
     toSupplierList = () => {

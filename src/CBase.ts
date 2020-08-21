@@ -1,4 +1,4 @@
-import { CSub, CBase } from "tonva";
+import { CSub, CBase, CAppBase, IConstructor } from "tonva";
 import { UQs } from "./uqs";
 import { CApp } from "./CApp";
 
@@ -7,8 +7,18 @@ export abstract class CUqBase extends CBase {
     protected get uqs(): UQs { return this._uqs as UQs };
 }
 
-export abstract class CUqSub extends CSub {
-    get cApp(): CApp { return this._cApp; }
+export abstract class CUqSub<T extends CUqBase> extends CSub<T> {
+    get cApp(): CApp { return this.cApp; }
     protected get uqs(): UQs { return this._uqs as UQs };
-    protected get owner(): CUqBase { return this._owner as CUqBase; };
+    protected get owner(): T { return this._owner as T }
+}
+
+export abstract class CUqApp extends CAppBase {
+    get uqs(): UQs { return this._uqs };
+
+    protected newC<T extends CUqBase>(type: IConstructor<T>): T {
+        let c = new type(this);
+        c.init();
+        return c;
+    }
 }
