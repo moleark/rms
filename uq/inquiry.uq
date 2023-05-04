@@ -1,4 +1,4 @@
-
+/*
 -----------------------------询价单
 --询价产品包装
 TUID InquiryPackage(
@@ -140,3 +140,4 @@ History InquiryHistory(
     row,
     user
 );
+*/

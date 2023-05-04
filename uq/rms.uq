@@ -1,26 +1,20 @@
 --供应商
-TUID Supplier ver 2.0(
+ID Supplier ver 2.0(
     id,
-    main no char(10) null,
-    main name char(200),                     -- 供应商名称
-    main abbreviation char(200),             -- 简称
-    main webSite char(500),                  -- 供应商网址1
-    main addressString char(400),
-    main address ID Address,
-    main productionAddress char(500),        --生产厂址
-    main profile text,                       --企业简介(供应商信息概况) 
-    main isValid smallint default 1,         --是否有效（0 无效、1 有效）
-    main defaultContact ID SupplierContact,  --订单联系人
-    main inquiryContact ID SupplierContact,  --询价联系人
-    main taxNo char(50),                     --税号  
-    main businessArea char(10),              --业务区域
-    search(name),
-    unique(no),
+    no char(10) null,
+    name char(200),                     -- 供应商名称
+    secondName char(200),               -- 供应商名称
+    abbreviation char(200),             -- 简称
+    isValid smallint default 1,         --是否有效（0 无效、1 有效）
+    create datetime,
+    Update datetime,
 );
 
+/*
 --银行账户信息
-TUID BankAccount (
+ID BankAccount (
     id,
+    key supplier ID Supplier,
     main bankAddress char(500),              --供应商银行地址
     main bankSWIFT char(100),                --供应商开户行SWIFT/BIC
     main bankIBAN char(100),                 --供应商开户行IBAN
@@ -31,28 +25,17 @@ TUID BankAccount (
     main usageType smallint,                 --用途（0 开户行 1 中转行）
 );
 
-MAP SupplierBankAccount (
-    key supplier ID Supplier,
-    key bankAccount ID BankAccount,
-);
-
 --供应商负责人
-MAP SupplierHandler (
-    key supplier ID Supplier,
-    key principal ID Employee,
-);
-
---供应商财务联系人
-MAP SupplierFinanceContact (
-    key supplier ID Supplier,
-    key financeContact ID SupplierContact,
+IX ixSupplierHandler (
+    ix ID Supplier,
+    xi ID Employee,
 );
 
 --供应商联系人
-TUID SupplierContact(
+ID SupplierContact(
     id,
+    key supplier ID Supplier,
     main no char(10) null,
-    main supplier ID Supplier not null,   --供应商编号
     main name char(50) null,
     main firstName char(50),
     main lastName char(50),
@@ -68,11 +51,12 @@ TUID SupplierContact(
     main wechatId char(50),
     main addressString char(400),
     main address ID Address,
+    contactType int,        -- 采购联系人 / 财务联系人
     main isValid smallint default 1         --联系人信息是否有效（1 有效、0 无效）
 );
 
 --资源品牌
-TUID RsBrand(
+ID RsBrand(
     id,
     main no char(10) ,--编号
     main name char(50), --名称
@@ -83,7 +67,7 @@ TUID RsBrand(
 
 
 --资源产品
-TUID Product(
+ID Product(
     id,
     main no char(50) null,                       --编号
     main supplier ID Supplier not null,          --供应商编号
@@ -91,7 +75,6 @@ TUID Product(
     main origin char(50),                        --供应商自编号
     main description char(1000) null,            --产品英文名称
     main descriptionC char(1000) null,           --产品中文名称
-    main chinaHSCode char(50),                   --中国海关税则编码
     arr Pack (
         owner,
         id,
@@ -101,7 +84,7 @@ TUID Product(
         main type smallint,                          --包装类型，分为两种：1.目录包装，2.非目录包装
         isValid smallint not null default 1,    --是否有效（0 无效、1 有效）
     ),
-    isTrue tinyint not null default 1,
+    isValid tinyint not null default 1,
     createTime datetime,                        --创建时间
     search(origin, description, descriptionC),
     unique(no),
@@ -194,3 +177,4 @@ MAP ProductRestrictMark (
     key product ID Product,
     key restrictMark ID RestrictMark,          --限制性标记
 );
+*/
