@@ -396,10 +396,10 @@ ACTION DeleteInquiryPending(
                 join InquiryPendingItem as b on a.id=b.inquiryPackage
         where   b.inquiryPending=id)
     {
-        delete from InquiryPackage where id=a;
+        delete t from InquiryPackage as t where t.id=a;
     };
 
-    delete from InquiryPendingItem where inquiryPending=id;
+    delete t from InquiryPendingItem as t where t.inquiryPending=id;
     Pending InquiryPending - at id;
 };
 
@@ -408,8 +408,8 @@ ACTION DeleteInquiryPackage(
     id bigint,
     pid bigint
 ) {
-    delete from InquiryPendingItem where inquiryPending=id and inquiryPackage=pid;
-    delete from InquiryPackage where id=pid;
+    delete t from InquiryPendingItem as t where t.inquiryPending=id and t.inquiryPackage=pid;
+    delete t from InquiryPackage as t where t.id=pid;
 };
 
 --将询价任务更新为已询出状态
@@ -743,10 +743,10 @@ ACTION AddInquiryResult ver 4.0(
                 join InquiryPendingItem as b on a.id=b.inquiryPackage
         where   b.inquiryPending=id)
         {
-            delete from InquiryPackage where id=a;
+            delete t from InquiryPackage as t where t.id=a;
         };
 
-        delete from InquiryPendingItem where inquiryPending=id;
+        delete t from InquiryPendingItem as t where t.inquiryPending=id;
         Pending InquiryPending - at id;
     }
 };

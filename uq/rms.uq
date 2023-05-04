@@ -4,11 +4,11 @@ TUID Supplier ver 2.0(
     main no char(10) null,
     main name char(200),                     -- 供应商名称
     main abbreviation char(200),             -- 简称
-    main webSite char(500),                  --供应商网址1
+    main webSite char(500),                  -- 供应商网址1
     main addressString char(400),
     main address ID Address,
     main productionAddress char(500),        --生产厂址
-    main profile text,                 --企业简介(供应商信息概况) 
+    main profile text,                       --企业简介(供应商信息概况) 
     main isValid smallint default 1,         --是否有效（0 无效、1 有效）
     main defaultContact ID SupplierContact,  --订单联系人
     main inquiryContact ID SupplierContact,  --询价联系人
@@ -116,148 +116,6 @@ Map RsProductChemical (
     molecularFomula char(200),
     molecularWeight char(30),
     index idx_unit_cas,
-);
-
------------------------------询价单
---询价产品包装
-TUID InquiryPackage(
-    id,
-    main supplier ID Supplier not null,          --供应商编号   
-    main product ID Product,                     --产品编号
-    main quantity int,                           --数量
-    main radiox dec(12,2),                       --套
-    main radioy dec(12,4),                       --包装规格
-    main unit ID PackType,                       --单位
-    main purity char(80),                        --询价纯度   
-    search(supplier, product),  
-);
-
---询价任务PENDING
-PENDING InquiryPending ver 0.3 (
-    id,
-    user,
-    date,
-    supplier ID Supplier not null,          --供应商编号
-    status smallint default 0,              --询价状态（0 未询出 1 已询出）
-    contact ID SupplierContact null,        --供应商默认联系人
-    contactName char(50) null,              --供应商联系人姓名
-    contactSalutation char(10),
-    contactDepartmentName char(100),
-    contactTelephone char(50),
-    contactMobile char(50) null,
-    contactEmail char(50),
-    contactfax char(20),
-    way smallint null,                      --询价方式：2：电话询价；3：传真询价；1：Email询价
-    inquiryUser ID [$user],                 --询价人
-    inquiryDate datetime                    --询出时间
-);
-
-
---询价任务明细
-Map InquiryPendingItem (
-    key inquiryPending ID,
-    key inquiryPackage ID InquiryPackage,
-    user ID [$user],                        --创建人
-    createDate datetime,
-    remarks char(1000),                     --备注：资源部新建的询价单需要国际部完成询价时，填写的询价要求
-    jsonStr char(1000)                      --询价结果json串
-);
-
---询价结果中提供不了的原因
-TUID NotProvidedReason(
-    id,
-    main description char(100),
-    main isValid smallint not null default 1,    --是否有效（0 无效、1 有效）
-);
-
---询价单（询价需求+询价结果）
-SHEET InquirySheet ver 0.4 (
-    supplier ID Supplier,                   --供应商编号
-    contact ID SupplierContact,             --供应商默认联系人
-    contactName char(50) null,              --供应商联系人姓名
-    contactSalutation char(10),
-    contactDepartmentName char(100),
-    contactTelephone char(50),
-    contactMobile char(50) null,
-    contactEmail char(50),
-    contactfax char(20),
-    Arr inquiryitems (
-        no char(50),                        --老询价结果编号
-        product ID Product,                 --询价产品编号
-        inquiryQuantity int,                --询价数量
-        inquiryRadiox dec(12,2),            --询价套
-        inquiryRadioy dec(12,4),            --询价包装规格
-        inquiryUnit ID PackType,            --询价单位  
-        inquirypurity char(80),             --询价纯度
-        itemuser ID [$user],                --创建人
-        itemcreateDate datetime,            --创建时间
-        quantity int,                       --反馈数量
-        radiox dec(12,2),                   --反馈套
-        radioy dec(12,4),                   --反馈包装规格
-        unit ID PackType,                      --反馈单位
-        purity char(80),                    --反馈纯度
-        listPrice dec(12,2),                --目录单价
-        price dec(12,2),                    --结算单价
-        currency ID Currency,               --结算币种
-        isTaxIn smallint,                   --结算单价中是否已经包含税费；0：不包含；1：包含
-        isTransFeeIn smallint,              --结算单价中是否已经包含税费；0：不包含；1：包含
-        transFee dec(12,2),                 --运费
-        transFeecurrency ID Currency,       --运费币种
-        packingFee dec(12,2),               --包装费
-        packingcurrency ID Currency,        --包装费币种
-        otherFee dec(12,2),                 --其他费用
-        otherFeecurrency ID Currency,       --其他费用币种
-        customizeUpto datetime,             --用于计算定制周期。产品需要定制时，用于计算定制周期，CustomizeUpto减去CreateDate为定制周期
-        validUpto datetime,                 --报价有效期
-        minArriveDate datetime,             --最短到货期
-        maxArriveDate datetime,             --最长到货期
-        invoiceType smallint,               --发票类型
-        vatRate ID VatRate,                 --增值税率
-        tariffRate dec(12,4),               --关税税率
-        packType smallint,                  --包装类型，分为两种：1.目录包装，2.非目录包装
-        coaFilePath char(1000),             --供应商所提供的COA文件路径
-        msdsFilePath char(1000),            --供应商所提供的MSDS文件的上传路径
-        quotationFilePath char(1000),       --供应商提供的报价单的上传路径
-        remarks char(1000),                 --备注：资源部新建的询价单需要国际部完成询价时，填写的询价要求
-        inquiryRemarks char(1000),          --报价备注
-        result smallint,                    --询价结果（0:不可供；1：可供）
-        notProvidedReason ID NotProvidedReason, --不可供原因
-        isUsed smallint                     --价格是否同步到包装上（0：不使用 1：使用）
-    ),
-    way smallint not null,                  --询价方式：2：电话询价；3：传真询价；1：Email询价
-    user ID [$user],                        --创建人
-    createDate datetime,                    --创建时间
-    inquiryUser ID [$user],                 --询价人
-    inquiryDate datetime                    --询出时间
-)
-Action{
-        history InquiryHistory
-            set supplier = supplier, contact = contact, contactName = contactName, contactSalutation = contactSalutation, contactDepartmentName = contactDepartmentName
-            , contactTelephone = contactTelephone, contactMobile = contactMobile,contactEmail = contactEmail, contactfax = contactfax
-            , inquiryUser = inquiryUser, startDate = createDate,inquiryDate=inquiryDate,way=way;
-        STATE TO END;
-};
-
---询价历史
-History InquiryHistory(
-    date,
-    supplier ID Supplier,                   --供应商编号
-    contact ID SupplierContact,             --供应商默认联系人
-    contactName char(50) null,              --供应商联系人姓名
-    contactSalutation char(10),
-    contactDepartmentName char(100),
-    contactTelephone char(50),
-    contactMobile char(50) null,
-    contactEmail char(50),
-    contactfax char(20),
-    inquiryUser ID [$user],                 --询价人
-    startDate datetime,                     --开始时间   
-    inquiryDate datetime,                   --询出时间 
-    way smallint not null,                  --询价方式：2：电话询价；3：传真询价；1：Email询价   
-    sheet,
-    type,
-    row,
-    user
 );
 
 
